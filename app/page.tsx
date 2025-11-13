@@ -1,65 +1,69 @@
+"use client";
+
 import Image from "next/image";
+import Link from "next/link";
+import { motion } from "framer-motion";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="flex min-h-screen flex-col items-center justify-center px-6 text-center bg-black text-white">
+      
+      {/* Hero Section */}
+      <motion.section
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+        className="max-w-2xl mt-10"
+      >
+        <h1 className="text-5xl md:text-6xl font-bold mb-4 leading-tight">
+          Wiens <span className="text-[#0d9488]">jüngster</span> Verein.
+        </h1>
+
+        <p className="text-gray-400 mb-6 text-lg leading-relaxed">
+          Bewegung. Gemeinschaft. Zukunft. <br />
+          Mello steht für eine neue Generation von Sport und Kultur.
+        </p>
+
+        <Link
+          href="/mitgliedschaft"
+          className="inline-block bg-[#0d9488] text-black font-semibold rounded-full px-6 py-2 transition-all duration-300 hover:scale-105 hover:bg-[#0b7d71] hover:shadow-[0_0_25px_5px_rgba(13,148,136,0.6)]"
+        >
+          Mehr über uns
+        </Link>
+      </motion.section>
+
+      {/* Logo mit Glow */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.2, delay: 0.3 }}
+        className="mt-16 flex justify-center"
+      >
+        <div className="relative group flex items-center justify-center transition-transform duration-500 hover:scale-105">
+          
+          {/* Glow Effekt */}
+          <div
+            className="absolute w-[190px] h-[190px] rounded-full opacity-85 blur-[85px] animate-[pulseGlow_5s_ease-in-out_infinite,lightSweep_8s_ease-in-out_infinite] group-hover:blur-[110px] transition-all duration-700 mobile-glow"
+            style={{
+              background: `
+                radial-gradient(circle, rgba(13,148,136,0.35) 0%, rgba(13,148,136,0.15) 70%, transparent 100%),
+                linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 40%, rgba(255,255,255,0.05) 60%, transparent 100%)
+              `,
+              backgroundSize: "200% 200%",
+            }}
+          ></div>
+
+          {/* Logo */}
+          <Image
+            src="/logo.png"
+            alt="Mello Logo"
+            width={160}
+            height={160}
+            className="relative z-10 rounded-full transition-all duration-500 group-hover:drop-shadow-[0_0_25px_rgba(13,148,136,0.8)] cursor-pointer"
+            onClick={() => (window.location.href = "/")}
+          />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </motion.div>
     </div>
   );
 }
