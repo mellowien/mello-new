@@ -15,7 +15,7 @@ export async function POST(req: Request) {
         {
           price_data: {
             currency: "eur",
-            unit_amount: Math.round(amount * 100), // Betrag in Cent
+            unit_amount: Math.round(amount * 100),
             product_data: {
               name: `Mitgliedsbeitrag von ${name}`,
             },
@@ -32,9 +32,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ url: session.url });
   } catch (error) {
     console.error("Stripe error:", error);
-    return NextResponse.json(
-      { error: "Stripe Fehler" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Stripe Fehler" }, { status: 500 });
   }
 }
