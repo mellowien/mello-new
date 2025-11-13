@@ -1,15 +1,15 @@
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Poppins } from "next/font/google";
+import { Montserrat } from "next/font/google";
 
 export const metadata = {
   title: "FC Mello Wien",
   description: "Wiens jüngster Verein",
 };
 
-// Poppins Schriftart laden
-const poppins = Poppins({
+// Montserrat Schrift laden
+const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"], // verschiedene Stärken
 });
@@ -30,7 +30,7 @@ export default function RootLayout({
       </head>
 
       <body
-        className={`${poppins.className} bg-black text-white flex flex-col min-h-screen`}
+        className={`${montserrat.className} bg-black text-white flex flex-col min-h-screen`}
       >
         {/* Header global */}
         <Header />
