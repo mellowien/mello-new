@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 
 const navLinks = [
-  { name: "Über uns", href: "/about" },
+  { name: "Über uns", href: "/ueber-uns" },
   { name: "Team", href: "/team" },
   { name: "Mitgliedschaft", href: "/mitgliedschaft" },
   { name: "Minigames", href: "/minigames" },
