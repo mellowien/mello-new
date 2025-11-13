@@ -34,36 +34,42 @@ export default function ImpressumPage() {
         transition={{ duration: 1, delay: 0.2 }}
         className="relative bg-black/70 border border-teal-300/30 backdrop-blur-md rounded-2xl p-8 md:p-12 max-w-3xl leading-relaxed shadow-[0_0_25px_rgba(45,212,191,0.2)]"
       >
+        {/* Vereinsname */}
         <p className="text-gray-300 mb-4">
           <strong>Verein:</strong><br />
           Fußballclub Mello Wien (FC Mello Wien)
         </p>
 
+        {/* ZVR-Zahl */}
         <p className="text-gray-300 mb-4">
           <strong>ZVR-Zahl:</strong> 1231202907
         </p>
 
+        {/* Rechtsform */}
         <p className="text-gray-300 mb-4">
           <strong>Rechtsform:</strong><br />
           Gemeinnütziger, eingetragener Verein nach österreichischem Vereinsgesetz (VerG 2002)
         </p>
 
+        {/* Adresse */}
         <p className="text-gray-300 mb-4">
           <strong>Vereinssitz:</strong><br />
           1020 Wien<br />
-          Nordbahnstraße 47 / 4. Stock / Top 4080<br />
+          Nordbahnstraße 47<br />
           Österreich
         </p>
 
+        {/* Vertretung */}
         <p className="text-gray-300 mb-4">
           <strong>Vertretungsbefugnis:</strong><br />
           Der Verein wird nach außen vertreten durch den Obmann:<br />
           <span className="text-teal-300 font-semibold">Daniel Rezai</span>
           <br /><br />
-          Schriftliche Ausfertigungen benötigen die Unterschrift des Obmanns und des/der Schriftführers/Schriftführerin.<br />
+          Schriftliche Ausfertigungen benötigen die Unterschrift des Obmanns und des/der Schriftführer/in.<br />
           In finanziellen Angelegenheiten: Obmann und Kassier/in.
         </p>
 
+        {/* Kontakt */}
         <p className="text-gray-300 mb-4">
           <strong>Kontakt:</strong><br />
           E-Mail:{" "}
@@ -76,20 +82,23 @@ export default function ImpressumPage() {
           </a>
         </p>
 
+        {/* Vereinszweck */}
         <p className="text-gray-300 mb-4">
           <strong>Vereinszweck:</strong><br />
           Förderung des Sports, insbesondere Fußball, sowie Aufbau eines urbanen, modernen Multisportvereins.
         </p>
 
+        {/* Haftung */}
         <p className="text-gray-300 mb-4">
           <strong>Haftungsausschluss:</strong><br />
-          Alle Inhalte dieser Website wurden sorgfältig erstellt. Für Richtigkeit, Vollständigkeit und Aktualität kann keine Haftung übernommen werden. 
+          Alle Inhalte dieser Website wurden sorgfältig erstellt. Für Richtigkeit, Vollständigkeit und Aktualität kann keine Haftung übernommen werden.
           Für Inhalte externer Links ist ausschließlich der jeweilige Betreiber verantwortlich.
         </p>
 
+        {/* Copyright */}
         <p className="text-gray-300 mb-4">
           <strong>Urheberrecht:</strong><br />
-          Sämtliche Inhalte (Texte, Bilder, Grafiken, Medien) unterliegen dem Urheberrecht. 
+          Sämtliche Inhalte (Texte, Bilder, Grafiken, Medien) unterliegen dem Urheberrecht.
           Jede Nutzung außerhalb des Urheberrechts bedarf der schriftlichen Zustimmung.
         </p>
       </motion.div>
