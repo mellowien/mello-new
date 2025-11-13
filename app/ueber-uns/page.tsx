@@ -13,10 +13,9 @@ export default function AboutPage() {
 
       {/* Glow */}
       <div
-        className="absolute top-40 w-[260px] h-[260px] rounded-full blur-[150px] opacity-50"
+        className="absolute top-40 w-[260px] h-[260px] rounded-full blur-[150px] opacity-40"
         style={{
-          background:
-            "radial-gradient(circle, rgba(45,212,191,0.7), transparent)"
+          background: "radial-gradient(circle, rgba(45,212,191,0.65), transparent)"
         }}
       ></div>
 
@@ -35,29 +34,28 @@ export default function AboutPage() {
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, delay: 0.2 }}
-        className="relative bg-black/70 border border-teal-300/30 backdrop-blur-md rounded-2xl p-8 md:p-12 max-w-3xl leading-relaxed shadow-[0_0_25px_rgba(45,212,191,0.25)]"
+        className="relative bg-black/70 border border-teal-300/30 backdrop-blur-md rounded-2xl p-8 md:p-12 max-w-3xl leading-relaxed shadow-[0_0_25px_rgba(45,212,191,0.2)]"
       >
         <p className="text-gray-300 mb-6">
-          Der <strong>FC Mello Wien</strong> ist Wiens jüngster Verein – entstanden aus dem
-          Wunsch, etwas Neues aufzubauen. Etwas, das Bewegung, Gemeinschaft und eine moderne,
+          Der <strong>FC Mello Wien</strong> ist Wiens jüngster Verein – entstanden aus dem Wunsch,
+          etwas Neues aufzubauen. Etwas, das Bewegung, Gemeinschaft und eine moderne,
           offene Sportkultur vereint.
         </p>
 
         <p className="text-gray-300 mb-6">
-          Gegründet wurde der Verein von Freunden, die nach Wien gezogen sind
-          und hier nicht nur Fußball spielen wollten, sondern eine Vision hatten:
-          Einen Verein zu schaffen, der jung, urban und zugänglich ist.
+          Gegründet wurde der Verein mit dem Ziel, eine neue Art von Sportkultur in Wien zu etablieren – 
+          jung, urban und offen für alle. Nicht nur Fußball, sondern eine Vision von Gemeinschaft, 
+          Bewegung und Identität.
         </p>
 
         <p className="text-gray-300 mb-6">
           In den ersten Jahren übernehmen wir vieles selbst – Organisation, Trainings,
-          Social Media, Vereinsaufbau. Ein kleines Team von Freunden legt die Basis.
+          Social Media und Vereinsaufbau. Ein kleines Team legt die Basis für etwas Größeres.
         </p>
 
         <p className="text-gray-300 mb-6">
-          Langfristig möchten wir ein echter <strong>Multisportverein</strong> werden – mit
-          Angeboten für Kinder, Jugendliche und Erwachsene. Basketball, Tennis und andere
-          Sportarten werden folgen.
+          Langfristig möchten wir ein echter <strong>Multisportverein</strong> werden – mit Angeboten für
+          Kinder, Jugendliche und Erwachsene. Basketball, Tennis und weitere Sportarten werden folgen.
         </p>
 
         <p className="text-gray-300 mb-6">
