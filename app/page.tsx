@@ -6,64 +6,107 @@ import { motion } from "framer-motion";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center px-6 text-center bg-black text-white">
-      
-      {/* Hero Section */}
-      <motion.section
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-        className="max-w-2xl mt-10"
-      >
-        <h1 className="text-5xl md:text-6xl font-bold mb-4 leading-tight">
-          Wiens <span className="text-[#0d9488]">jüngster</span> Verein.
-        </h1>
+    <main className="relative min-h-[calc(100vh-6rem)] overflow-hidden bg-black text-white flex items-center justify-center px-6">
+      {/* Cinematic Background Layer */}
+      <div className="pointer-events-none absolute inset-0">
+        {/* Oberer Lichtfächer */}
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] bg-[radial-gradient(circle_at_top,_rgba(13,148,136,0.55),_transparent_60%)] opacity-70 mix-blend-screen animate-softPulse" />
 
-        <p className="text-gray-400 mb-6 text-lg leading-relaxed">
-          Bewegung. Gemeinschaft. Zukunft. <br />
-          Mello steht für eine neue Generation von Sport und Kultur.
-        </p>
+        {/* Diagonaler Lichtfächer links */}
+        <div className="absolute left-[-20%] top-[10%] w-[700px] h-[500px] rotate-[-18deg] bg-[radial-gradient(circle_at_center,_rgba(45,212,191,0.45),_transparent_65%)] opacity-60 mix-blend-screen animate-slowDrift" />
 
-        <Link
-          href="/mitgliedschaft"
-          className="inline-block bg-[#0d9488] text-black font-semibold rounded-full px-6 py-2 transition-all duration-300 hover:scale-105 hover:bg-[#0b7d71] hover:shadow-[0_0_25px_5px_rgba(13,148,136,0.6)]"
+        {/* Diagonaler Lichtfächer rechts */}
+        <div className="absolute right-[-15%] bottom-[-10%] w-[700px] h-[500px] rotate-[16deg] bg-[radial-gradient(circle_at_center,_rgba(56,189,248,0.4),_transparent_65%)] opacity-55 mix-blend-screen animate-slowDriftReverse" />
+
+        {/* Subtiles dunkles Vignette */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_black_70%)] opacity-90" />
+
+        {/* ganz feine Partikel-Ebene */}
+        <div className="absolute inset-0 opacity-[0.22] mix-blend-screen noise-layer" />
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-[1.4fr_1fr] gap-12 items-center">
+        {/* Textblock */}
+        <motion.section
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9 }}
+          className="text-center md:text-left"
         >
-          Mehr über uns
-        </Link>
-      </motion.section>
+          <p className="uppercase tracking-[0.35em] text-xs md:text-sm text-teal-300/80 mb-4">
+            FUTURE SPORT CLUB • WIEN
+          </p>
 
-      {/* Logo mit Glow */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.2, delay: 0.3 }}
-        className="mt-16 flex justify-center"
-      >
-        <div className="relative group flex items-center justify-center transition-transform duration-500 hover:scale-105">
-          
-          {/* Glow Effekt */}
-          <div
-            className="absolute w-[190px] h-[190px] rounded-full opacity-85 blur-[85px] animate-[pulseGlow_5s_ease-in-out_infinite,lightSweep_8s_ease-in-out_infinite] group-hover:blur-[110px] transition-all duration-700 mobile-glow"
-            style={{
-              background: `
-                radial-gradient(circle, rgba(13,148,136,0.35) 0%, rgba(13,148,136,0.15) 70%, transparent 100%),
-                linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 40%, rgba(255,255,255,0.05) 60%, transparent 100%)
-              `,
-              backgroundSize: "200% 200%",
-            }}
-          ></div>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold mb-5 leading-tight">
+            Wir sind{" "}
+            <span className="text-teal-300">
+              Mello.
+            </span>
+            <br />
+            Eine neue Ära für Wien.
+          </h1>
 
-          {/* Logo */}
-          <Image
-            src="/logo.png"
-            alt="Mello Logo"
-            width={160}
-            height={160}
-            className="relative z-10 rounded-full transition-all duration-500 group-hover:drop-shadow-[0_0_25px_rgba(13,148,136,0.8)] cursor-pointer"
-            onClick={() => (window.location.href = "/")}
-          />
-        </div>
-      </motion.div>
-    </div>
+          <p className="text-gray-300/90 mb-8 text-base md:text-lg leading-relaxed">
+            Nicht nur ein Verein, sondern eine Bewegung.{" "}
+            <span className="text-gray-100">
+              Football, Community, Culture
+            </span>{" "}
+            – für eine Generation, die mehr will als nur 90 Minuten.
+          </p>
+
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+            <Link
+              href="/mitgliedschaft"
+              className="inline-flex items-center justify-center rounded-full bg-teal-400 text-black font-semibold px-7 py-2.5 text-sm md:text-base shadow-[0_0_35px_rgba(45,212,191,0.8)] hover:shadow-[0_0_45px_rgba(45,212,191,1)] hover:bg-teal-300 transition-all duration-300 hover:-translate-y-[1px]"
+            >
+              Jetzt Teil von Mello werden
+            </Link>
+
+            <Link
+              href="/about"
+              className="inline-flex items-center justify-center rounded-full border border-teal-300/60 text-teal-100 px-7 py-2.5 text-sm md:text-base hover:bg-teal-300/10 hover:border-teal-300 transition-all duration-300"
+            >
+              Mehr über uns
+            </Link>
+          </div>
+
+          {/* kleine Subline */}
+          <p className="mt-5 text-xs md:text-sm text-gray-400/90">
+            Erste Mitglieder prägen die Geschichte.{" "}
+            <span className="text-teal-300/90">Du bist früh genug.</span>
+          </p>
+        </motion.section>
+
+        {/* Logo + Cinematic Glow rechts */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 1.1, delay: 0.15 }}
+          className="flex justify-center md:justify-end"
+        >
+          <div className="relative group flex items-center justify-center">
+            {/* starker Glow */}
+            <div className="absolute w-[260px] h-[260px] rounded-full blur-[80px] bg-[radial-gradient(circle,_rgba(34,211,238,0.65)_0%,_rgba(13,148,136,0.25)_55%,_transparent_75%)] opacity-90 animate-softPulseSlow group-hover:blur-[95px] transition-all duration-700" />
+
+            {/* vertikaler Lichtstreifen */}
+            <div className="absolute w-[3px] h-[220px] bg-gradient-to-b from-transparent via-teal-200/80 to-transparent blur-[1px] opacity-75 group-hover:opacity-100 animate-lightSweep" />
+
+            {/* Logo-Container */}
+            <div className="relative rounded-full border border-teal-300/40 bg-black/40 backdrop-blur-xl p-3 shadow-[0_0_25px_rgba(45,212,191,0.7)] group-hover:shadow-[0_0_40px_rgba(45,212,191,1)] transition-shadow duration-500">
+              <Image
+                src="/logo.png"
+                alt="Mello Logo"
+                width={170}
+                height={170}
+                className="rounded-full select-none pointer-events-none drop-shadow-[0_0_18px_rgba(45,212,191,0.9)]"
+                priority
+              />
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </main>
   );
 }
