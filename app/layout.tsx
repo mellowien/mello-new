@@ -1,11 +1,18 @@
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { Poppins } from "next/font/google";
 
 export const metadata = {
   title: "FC Mello Wien",
   description: "Wiens jüngster Verein",
 };
+
+// Poppins Schriftart laden
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"], // verschiedene Stärken
+});
 
 export default function RootLayout({
   children,
@@ -22,19 +29,17 @@ export default function RootLayout({
         />
       </head>
 
-      <body className="bg-black text-white font-sans flex flex-col min-h-screen">
-
-        {/* Header (immer oben sichtbar) */}
+      <body
+        className={`${poppins.className} bg-black text-white flex flex-col min-h-screen`}
+      >
+        {/* Header global */}
         <Header />
 
-        {/* Hauptinhalt der Seite */}
-        <main className="flex-grow pt-24">
-          {children}
-        </main>
+        {/* Seiteninhalt */}
+        <main className="flex-grow pt-24">{children}</main>
 
-        {/* Footer (global auf jeder Seite) */}
+        {/* Footer global */}
         <Footer />
-
       </body>
     </html>
   );
