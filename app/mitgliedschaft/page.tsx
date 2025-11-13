@@ -25,7 +25,7 @@ export default function MitgliedschaftPage() {
         die gemeinsam etwas Großes aufbauen wollen.
       </motion.p>
 
-      {/* --- Drei Karten --- */}
+      {/* Drei Karten */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -35,30 +35,36 @@ export default function MitgliedschaftPage() {
         {/* Spieler */}
         <div className="bg-black/60 border border-teal-300/30 rounded-2xl p-6 text-center shadow-[0_0_25px_rgba(45,212,191,0.15)] hover:shadow-[0_0_35px_rgba(45,212,191,0.3)] transition-all duration-300">
           <h2 className="text-2xl font-semibold text-teal-300 mb-2">Spieler</h2>
-          <p className="text-gray-300 mb-5">
-            Jeder ist willkommen – egal ob Anfänger oder erfahren.
+
+          <p className="text-gray-300 mb-5 leading-relaxed">
+            Egal ob du Anfänger oder erfahren bist – bei uns zählt Leidenschaft.
+            Wir bauen ein neues Team auf, das gemeinsam wächst, lernt und etwas
+            Besonderes entstehen lässt.
           </p>
+
           <Link
             href="/kontakt"
-            className="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-teal-400 text-black font-semibold shadow-[0_0_30px_rgba(45,212,191,0.7)] hover:bg-teal-300 transition-all duration-300"
+            className="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-teal-400 text-black font-semibold shadow-[0_0_30px_rgba(45,212,191,0.7)] hover:bg-teal-300 hover:scale-105 transition-all duration-300"
           >
-            Zum Team bewerben
+            Spieleranfrage senden
           </Link>
         </div>
 
-        {/* Mitgestalten (NEU) */}
+        {/* Mitgestalten */}
         <div className="bg-black/60 border border-teal-300/30 rounded-2xl p-6 text-center shadow-[0_0_25px_rgba(45,212,191,0.15)] hover:shadow-[0_0_35px_rgba(45,212,191,0.3)] transition-all duration-300">
           <h2 className="text-2xl font-semibold text-teal-300 mb-2">
             Mitgestalten
           </h2>
-          <p className="text-gray-300 mb-5">
+
+          <p className="text-gray-300 mb-5 leading-relaxed">
             Hilf mit, den Verein aktiv aufzubauen — ob Events, Organisation,
             kreative Ideen oder sogar Vorstand. Wir suchen Menschen, die etwas
             verändern wollen.
           </p>
+
           <Link
             href="/kontakt"
-            className="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-teal-400 text-black font-semibold shadow-[0_0_30px_rgba(45,212,191,0.7)] hover:bg-teal-300 transition-all duration-300"
+            className="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-teal-400 text-black font-semibold shadow-[0_0_30px_rgba(45,212,191,0.7)] hover:bg-teal-300 hover:scale-105 transition-all duration-300"
           >
             Kontakt aufnehmen
           </Link>
@@ -69,20 +75,22 @@ export default function MitgliedschaftPage() {
           <h2 className="text-2xl font-semibold text-teal-300 mb-2">
             Sponsoren
           </h2>
-          <p className="text-gray-300 mb-5">
-            Unterstütze unsere Vision langfristig als Partner und hilf uns, den
-            Verein professionell aufzubauen.
+
+          <p className="text-gray-300 mb-5 leading-relaxed">
+            Unterstütze unsere Vision langfristig als Partner und hilf uns,
+            den Verein professionell aufzubauen.
           </p>
+
           <Link
             href="/kontakt"
-            className="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-teal-400 text-black font-semibold shadow-[0_0_30px_rgba(45,212,191,0.7)] hover:bg-teal-300 transition-all duration-300"
+            className="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-teal-400 text-black font-semibold shadow-[0_0_30px_rgba(45,212,191,0.7)] hover:bg-teal-300 hover:scale-105 transition-all duration-300"
           >
             Partner werden
           </Link>
         </div>
       </motion.div>
 
-      {/* Push zur Kontaktaufnahme */}
+      {/* Unten: allgemeiner Kontakt */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
