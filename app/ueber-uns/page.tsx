@@ -4,67 +4,70 @@ import { motion } from "framer-motion";
 
 export default function AboutPage() {
   return (
-    <main className="relative min-h-screen bg-black text-white px-6 pt-32 pb-24 flex flex-col items-center overflow-hidden">
-      
-      {/* --- Background Effects --- */}
-      <div className="pointer-events-none select-none">
-        {/* Cinematic Light Flares */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1600px] h-[800px] opacity-20 bg-[radial-gradient(circle_at_top,rgba(13,148,136,0.35),transparent_70%)] animate-pulse-slow"></div>
-        <div className="absolute top-40 right-0 w-[800px] h-[600px] opacity-[0.10] bg-[radial-gradient(circle,rgba(13,148,136,0.45),transparent_70%)] blur-3xl"></div>
+    <main className="relative min-h-screen bg-black text-white px-6 pt-32 pb-20 flex flex-col items-center">
 
-        {/* Subtle Grid */}
-        <div className="absolute inset-0 opacity-[0.04] bg-[url('/grid.png')] bg-repeat"></div>
+      {/* Grid Background */}
+      <div className="absolute inset-0 pointer-events-none opacity-20">
+        <div className="w-full h-full bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:48px_48px]"></div>
       </div>
 
-      {/* --- Heading --- */}
+      {/* Glow */}
+      <div
+        className="absolute top-40 w-[260px] h-[260px] rounded-full blur-[150px] opacity-40"
+        style={{
+          background: "radial-gradient(circle, rgba(13,148,136,0.6), transparent)"
+        }}
+      ></div>
+
+      {/* Title */}
       <motion.h1
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="text-5xl md:text-7xl font-bold text-center mb-16 tracking-tight"
+        className="text-5xl md:text-6xl font-bold text-center mb-12"
       >
-        Über <span className="text-mello">uns</span>
+        Über <span className="text-[#0d9488]">uns</span>
       </motion.h1>
 
-      {/* --- Content Card --- */}
+      {/* Textbox */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, delay: 0.25 }}
-        className="relative bg-black/60 border border-mello/40 backdrop-blur-xl rounded-3xl p-10 md:p-14 max-w-3xl leading-relaxed shadow-[0_0_35px_rgba(13,148,136,0.25)]"
+        transition={{ duration: 1, delay: 0.2 }}
+        className="relative bg-black/70 border border-[#0d9488]/30 backdrop-blur-md rounded-2xl p-8 md:p-12 max-w-3xl leading-relaxed shadow-[0_0_25px_rgba(13,148,136,0.15)]"
       >
         <p className="text-gray-300 mb-6">
-          Der <strong>FC Mello Wien</strong> ist Wiens jüngster Verein — entstanden aus einer Idee,
-          die größer ist als Fußball: Wir wollen Bewegung, Gemeinschaft und moderne Sportkultur
-          verbinden.
+          Der <strong>FC Mello Wien</strong> ist Wiens jüngster Verein – entstanden aus dem
+          Wunsch, etwas Neues aufzubauen. Etwas, das Bewegung, Gemeinschaft und eine moderne,
+          offene Sportkultur vereint.
         </p>
 
         <p className="text-gray-300 mb-6">
-          Gegründet wurde Mello von Freunden, die nach Wien gezogen sind und nicht nur einen Platz
-          zum Spielen gesucht haben — sondern eine Vision hatten: Einen urbanen, offenen Verein zu
-          schaffen, der neue Wege geht.
+          Gegründet wurde der Verein von Freunden, die nach Wien gezogen sind
+          und hier nicht nur Fußball spielen wollten, sondern eine Vision hatten:
+          Einen Verein zu schaffen, der jung, urban und zugänglich ist.
         </p>
 
         <p className="text-gray-300 mb-6">
-          Mello ist jung, energiegeladen und eigenständig. In den ersten Jahren stemmen wir fast alles selbst:
-          Organisation, Training, Social Media, Strukturaufbau. Ein kleines Team baut etwas Großes auf.
+          In den ersten Jahren übernehmen wir vieles selbst – Organisation, Trainings,
+          Social Media, Vereinsaufbau. Ein kleines Team von Freunden legt die Basis.
         </p>
 
         <p className="text-gray-300 mb-6">
-          Langfristig möchten wir ein moderner <strong>Multisportverein</strong> werden — mit Angeboten
-          für Kinder, Jugendliche und Erwachsene. Fußball, Basketball, Tennis und mehr sollen Teil der
-          Mello-Familie werden.
+          Langfristig möchten wir ein echter <strong>Multisportverein</strong> werden – mit
+          Angeboten für Kinder, Jugendliche und Erwachsene. Basketball, Tennis und andere
+          Sportarten werden folgen.
         </p>
 
         <p className="text-gray-300 mb-6">
-          Der <strong>FC Mello Wien</strong> ist ein gemeinnütziger Verein. Jeder Euro, den wir erhalten,
-          fließt zu 100% in den Sport — in Trainingsplätze, Material, Jugendarbeit und Infrastruktur.
+          Der <strong>FC Mello Wien</strong> ist ein eingetragener gemeinnütziger Verein.
+          Jeder Cent fließt zurück in den Sport und in den Aufbau des Vereins.
         </p>
 
-        <p className="text-gray-200 font-semibold text-lg mt-10 text-center">
-          Mello ist mehr als ein Verein.  
-          <span className="block text-mello text-2xl font-bold mt-2">
-            Es ist eine Bewegung.
+        <p className="text-gray-300 font-medium text-lg mt-8 text-center">
+          Mello ist mehr als ein Name.
+          <span className="block text-[#0d9488] text-xl font-semibold mt-2">
+            Es ist eine Bewegung. Und du kannst Teil davon sein.
           </span>
         </p>
       </motion.div>
