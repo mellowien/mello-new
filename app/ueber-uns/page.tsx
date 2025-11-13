@@ -13,9 +13,10 @@ export default function AboutPage() {
 
       {/* Glow */}
       <div
-        className="absolute top-40 w-[260px] h-[260px] rounded-full blur-[150px] opacity-40"
+        className="absolute top-40 w-[260px] h-[260px] rounded-full blur-[150px] opacity-50"
         style={{
-          background: "radial-gradient(circle, rgba(13,148,136,0.6), transparent)"
+          background:
+            "radial-gradient(circle, rgba(45,212,191,0.7), transparent)"
         }}
       ></div>
 
@@ -26,7 +27,7 @@ export default function AboutPage() {
         transition={{ duration: 0.8 }}
         className="text-5xl md:text-6xl font-bold text-center mb-12"
       >
-        Über <span className="text-[#0d9488]">uns</span>
+        Über <span className="text-teal-300">uns</span>
       </motion.h1>
 
       {/* Textbox */}
@@ -34,7 +35,7 @@ export default function AboutPage() {
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, delay: 0.2 }}
-        className="relative bg-black/70 border border-[#0d9488]/30 backdrop-blur-md rounded-2xl p-8 md:p-12 max-w-3xl leading-relaxed shadow-[0_0_25px_rgba(13,148,136,0.15)]"
+        className="relative bg-black/70 border border-teal-300/30 backdrop-blur-md rounded-2xl p-8 md:p-12 max-w-3xl leading-relaxed shadow-[0_0_25px_rgba(45,212,191,0.25)]"
       >
         <p className="text-gray-300 mb-6">
           Der <strong>FC Mello Wien</strong> ist Wiens jüngster Verein – entstanden aus dem
@@ -66,7 +67,7 @@ export default function AboutPage() {
 
         <p className="text-gray-300 font-medium text-lg mt-8 text-center">
           Mello ist mehr als ein Name.
-          <span className="block text-[#0d9488] text-xl font-semibold mt-2">
+          <span className="block text-teal-300 text-xl font-semibold mt-2">
             Es ist eine Bewegung. Und du kannst Teil davon sein.
           </span>
         </p>
