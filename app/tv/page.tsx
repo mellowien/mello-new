@@ -18,7 +18,7 @@ export default function MelloTVPage() {
       {/* Twitch Livestream */}
       <div className="w-full max-w-5xl aspect-video rounded-xl overflow-hidden border border-teal-300/40 shadow-[0_0_25px_rgba(45,212,191,0.3)] mb-14">
         <iframe
-          src="https://player.twitch.tv/?channel=mellowien&parent=localhost&parent=127.0.0.1&parent=mellowien.at"
+          src="https://player.twitch.tv/?channel=mellowien&parent=mellowien.at&parent=www.mellowien.at&parent=localhost&parent=127.0.0.1"
           height="100%"
           width="100%"
           allowFullScreen
