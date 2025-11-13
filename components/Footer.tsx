@@ -9,14 +9,20 @@ export default function Footer() {
       
       {/* Logo + Glow */}
       <div className="relative mb-8 flex items-center justify-center">
-        <div className="absolute w-[130px] h-[130px] rounded-full blur-[60px] bg-[#0d9488]/40 animate-pulse"></div>
+        <div className="absolute w-[130px] h-[130px] rounded-full blur-[60px] bg-teal-400/40 animate-pulse"></div>
 
         <Image
           src="/logo_footer.png"
           alt="FC Mello Wien Logo"
           width={95}
           height={95}
-          className="object-contain opacity-95 brightness-125 drop-shadow-[0_0_25px_rgba(13,148,136,0.7)] transition-all duration-700 hover:drop-shadow-[0_0_45px_rgba(13,148,136,0.9)] select-none pointer-events-none"
+          className="
+            object-contain opacity-95 brightness-125
+            drop-shadow-[0_0_25px_rgba(45,212,191,0.7)]
+            transition-all duration-700
+            hover:drop-shadow-[0_0_45px_rgba(45,212,191,0.9)]
+            select-none pointer-events-none
+          "
           priority
         />
       </div>
@@ -27,14 +33,13 @@ export default function Footer() {
           { label: "Über uns", href: "/ueber-uns" },
           { label: "Team", href: "/team" },
           { label: "Mitgliedschaft", href: "/mitgliedschaft" },
-          { label: "Minigames", href: "/minigames" },
           { label: "Kontakt", href: "/kontakt" },
           { label: "Impressum", href: "/impressum" },
         ].map(({ label, href }) => (
           <Link
             key={href}
             href={href}
-            className="hover:text-[#0d9488] transition-colors duration-300"
+            className="hover:text-teal-300 transition-colors duration-300"
           >
             {label}
           </Link>
@@ -62,10 +67,15 @@ export default function Footer() {
             rel="noopener noreferrer"
             className="group relative transition-all duration-500 hover:scale-110"
           >
-            <span className="absolute inset-0 rounded-full blur-lg opacity-0 group-hover:opacity-70 group-hover:blur-xl bg-[rgba(13,148,136,0.6)] transition-all duration-500"></span>
+            <span className="
+              absolute inset-0 rounded-full blur-lg opacity-0 
+              group-hover:opacity-70 group-hover:blur-xl 
+              bg-[rgba(45,212,191,0.6)]
+              transition-all duration-500
+            "></span>
 
             <i
-              className={`fab fa-${icon} relative z-10 text-xl text-gray-400 group-hover:text-[#0d9488] transition-all duration-500`}
+              className={`fab fa-${icon} relative z-10 text-xl text-gray-400 group-hover:text-teal-300 transition-all duration-500`}
             ></i>
           </Link>
         ))}
