@@ -21,12 +21,13 @@ export default function Home() {
         {/* Subtiles dunkles Vignette */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_black_70%)] opacity-90" />
 
-        {/* ganz feine Partikel-Ebene */}
+        {/* feine Partikel */}
         <div className="absolute inset-0 opacity-[0.22] mix-blend-screen noise-layer" />
       </div>
 
       {/* Content */}
       <div className="relative z-10 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-[1.4fr_1fr] gap-12 items-center">
+        
         {/* Textblock */}
         <motion.section
           initial={{ opacity: 0, y: 30 }}
@@ -38,21 +39,21 @@ export default function Home() {
             FUTURE SPORT CLUB • WIEN
           </p>
 
+          {/* TITEL — OPTION 3 */}
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold mb-5 leading-tight">
-            Wir sind{" "}
-            <span className="text-teal-300">
-              Mello.
-            </span>
+            Wir sind <span className="text-teal-300">Mello.</span>
             <br />
-            Eine neue Ära für Wien.
+            Ein Verein, der verbindet.
           </h1>
 
+          {/* VARIANTE B */}
+          <p className="text-gray-300/90 mb-6 text-base md:text-lg leading-relaxed">
+            Wir schaffen eine sportliche Heimat für Spieler, Mitglieder
+            und alle, die etwas Neues in Wien mitgestalten wollen.
+          </p>
+
           <p className="text-gray-300/90 mb-8 text-base md:text-lg leading-relaxed">
-            Nicht nur ein Verein, sondern eine Bewegung.{" "}
-            <span className="text-gray-100">
-              Football, Community, Culture
-            </span>{" "}
-            – für eine Generation, die mehr will als nur 90 Minuten.
+            Für Spieler, Unterstützer und Partner, die gemeinsam etwas aufbauen wollen.
           </p>
 
           {/* CTAs */}
@@ -65,21 +66,21 @@ export default function Home() {
             </Link>
 
             <Link
-              href="/about"
+              href="/ueber-uns"
               className="inline-flex items-center justify-center rounded-full border border-teal-300/60 text-teal-100 px-7 py-2.5 text-sm md:text-base hover:bg-teal-300/10 hover:border-teal-300 transition-all duration-300"
             >
               Mehr über uns
             </Link>
           </div>
 
-          {/* kleine Subline */}
+          {/* Subline */}
           <p className="mt-5 text-xs md:text-sm text-gray-400/90">
             Erste Mitglieder prägen die Geschichte.{" "}
             <span className="text-teal-300/90">Du bist früh genug.</span>
           </p>
         </motion.section>
 
-        {/* Logo + Cinematic Glow rechts */}
+        {/* Logo + Glow */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -87,13 +88,14 @@ export default function Home() {
           className="flex justify-center md:justify-end"
         >
           <div className="relative group flex items-center justify-center">
-            {/* starker Glow */}
+            
+            {/* Glow */}
             <div className="absolute w-[260px] h-[260px] rounded-full blur-[80px] bg-[radial-gradient(circle,_rgba(34,211,238,0.65)_0%,_rgba(13,148,136,0.25)_55%,_transparent_75%)] opacity-90 animate-softPulseSlow group-hover:blur-[95px] transition-all duration-700" />
 
-            {/* vertikaler Lichtstreifen */}
+            {/* Lichtstreifen */}
             <div className="absolute w-[3px] h-[220px] bg-gradient-to-b from-transparent via-teal-200/80 to-transparent blur-[1px] opacity-75 group-hover:opacity-100 animate-lightSweep" />
 
-            {/* Logo-Container */}
+            {/* Logo */}
             <div className="relative rounded-full border border-teal-300/40 bg-black/40 backdrop-blur-xl p-3 shadow-[0_0_25px_rgba(45,212,191,0.7)] group-hover:shadow-[0_0_40px_rgba(45,212,191,1)] transition-shadow duration-500">
               <Image
                 src="/logo.png"
