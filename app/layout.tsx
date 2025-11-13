@@ -1,17 +1,17 @@
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Montserrat } from "next/font/google";
+import { Poppins } from "next/font/google";
 
 export const metadata = {
   title: "FC Mello Wien",
   description: "Wiens jüngster Verein",
 };
 
-// Montserrat Schrift laden
-const montserrat = Montserrat({
+// Poppins Schriftart laden
+const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"], // verschiedene Stärken
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export default function RootLayout({
@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="de">
       <head>
-        {/* FontAwesome für Social Icons */}
+        {/* FontAwesome */}
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
@@ -30,15 +30,14 @@ export default function RootLayout({
       </head>
 
       <body
-        className={`${montserrat.className} bg-black text-white flex flex-col min-h-screen`}
+        className={`${poppins.className} bg-black text-white flex flex-col min-h-screen`}
       >
-        {/* Header global */}
         <Header />
 
-        {/* Seiteninhalt */}
-        <main className="flex-grow pt-24">{children}</main>
+        <main className="flex-grow pt-24">
+          {children}
+        </main>
 
-        {/* Footer global */}
         <Footer />
       </body>
     </html>
