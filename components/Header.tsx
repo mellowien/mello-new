@@ -54,7 +54,7 @@ export default function Header() {
           <Link
             href="/tv"
             className="
-              ml-4 bg-[#0d9488] text-black px-4 py-1.5 rounded-full font-semibold
+              ml-4 bg-[#0d9488] text-black px-4 py-1.5 rounded-full font-medium
               hover:bg-[#0b7d71] hover:scale-105 transition-all
               shadow-[0_0_15px_rgba(13,148,136,0.6)]
             "
@@ -89,7 +89,7 @@ export default function Header() {
           <Link
             href="/tv"
             className="
-              mx-auto mt-2 bg-[#0d9488] text-black px-6 py-2 rounded-full font-semibold
+              mx-auto mt-2 bg-[#0d9488] text-black px-6 py-2 rounded-full font-medium
               hover:bg-[#0b7d71] transition-all shadow-[0_0_10px_rgba(13,148,136,0.6)]
             "
             onClick={() => setMenuOpen(false)}
