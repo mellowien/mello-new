@@ -6,36 +6,30 @@ import { motion } from "framer-motion";
 
 export default function Home() {
   return (
-    <main className="relative min-h-[calc(100vh-6rem)] overflow-hidden bg-black text-white flex items-center justify-center px-6">
-      {/* Cinematic Background Layer */}
+    <main className="relative min-h-screen overflow-hidden bg-black text-white flex items-center justify-center px-6">
+      {/* Background Layer */}
       <div className="pointer-events-none absolute inset-0">
-        {/* Oberer Lichtfächer */}
-        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] bg-[radial-gradient(circle_at_top,_rgba(13,148,136,0.55),_transparent_60%)] opacity-70 mix-blend-screen animate-softPulse" />
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] md:w-[1200px] h-[500px] md:h-[600px] bg-[radial-gradient(circle_at_top,_rgba(13,148,136,0.55),_transparent_60%)] opacity-70 mix-blend-screen animate-softPulse" />
 
-        {/* Diagonaler Lichtfächer links */}
-        <div className="absolute left-[-20%] top-[10%] w-[700px] h-[500px] rotate-[-18deg] bg-[radial-gradient(circle_at_center,_rgba(45,212,191,0.45),_transparent_65%)] opacity-60 mix-blend-screen animate-slowDrift" />
+        <div className="absolute left-[-30%] top-[10%] w-[500px] md:w-[700px] h-[400px] md:h-[500px] rotate-[-18deg] bg-[radial-gradient(circle_at_center,_rgba(45,212,191,0.4),_transparent_65%)] opacity-50 md:opacity-60 mix-blend-screen animate-slowDrift" />
 
-        {/* Diagonaler Lichtfächer rechts */}
-        <div className="absolute right-[-15%] bottom-[-10%] w-[700px] h-[500px] rotate-[16deg] bg-[radial-gradient(circle_at_center,_rgba(56,189,248,0.4),_transparent_65%)] opacity-55 mix-blend-screen animate-slowDriftReverse" />
+        <div className="absolute right-[-25%] bottom-[-10%] w-[500px] md:w-[700px] h-[400px] md:h-[500px] rotate-[16deg] bg-[radial-gradient(circle_at_center,_rgba(56,189,248,0.35),_transparent_65%)] opacity-45 md:opacity-55 mix-blend-screen animate-slowDriftReverse" />
 
-        {/* Subtiles dunkles Vignette */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_black_70%)] opacity-90" />
 
-        {/* feine Partikel */}
-        <div className="absolute inset-0 opacity-[0.22] mix-blend-screen noise-layer" />
+        <div className="absolute inset-0 opacity-[0.18] mix-blend-screen noise-layer" />
       </div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-[1.4fr_1fr] gap-12 items-center">
-        
-        {/* Textblock */}
+      <div className="relative z-10 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-[1.4fr_1fr] gap-10 md:gap-12 items-center">
+
+        {/* Text */}
         <motion.section
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9 }}
           className="text-center md:text-left"
         >
-          {/* NEU: FC Mello Wien • 2025 */}
           <p className="uppercase tracking-[0.35em] text-xs md:text-sm text-teal-300/80 mb-4">
             FC MELLO WIEN • 2025
           </p>
@@ -46,7 +40,7 @@ export default function Home() {
             Ein Verein, der verbindet.
           </h1>
 
-          <p className="text-gray-300/90 mb-6 text-base md:text-lg leading-relaxed">
+          <p className="text-gray-300/90 mb-4 text-base md:text-lg leading-relaxed">
             Wir schaffen eine sportliche Heimat für Spieler, Mitglieder
             und alle, die etwas Neues in Wien mitgestalten wollen.
           </p>
@@ -55,11 +49,10 @@ export default function Home() {
             Für Spieler, Unterstützer und Partner, die gemeinsam etwas aufbauen wollen.
           </p>
 
-          {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
             <Link
               href="/mitgliedschaft"
-              className="inline-flex items-center justify-center rounded-full bg-teal-400 text-black font-semibold px-7 py-2.5 text-sm md:text-base shadow-[0_0_35px_rgba(45,212,191,0.8)] hover:shadow-[0_0_45px_rgba(45,212,191,1)] hover:bg-teal-300 transition-all duration-300 hover:-translate-y-[1px]"
+              className="inline-flex items-center justify-center rounded-full bg-teal-400 text-black font-semibold px-7 py-2.5 text-sm md:text-base shadow-[0_0_35px_rgba(45,212,191,0.8)] hover:shadow-[0_0_45px_rgba(45,212,191,1)] hover:bg-teal-300 transition-all duration-300"
             >
               Jetzt Teil von Mello werden
             </Link>
@@ -72,35 +65,31 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Subline */}
           <p className="mt-5 text-xs md:text-sm text-gray-400/90">
             Erste Mitglieder prägen die Geschichte.{" "}
             <span className="text-teal-300/90">Du bist früh genug.</span>
           </p>
         </motion.section>
 
-        {/* Logo + Glow */}
+        {/* Logo */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.8, y: 20 }}
+          initial={{ opacity: 0, scale: 0.85, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 1.1, delay: 0.15 }}
-          className="flex justify-center md:justify-end"
+          className="flex justify-center md:justify-end mt-6 md:mt-0"
         >
           <div className="relative group flex items-center justify-center">
-            
-            {/* Glow */}
-            <div className="absolute w-[260px] h-[260px] rounded-full blur-[80px] bg-[radial-gradient(circle,_rgba(34,211,238,0.65)_0%,_rgba(13,148,136,0.25)_55%,_transparent_75%)] opacity-90 animate-softPulseSlow group-hover:blur-[95px] transition-all duration-700" />
 
-            {/* Lichtstreifen */}
-            <div className="absolute w-[3px] h-[220px] bg-gradient-to-b from-transparent via-teal-200/80 to-transparent blur-[1px] opacity-75 group-hover:opacity-100 animate-lightSweep" />
+            <div className="absolute w-[200px] md:w-[260px] h-[200px] md:h-[260px] rounded-full blur-[70px] md:blur-[80px] bg-[radial-gradient(circle,_rgba(34,211,238,0.6)_0%,_rgba(13,148,136,0.25)_55%,_transparent_75%)] opacity-85 animate-softPulseSlow" />
 
-            {/* Logo */}
-            <div className="relative rounded-full border border-teal-300/40 bg-black/40 backdrop-blur-xl p-3 shadow-[0_0_25px_rgba(45,212,191,0.7)] group-hover:shadow-[0_0_40px_rgba(45,212,191,1)] transition-shadow duration-500">
+            <div className="absolute w-[2px] md:w-[3px] h-[160px] md:h-[220px] bg-gradient-to-b from-transparent via-teal-200/70 to-transparent blur-[1px] opacity-70 animate-lightSweep" />
+
+            <div className="relative rounded-full border border-teal-300/40 bg-black/40 backdrop-blur-xl p-3 shadow-[0_0_22px_rgba(45,212,191,0.7)]">
               <Image
                 src="/logo.png"
                 alt="Mello Logo"
-                width={170}
-                height={170}
+                width={150}
+                height={150}
                 className="rounded-full select-none pointer-events-none drop-shadow-[0_0_18px_rgba(45,212,191,0.9)]"
                 priority
               />
