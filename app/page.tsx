@@ -8,13 +8,40 @@ export default function Home() {
   return (
     <main className="relative min-h-screen overflow-hidden bg-black text-white flex items-center justify-center px-6 pt-10 pb-20 md:pt-0">
 
-      {/* Background Effects */}
+      {/* Background Glow Layers */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_black_70%)] opacity-90" />
+
+        {/* TOP glow */}
+        <div
+          className="absolute -top-32 left-1/2 -translate-x-1/2 w-[900px] h-[500px] 
+          bg-[radial-gradient(circle_at_top,_rgba(13,148,136,0.45),_transparent_65%)]
+          opacity-70 md:opacity-80 mix-blend-screen"
+        />
+
+        {/* LEFT diagonal glow (Desktop only) */}
+        <div
+          className="hidden md:block absolute left-[-20%] top-[5%] w-[650px] h-[450px]
+          rotate-[-18deg]
+          bg-[radial-gradient(circle,_rgba(45,212,191,0.35),_transparent_70%)]
+          opacity-60 mix-blend-screen"
+        />
+
+        {/* RIGHT diagonal glow (Desktop only) */}
+        <div
+          className="hidden md:block absolute right-[-20%] bottom-[-10%] w-[650px] h-[450px]
+          rotate-[15deg]
+          bg-[radial-gradient(circle,_rgba(56,189,248,0.35),_transparent_70%)]
+          opacity-60 mix-blend-screen"
+        />
+
+        {/* Vignette */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle,_transparent_0%,_black_70%)] opacity-90" />
+
+        {/* Noise */}
         <div className="absolute inset-0 opacity-[0.22] mix-blend-screen noise-layer" />
       </div>
 
-      {/* CONTENT WRAPPER */}
+      {/* CONTENT */}
       <div className="relative z-10 max-w-5xl mx-auto flex flex-col md:grid md:grid-cols-[1.4fr_1fr] gap-12 items-center">
 
         {/* TEXTBLOCK */}
@@ -24,7 +51,6 @@ export default function Home() {
           transition={{ duration: 0.9 }}
           className="text-center md:text-left"
         >
-          {/* UPDATED LINE */}
           <p className="uppercase tracking-[0.35em] text-xs md:text-sm text-teal-300/80 mb-4">
             FC MELLO WIEN • 2025
           </p>
@@ -44,10 +70,11 @@ export default function Home() {
             Für Spieler, Unterstützer und Partner, die gemeinsam etwas aufbauen wollen.
           </p>
 
+          {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
             <Link
               href="/mitgliedschaft"
-              className="inline-flex items-center justify-center rounded-full bg-teal-400 text-black font-semibold px-7 py-2.5 text-sm md:text-base shadow-[0_0_35px_rgba(45,212,191,0.8)] hover:bg-teal-300 transition-all duration-300"
+              className="inline-flex items-center justify-center rounded-full bg-teal-400 text-black font-semibold px-7 py-2.5 text-sm md:text-base shadow-[0_0_35px_rgba(45,212,191,0.7)] hover:bg-teal-300 transition-all duration-300"
             >
               Jetzt Teil von Mello werden
             </Link>
@@ -75,10 +102,15 @@ export default function Home() {
         >
           <div className="relative flex items-center justify-center">
 
-            {/* Glow (Mobile kleiner) */}
-            <div className="absolute w-[180px] h-[180px] md:w-[260px] md:h-[260px] rounded-full blur-[70px] bg-[radial-gradient(circle,_rgba(34,211,238,0.55)_0%,_rgba(13,148,136,0.2)_55%,_transparent_75%)] opacity-80" />
+            {/* LOGO GLOW */}
+            <div
+              className="absolute w-[180px] h-[180px] md:w-[260px] md:h-[260px]
+              rounded-full blur-[70px]
+              bg-[radial-gradient(circle,_rgba(34,211,238,0.55)_0%,_rgba(13,148,136,0.25)_55%,_transparent_75%)]
+              opacity-80"
+            />
 
-            {/* Logo */}
+            {/* LOGO */}
             <div className="relative rounded-full border border-teal-300/40 bg-black/40 backdrop-blur-xl p-3 shadow-[0_0_25px_rgba(45,212,191,0.7)]">
               <Image
                 src="/logo.png"
