@@ -10,34 +10,16 @@ export default function Home() {
 
       {/* Background Glow Layers */}
       <div className="pointer-events-none absolute inset-0">
-
-        {/* TOP glow */}
         <div
-          className="absolute -top-32 left-1/2 -translate-x-1/2 w-[900px] h-[500px] 
-          bg-[radial-gradient(circle_at_top,_rgba(13,148,136,0.45),_transparent_65%)]
-          opacity-70 md:opacity-80 mix-blend-screen"
+          className="absolute -top-32 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-[radial-gradient(circle_at_top,_rgba(13,148,136,0.45),_transparent_65%)] opacity-70 md:opacity-80 mix-blend-screen"
         />
-
-        {/* LEFT diagonal glow (Desktop only) */}
         <div
-          className="hidden md:block absolute left-[-20%] top-[5%] w-[650px] h-[450px]
-          rotate-[-18deg]
-          bg-[radial-gradient(circle,_rgba(45,212,191,0.35),_transparent_70%)]
-          opacity-60 mix-blend-screen"
+          className="hidden md:block absolute left-[-20%] top-[5%] w-[650px] h-[450px] rotate-[-18deg] bg-[radial-gradient(circle,_rgba(45,212,191,0.35),_transparent_70%)] opacity-60 mix-blend-screen"
         />
-
-        {/* RIGHT diagonal glow (Desktop only) */}
         <div
-          className="hidden md:block absolute right-[-20%] bottom-[-10%] w-[650px] h-[450px]
-          rotate-[15deg]
-          bg-[radial-gradient(circle,_rgba(56,189,248,0.35),_transparent_70%)]
-          opacity-60 mix-blend-screen"
+          className="hidden md:block absolute right-[-20%] bottom-[-10%] w-[650px] h-[450px] rotate-[15deg] bg-[radial-gradient(circle,_rgba(56,189,248,0.35),_transparent_70%)] opacity-60 mix-blend-screen"
         />
-
-        {/* Vignette */}
         <div className="absolute inset-0 bg-[radial-gradient(circle,_transparent_0%,_black_70%)] opacity-90" />
-
-        {/* Noise */}
         <div className="absolute inset-0 opacity-[0.22] mix-blend-screen noise-layer" />
       </div>
 
@@ -56,18 +38,19 @@ export default function Home() {
           </p>
 
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold mb-5 leading-tight">
-            Wir sind <span className="text-teal-300">Mello.</span>
-            <br />
-            Ein Verein, der verbindet.
+            Mello Wien – <span className="text-teal-300">Der junge Fußballverein</span>
+            <br />für eine neue Generation.
           </h1>
 
           <p className="text-gray-300/90 mb-4 text-base md:text-lg leading-relaxed">
-            Wir schaffen eine sportliche Heimat für Spieler, Mitglieder
-            und alle, die etwas Neues in Wien mitgestalten wollen.
+            Wir sind Mello. Ein Verein, der moderner denkt: offen, gemeinschaftlich,
+            ambitioniert. Ein Club für alle, die Fußball lieben – und gleichzeitig
+            etwas Neues in Wien mitgestalten wollen.
           </p>
 
           <p className="text-gray-300/90 mb-8 text-base md:text-lg leading-relaxed">
-            Für Spieler, Unterstützer und Partner, die gemeinsam etwas aufbauen wollen.
+            Bei uns findest du nicht nur ein Team, sondern eine Community, die zusammen
+            trainiert, zusammen wächst und eine neue Fußballkultur prägt.
           </p>
 
           {/* CTAs */}
@@ -88,8 +71,8 @@ export default function Home() {
           </div>
 
           <p className="mt-6 text-xs md:text-sm text-gray-400/90">
-            Erste Mitglieder prägen die Geschichte.{" "}
-            <span className="text-teal-300/90">Du bist früh genug.</span>
+            Die erste Generation schreibt Geschichte.
+            <span className="text-teal-300/90"> Sei von Anfang an dabei.</span>
           </p>
         </motion.section>
 
@@ -101,16 +84,10 @@ export default function Home() {
           className="flex justify-center md:justify-end w-full"
         >
           <div className="relative flex items-center justify-center">
-
-            {/* LOGO GLOW */}
             <div
-              className="absolute w-[180px] h-[180px] md:w-[260px] md:h-[260px]
-              rounded-full blur-[70px]
-              bg-[radial-gradient(circle,_rgba(34,211,238,0.55)_0%,_rgba(13,148,136,0.25)_55%,_transparent_75%)]
-              opacity-80"
+              className="absolute w-[180px] h-[180px] md:w-[260px] md:h-[260px] rounded-full blur-[70px] bg-[radial-gradient(circle,_rgba(34,211,238,0.55)_0%,_rgba(13,148,136,0.25)_55%,_transparent_75%)] opacity-80"
             />
 
-            {/* LOGO */}
             <div className="relative rounded-full border border-teal-300/40 bg-black/40 backdrop-blur-xl p-3 shadow-[0_0_25px_rgba(45,212,191,0.7)]">
               <Image
                 src="/logo.png"
@@ -123,7 +100,6 @@ export default function Home() {
             </div>
           </div>
         </motion.div>
-
       </div>
     </main>
   );
