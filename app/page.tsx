@@ -38,7 +38,7 @@ export default function Home() {
           </p>
 
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold mb-5 leading-tight">
-            Mello Wien – <span className="text-teal-300">Der junge Fußballverein</span>
+            Mello Wien – <span className="text-teal-300">Der Fußballverein</span>
             <br />für eine neue Generation.
           </h1>
 
