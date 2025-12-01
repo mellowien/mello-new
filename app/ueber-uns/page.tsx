@@ -37,36 +37,38 @@ export default function AboutPage() {
         className="relative bg-black/70 border border-teal-300/40 backdrop-blur-md rounded-2xl p-8 md:p-12 max-w-3xl leading-relaxed shadow-[0_0_25px_rgba(45,212,191,0.25)]"
       >
         <p className="text-gray-300 mb-6">
-          Der <strong>FC Mello Wien</strong> ist Wiens jüngster Verein – entstanden aus dem
-          Wunsch, etwas Neues aufzubauen. Etwas, das Bewegung, Gemeinschaft und eine moderne,
-          offene Sportkultur vereint.
+          <strong>Mello Wien</strong> ist ein moderner Fußballverein – geschaffen für eine neue
+          Generation von Spielern, Fans und Menschen, die Sport anders leben wollen. Wir verbinden
+          Fußball mit Gemeinschaft, urbaner Kultur und einem klaren, zeitgemäßen Zugang zum Vereinsleben.
         </p>
 
         <p className="text-gray-300 mb-6">
-          Was als einfache Idee begann – ein eigener Verein mit Charakter – wurde zu einem
-          langfristigen Projekt. Wir wollen Strukturen schaffen, die modern, zugänglich und
-          geprägt von einer neuen Generation an Sportkultur sind.
+          Wir haben Mello gegründet, weil etwas gefehlt hat: ein Verein, der offen denkt,
+          Gemeinschaft lebt und sportliche Ambition mit einer modernen Identität verbindet. 
+          Ein Club, der nicht in alten Mustern steckt, sondern Fußball neu interpretiert.
         </p>
 
         <p className="text-gray-300 mb-6">
-          In den ersten Jahren übernehmen wir <strong>alles selbst</strong> – Organisation,
-          Trainings, Social Media und den gesamten Vereinsaufbau. Ein kleines Team legt damit
-          die Basis für etwas Größeres.
+          Bei Mello stehen unsere Werte im Mittelpunkt: Gemeinschaft, Ambition, Entwicklung,
+          Offenheit und ein urbaner Spirit, der uns und die Stadt Wien verbindet. Wir wollen
+          einen Raum schaffen, in dem jeder wachsen kann – sportlich und menschlich.
         </p>
 
         <p className="text-gray-300 mb-6">
-          Langfristig möchten wir ein echter <strong>Multisportverein</strong> werden – mit
-          Angeboten für Kinder, Jugendliche und Erwachsene. Basketball, Tennis und andere
-          Sportarten werden folgen.
+          Unsere Vision geht weit über Fußball hinaus. Schritt für Schritt bauen wir einen
+          <strong> modernen Mehrsparten-Sportverein</strong> auf – mit langfristigen Angeboten
+          für Kinder, Jugendliche und Erwachsene. Fußball ist unser Startpunkt, aber nicht unser Ziel.
         </p>
 
         <p className="text-gray-300 mb-6">
-          Der <strong>FC Mello Wien</strong> ist ein eingetragener gemeinnütziger Verein.
-          Jeder Cent fließt zurück in den Sport und in den Aufbau des Vereins.
+          Die ersten Jahre legen wir selbst Hand an: Organisation, Trainings, Social Media,
+          Vereinsaufbau. Das Fundament entsteht durch Menschen, die an etwas Größeres glauben.
+          Jeder Cent fließt zurück in den Sport – Mello Wien ist ein eingetragener,
+          gemeinnütziger Verein.
         </p>
 
         <p className="text-gray-300 font-medium text-lg mt-8 text-center">
-          Mello ist mehr als ein Name.
+          Mello ist mehr als ein Verein.
           <span className="block text-teal-300 text-xl font-semibold mt-2">
             Es ist eine Bewegung. Und du kannst Teil davon sein.
           </span>
@@ -75,4 +77,3 @@ export default function AboutPage() {
     </main>
   );
 }
-
