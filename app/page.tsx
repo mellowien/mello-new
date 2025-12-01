@@ -37,9 +37,9 @@ export default function Home() {
             FC MELLO WIEN • 2025
           </p>
 
+          {/* ⭐ Professionelle Headline */}
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold mb-5 leading-tight">
-            Mello Wien – <span className="text-teal-300">Der Fußballverein</span>
-            <br />für eine neue Generation.
+            Mello Wien – <span className="text-teal-300">Der Fußballverein für eine neue Generation.</span>
           </h1>
 
           <p className="text-gray-300/90 mb-4 text-base md:text-lg leading-relaxed">
