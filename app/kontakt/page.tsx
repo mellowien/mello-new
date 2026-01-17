@@ -2,13 +2,13 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
 
 export default function Kontakt() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
+    website: "", // honeypot
   });
 
   const [showPopup, setShowPopup] = useState(false);
@@ -24,23 +24,37 @@ export default function Kontakt() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // → Speichern in Supabase
-    const { error } = await supabase.from("messages").insert([
-      {
-        name: formData.name,
-        email: formData.email,
-        message: formData.message,
-      },
-    ]);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          website: formData.website, // honeypot
+        }),
+      });
 
-    setIsSubmitting(false);
+      const data = await res.json().catch(() => ({}));
 
-    if (!error) {
+      if (!res.ok) {
+        console.error("CONTACT API ERROR:", data);
+        alert(
+          `❌ Es gab ein Problem beim Senden.${
+            data?.error ? `\n\n${data.error}` : ""
+          }`
+        );
+        return;
+      }
+
       setShowPopup(true);
-      setFormData({ name: "", email: "", message: "" });
-    } else {
-      console.error("SUPABASE ERROR:", error);
-      alert("❌ Es gab ein Problem beim Senden. Bitte versuch es nochmal.");
+      setFormData({ name: "", email: "", message: "", website: "" });
+    } catch (err) {
+      console.error("NETWORK ERROR:", err);
+      alert("❌ Netzwerkfehler. Bitte versuch es nochmal.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -67,7 +81,8 @@ export default function Kontakt() {
         transition={{ delay: 0.4 }}
         className="text-gray-400 mb-10 text-center max-w-lg"
       >
-        Fragen, Ideen oder Kooperationen?  
+        Fragen, Ideen oder Kooperationen?
+        <br />
         Wir freuen uns über jede Nachricht.
       </motion.p>
 
@@ -78,13 +93,24 @@ export default function Kontakt() {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}
         className="
-          w-full max-w-lg 
-          bg-black/70 border border-teal-300/30 
-          backdrop-blur-md rounded-2xl 
-          p-6 md:p-8 
+          w-full max-w-lg
+          bg-black/70 border border-teal-300/30
+          backdrop-blur-md rounded-2xl
+          p-6 md:p-8
           shadow-[0_0_20px_rgba(45,212,191,0.2)]
         "
       >
+        {/* Honeypot (hidden) */}
+        <input
+          type="text"
+          name="website"
+          value={formData.website}
+          onChange={handleChange}
+          autoComplete="off"
+          tabIndex={-1}
+          className="hidden"
+        />
+
         <div className="mb-5">
           <label htmlFor="name" className="block text-gray-300 mb-2">
             Name
@@ -97,10 +123,10 @@ export default function Kontakt() {
             onChange={handleChange}
             required
             className="
-              w-full px-4 py-2 
-              bg-black border border-teal-300/30 
-              rounded-lg text-gray-200 
-              focus:outline-none focus:border-teal-300 
+              w-full px-4 py-2
+              bg-black border border-teal-300/30
+              rounded-lg text-gray-200
+              focus:outline-none focus:border-teal-300
               transition
             "
           />
@@ -118,10 +144,10 @@ export default function Kontakt() {
             onChange={handleChange}
             required
             className="
-              w-full px-4 py-2 
-              bg-black border border-teal-300/30 
-              rounded-lg text-gray-200 
-              focus:outline-none focus:border-teal-300 
+              w-full px-4 py-2
+              bg-black border border-teal-300/30
+              rounded-lg text-gray-200
+              focus:outline-none focus:border-teal-300
               transition
             "
           />
@@ -139,10 +165,10 @@ export default function Kontakt() {
             onChange={handleChange}
             required
             className="
-              w-full px-4 py-2 
-              bg-black border border-teal-300/30 
-              rounded-lg text-gray-200 
-              focus:outline-none focus:border-teal-300 
+              w-full px-4 py-2
+              bg-black border border-teal-300/30
+              rounded-lg text-gray-200
+              focus:outline-none focus:border-teal-300
               transition resize-none
             "
           ></textarea>
@@ -152,13 +178,13 @@ export default function Kontakt() {
           type="submit"
           disabled={isSubmitting}
           className="
-            w-full 
-            bg-teal-400 text-black 
-            font-semibold rounded-full 
-            py-2 text-lg 
-            transition-all duration-300 
-            hover:scale-105 hover:bg-teal-300 
-            hover:shadow-[0_0_20px_rgba(45,212,191,0.6)] 
+            w-full
+            bg-teal-400 text-black
+            font-semibold rounded-full
+            py-2 text-lg
+            transition-all duration-300
+            hover:scale-105 hover:bg-teal-300
+            hover:shadow-[0_0_20px_rgba(45,212,191,0.6)]
             disabled:opacity-50
           "
         >
@@ -182,9 +208,9 @@ export default function Kontakt() {
               exit={{ scale: 0.85, opacity: 0 }}
               transition={{ duration: 0.25 }}
               className="
-                bg-black border border-teal-300/40 
-                rounded-2xl p-8 text-center 
-                shadow-[0_0_25px_rgba(45,212,191,0.8)] 
+                bg-black border border-teal-300/40
+                rounded-2xl p-8 text-center
+                shadow-[0_0_25px_rgba(45,212,191,0.8)]
                 max-w-sm
               "
               onClick={(e) => e.stopPropagation()}
@@ -198,9 +224,9 @@ export default function Kontakt() {
               <button
                 onClick={() => setShowPopup(false)}
                 className="
-                  bg-teal-400 text-black 
-                  font-semibold rounded-full 
-                  px-6 py-2 
+                  bg-teal-400 text-black
+                  font-semibold rounded-full
+                  px-6 py-2
                   hover:scale-105 transition-all
                 "
               >
