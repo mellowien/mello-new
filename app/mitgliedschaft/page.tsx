@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function MitgliedschaftPage() {
   return (
-    <main className="flex flex-col items-center justify-start min-h-screen bg-black text-white px-6 pt-12 pb-16">
+    <main className="flex flex-col items-center justify-start min-h-screen bg-black text-white px-6 pt-32 pb-16">
       <motion.h1
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
