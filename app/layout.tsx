@@ -34,7 +34,7 @@ export default function RootLayout({
       >
         <Header />
 
-        <main className="flex-grow pt-24">
+        <main className="flex-grow bg-black">
           {children}
         </main>
 
