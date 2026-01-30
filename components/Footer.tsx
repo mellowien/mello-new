@@ -5,8 +5,14 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="mt-20 flex flex-col items-center text-center text-gray-500 text-sm pb-10 border-t border-zinc-900 pt-10">
-      
+    <footer
+      className="
+        mt-20 flex flex-col items-center text-center
+        bg-black text-gray-500 text-sm
+        pb-10 pt-10
+        border-t border-zinc-900
+      "
+    >
       {/* Logo + Glow */}
       <div className="relative mb-8 flex items-center justify-center">
         <div className="absolute w-[130px] h-[130px] rounded-full blur-[60px] bg-teal-400/40 animate-pulse"></div>
@@ -67,12 +73,14 @@ export default function Footer() {
             rel="noopener noreferrer"
             className="group relative transition-all duration-500 hover:scale-110"
           >
-            <span className="
-              absolute inset-0 rounded-full blur-lg opacity-0 
-              group-hover:opacity-70 group-hover:blur-xl 
-              bg-[rgba(45,212,191,0.6)]
-              transition-all duration-500
-            "></span>
+            <span
+              className="
+                absolute inset-0 rounded-full blur-lg opacity-0
+                group-hover:opacity-70 group-hover:blur-xl
+                bg-[rgba(45,212,191,0.6)]
+                transition-all duration-500
+              "
+            ></span>
 
             <i
               className={`fab fa-${icon} relative z-10 text-xl text-gray-400 group-hover:text-teal-300 transition-all duration-500`}

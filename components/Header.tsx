@@ -17,14 +17,14 @@ export default function Header() {
   return (
     <header
       className="
-        fixed top-0 left-0 w-full z-50 
+        fixed top-0 left-0 w-full z-50
         bg-black/70 backdrop-blur-md
         border-b border-teal-300/30
         shadow-[0_0_25px_rgba(45,212,191,0.35)]
+        text-white
       "
     >
       <div className="mx-auto flex items-center justify-between px-6 py-3 max-w-7xl">
-
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <Image
@@ -33,9 +33,9 @@ export default function Header() {
             width={45}
             height={45}
             className="
-              rounded-full 
-              hover:scale-110 
-              transition-transform duration-300 
+              rounded-full
+              hover:scale-110
+              transition-transform duration-300
               drop-shadow-[0_0_15px_rgba(45,212,191,0.7)]
             "
           />
@@ -52,15 +52,17 @@ export default function Header() {
               "
             >
               {link.name}
-              <span className="
-                absolute left-0 -bottom-[3px] 
-                w-0 h-[2px] bg-teal-300 
-                group-hover:w-full transition-all duration-300
-              " />
+              <span
+                className="
+                  absolute left-0 -bottom-[3px]
+                  w-0 h-[2px] bg-teal-300
+                  group-hover:w-full transition-all duration-300
+                "
+              />
             </Link>
           ))}
 
-          {/* Mello TV Button (hellere Version) */}
+          {/* Mello TV Button */}
           <Link
             href="/tv"
             className="
@@ -96,7 +98,6 @@ export default function Header() {
             </Link>
           ))}
 
-          {/* Mello TV Button Mobile (hellere Version) */}
           <Link
             href="/tv"
             className="
