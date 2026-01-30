@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-black text-white flex items-center justify-center px-6 pt-10 pb-20 md:pt-0">
+    <main className="relative min-h-screen overflow-hidden bg-black text-white flex items-center justify-center px-6 pt-32 pb-20 md:pt-32">
 
       {/* Background Glow Layers */}
       <div className="pointer-events-none absolute inset-0">
