@@ -7,7 +7,7 @@ export default function Footer() {
   return (
     <footer
       className="
-        mt-20 flex flex-col items-center text-center
+        flex flex-col items-center text-center
         bg-black text-gray-500 text-sm
         pb-10 pt-10
         border-t border-zinc-900
