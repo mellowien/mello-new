@@ -1,116 +1,117 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useState } from "react";
 
 const navLinks = [
-  { name: "Über uns", href: "/ueber-uns" },
-  { name: "Team", href: "/team" },
+  { name: "Über uns",       href: "/ueber-uns" },
+  { name: "Team",           href: "/team" },
   { name: "Mitgliedschaft", href: "/mitgliedschaft" },
-  { name: "Kontakt", href: "/kontakt" },
+  { name: "Kontakt",        href: "/kontakt" },
 ];
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header
-      className="
-        fixed top-0 left-0 w-full z-50
-        bg-black/70 backdrop-blur-md
-        border-b border-teal-300/30
-        shadow-[0_0_25px_rgba(45,212,191,0.35)]
-        text-white
-      "
-    >
-      <div className="mx-auto flex items-center justify-between px-6 py-3 max-w-7xl">
-        {/* Logo */}
-        <Link href="/" className="flex items-center">
-          <Image
-            src="/logo.png"
-            alt="Mello Logo"
-            width={45}
-            height={45}
-            className="
-              rounded-full
-              hover:scale-110
-              transition-transform duration-300
-              drop-shadow-[0_0_15px_rgba(45,212,191,0.7)]
-            "
-          />
+    <header style={{
+      position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
+      background: "rgba(13,15,10,0.85)",
+      backdropFilter: "blur(12px)",
+      borderBottom: "1px solid #222222",
+    }}>
+      <div style={{
+        padding: "0 3rem",
+        height: "96px",
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+      }}>
+
+        {/* Logo + Name */}
+        <Link href="/" style={{ display: "flex", alignItems: "center", gap: "1.2rem", textDecoration: "none" }}>
+          <img src="/logo.png" alt="FC Mello Wien" style={{ width: "62px", height: "62px", borderRadius: "50%" }} />
+          <span style={{
+            fontFamily: "var(--font-display, 'Bebas Neue', sans-serif)",
+            fontSize: "2.8rem",
+            letterSpacing: ".12em",
+            color: "#f5f5f5",
+            WebkitFontSmoothing: "antialiased",
+            lineHeight: 1,
+          }}>MELLO</span>
         </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              className="
-                text-gray-300 hover:text-teal-300 transition relative group
-              "
-            >
-              {link.name}
-              <span
-                className="
-                  absolute left-0 -bottom-[3px]
-                  w-0 h-[2px] bg-teal-300
-                  group-hover:w-full transition-all duration-300
-                "
-              />
+        {/* Desktop nav */}
+        <nav className="desktop-nav" style={{
+          display: "flex", alignItems: "center", gap: "2.5rem",
+        }}>
+          {navLinks.map((l) => (
+            <Link key={l.href} href={l.href} style={{
+              color: "#888888", textDecoration: "none",
+              fontSize: ".85rem", fontWeight: 500,
+              letterSpacing: ".12em", textTransform: "uppercase",
+            }}>
+              {l.name}
             </Link>
           ))}
-
-          {/* Mello TV Button */}
-          <Link
-            href="/tv"
-            className="
-              ml-4 bg-teal-400 text-black px-4 py-1.5 rounded-full font-semibold
-              shadow-[0_0_25px_rgba(45,212,191,0.8)]
-              hover:bg-teal-300 hover:scale-105 transition-all
-            "
-          >
+          <Link href="/tv" style={{
+            color: "#0d9488", textDecoration: "none",
+            fontSize: ".85rem", fontWeight: 600,
+            letterSpacing: ".12em", textTransform: "uppercase",
+          }}>
             Mello TV
           </Link>
         </nav>
 
-        {/* Mobile Button */}
+        {/* Mobile hamburger */}
         <button
-          className="md:hidden text-gray-300 text-2xl"
+          className="mobile-menu-btn"
           onClick={() => setMenuOpen(!menuOpen)}
+          style={{
+            background: "none", border: "none",
+            color: "#f5f5f5", cursor: "pointer",
+            fontSize: "1.5rem", display: "none",
+          }}
         >
           {menuOpen ? "✕" : "☰"}
         </button>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile menu */}
       {menuOpen && (
-        <div className="md:hidden bg-black/90 border-t border-teal-300/20 flex flex-col text-center pb-4">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              className="py-3 text-gray-300 hover:text-teal-300 transition"
+        <div style={{
+          background: "#111111",
+          borderTop: "1px solid #222222",
+          padding: "1.5rem 2rem",
+          display: "flex", flexDirection: "column", gap: "1rem",
+        }}>
+          {navLinks.map((l) => (
+            <Link key={l.href} href={l.href}
               onClick={() => setMenuOpen(false)}
-            >
-              {link.name}
+              style={{
+                color: "#888888", textDecoration: "none",
+                fontSize: ".9rem", fontWeight: 500,
+                letterSpacing: ".1em", textTransform: "uppercase",
+              }}>
+              {l.name}
             </Link>
           ))}
-
-          <Link
-            href="/tv"
-            className="
-              mx-auto mt-2 bg-teal-400 text-black px-6 py-2 rounded-full font-semibold
-              shadow-[0_0_20px_rgba(45,212,191,0.8)]
-              hover:bg-teal-300 hover:scale-105 transition-all
-            "
+          <Link href="/tv"
             onClick={() => setMenuOpen(false)}
-          >
+            style={{
+              color: "#0d9488", textDecoration: "none",
+              fontSize: ".9rem", fontWeight: 600,
+              letterSpacing: ".1em", textTransform: "uppercase",
+            }}>
             Mello TV
           </Link>
         </div>
       )}
+
+      <style>{`
+        @media (max-width: 768px) {
+          .desktop-nav { display: none !important; }
+          .mobile-menu-btn { display: block !important; }
+        }
+      `}</style>
     </header>
   );
 }

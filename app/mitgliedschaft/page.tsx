@@ -1,118 +1,135 @@
-"use client";
-
-import { motion } from "framer-motion";
 import Link from "next/link";
+
+const cards = [
+  {
+    title: "Spieler",
+    desc: "Egal ob Anfänger oder erfahren — bei uns zählt Leidenschaft. Wir bauen ein neues Team auf, das gemeinsam wächst, lernt und etwas Besonderes entstehen lässt.",
+    cta: "Spieleranfrage senden",
+    href: "/kontakt",
+  },
+  {
+    title: "Mitgestalten",
+    desc: "Hilf mit, den Verein aktiv aufzubauen — ob Events, Organisation, kreative Ideen oder sogar Vorstand. Wir suchen Menschen, die etwas verändern wollen.",
+    cta: "Kontakt aufnehmen",
+    href: "/kontakt",
+  },
+  {
+    title: "Sponsoren",
+    desc: "Unterstütze unsere Vision langfristig als Partner und hilf uns, den Verein professionell aufzubauen.",
+    cta: "Partner werden",
+    href: "/kontakt",
+  },
+];
 
 export default function MitgliedschaftPage() {
   return (
-    <main className="flex flex-col items-center justify-start min-h-screen bg-black text-white px-6 pt-32 pb-16">
-      <motion.h1
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="text-4xl md:text-5xl font-bold mb-4 text-center"
-      >
-        Werde Teil von <span className="text-teal-300">Mello</span>
-      </motion.h1>
+    <main style={{
+      background: "#080808",
+      color: "#f5f5f5",
+      fontFamily: "var(--font-body, 'DM Sans', sans-serif)",
+      minHeight: "100vh",
+      paddingTop: "64px",
+    }}>
 
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-        className="text-gray-300 mb-10 text-center max-w-2xl leading-relaxed"
-      >
-        Egal ob Spieler, Mitgestalter oder Partner – unser Verein lebt von Menschen,
-        die gemeinsam etwas Großes aufbauen wollen.
-      </motion.p>
-
-      {/* Drei Karten */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl w-full"
-      >
-        {/* Spieler */}
-        <div className="bg-black/60 border border-teal-300/30 rounded-2xl p-6 text-center shadow-[0_0_25px_rgba(45,212,191,0.15)] hover:shadow-[0_0_35px_rgba(45,212,191,0.3)] transition-all duration-300">
-          <h2 className="text-2xl font-semibold text-teal-300 mb-2">Spieler</h2>
-
-          <p className="text-gray-300 mb-5 leading-relaxed">
-            Egal ob du Anfänger oder erfahren bist – bei uns zählt Leidenschaft.
-            Wir bauen ein neues Team auf, das gemeinsam wächst, lernt und etwas
-            Besonderes entstehen lässt.
+      {/* ── HERO ── */}
+      <section style={{
+        padding: "6rem 3rem 5rem",
+        position: "relative",
+        overflow: "hidden",
+        borderBottom: "1px solid #1a1a1a",
+      }}>
+        <div style={{
+          position: "absolute", inset: 0, pointerEvents: "none",
+          background: "radial-gradient(ellipse 50% 60% at 80% 50%, rgba(13,148,136,.07) 0%, transparent 70%)",
+        }} />
+        <div style={{ maxWidth: "800px", position: "relative", zIndex: 1 }}>
+        <h1 style={{
+            fontFamily: "var(--font-display, 'Bebas Neue', sans-serif)",
+            fontSize: "clamp(4rem, 9vw, 8rem)",
+            lineHeight: .9, letterSpacing: ".02em",
+            color: "#f5f5f5", marginBottom: "2rem",
+          }}>
+            Werde Teil von <span style={{ color: "#0d9488" }}>Mello</span>
+          </h1>
+          <p style={{
+            fontSize: "clamp(1rem, 1.5vw, 1.2rem)",
+            color: "#888888", maxWidth: "55ch", lineHeight: 1.8,
+          }}>
+            Egal ob Spieler, Mitgestalter oder Partner — unser Verein lebt von Menschen, die gemeinsam etwas Großes aufbauen wollen.
           </p>
-
-          <Link
-            href="/kontakt"
-            className="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-teal-400 text-black font-semibold shadow-[0_0_30px_rgba(45,212,191,0.7)] hover:bg-teal-300 hover:scale-105 transition-all duration-300"
-          >
-            Spieleranfrage senden
-          </Link>
         </div>
+      </section>
 
-        {/* Mitgestalten */}
-        <div className="bg-black/60 border border-teal-300/30 rounded-2xl p-6 text-center shadow-[0_0_25px_rgba(45,212,191,0.15)] hover:shadow-[0_0_35px_rgba(45,212,191,0.3)] transition-all duration-300">
-          <h2 className="text-2xl font-semibold text-teal-300 mb-2">
-            Mitgestalten
-          </h2>
+      {/* ── KARTEN ── */}
+      <section style={{
+        padding: "5rem 3rem",
+        display: "grid",
+        gridTemplateColumns: "repeat(3, 1fr)",
+        gap: "2px",
+        borderBottom: "1px solid #1a1a1a",
+      }}>
+        {cards.map((card, i) => (
+          <div key={i} style={{
+            background: "#0f0f0f",
+            padding: "3rem 2.5rem",
+            borderLeft: i === 0 ? "none" : "1px solid #1a1a1a",
+            display: "flex", flexDirection: "column",
+          }}>
+            <h2 style={{
+              fontFamily: "var(--font-display, 'Bebas Neue', sans-serif)",
+              fontSize: "clamp(1.8rem, 2.5vw, 2.4rem)",
+              letterSpacing: ".05em",
+              color: "#f5f5f5",
+              marginBottom: "1.2rem",
+            }}>{card.title}</h2>
+            <p style={{
+              fontSize: ".95rem", color: "#666666",
+              lineHeight: 1.8, flex: 1, marginBottom: "2rem",
+            }}>{card.desc}</p>
+            <Link href={card.href} style={{
+              border: "1px solid rgba(13,148,136,.4)",
+              color: "#0d9488",
+              fontFamily: "var(--font-body, 'DM Sans', sans-serif)",
+              fontWeight: 600, fontSize: ".8rem",
+              letterSpacing: ".12em", textTransform: "uppercase",
+              padding: ".85rem 1.5rem", textDecoration: "none",
+              display: "inline-block", alignSelf: "flex-start",
+            }}>{card.cta}</Link>
+          </div>
+        ))}
+      </section>
 
-          <p className="text-gray-300 mb-5 leading-relaxed">
-            Hilf mit, den Verein aktiv aufzubauen — ob Events, Organisation,
-            kreative Ideen oder sogar Vorstand. Wir suchen Menschen, die etwas
-            verändern wollen.
+      {/* ── CTA ── */}
+      <section style={{
+        padding: "5rem 3rem",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        flexWrap: "wrap",
+        gap: "2rem",
+      }}>
+        <div>
+          <h2 style={{
+            fontFamily: "var(--font-display, 'Bebas Neue', sans-serif)",
+            fontSize: "clamp(2rem, 4vw, 3.5rem)",
+            letterSpacing: ".02em", color: "#f5f5f5", margin: "0 0 .5rem",
+          }}>Jetzt Mitglied werden</h2>
+          <p style={{ fontSize: ".9rem", color: "#555555" }}>
+            FC Mello Wien ist ein eingetragener gemeinnütziger Verein.
           </p>
-
-          <Link
-            href="/kontakt"
-            className="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-teal-400 text-black font-semibold shadow-[0_0_30px_rgba(45,212,191,0.7)] hover:bg-teal-300 hover:scale-105 transition-all duration-300"
-          >
-            Kontakt aufnehmen
-          </Link>
         </div>
-
-        {/* Sponsoren */}
-        <div className="bg-black/60 border border-teal-300/30 rounded-2xl p-6 text-center shadow-[0_0_25px_rgba(45,212,191,0.15)] hover:shadow-[0_0_35px_rgba(45,212,191,0.3)] transition-all duration-300">
-          <h2 className="text-2xl font-semibold text-teal-300 mb-2">
-            Sponsoren
-          </h2>
-
-          <p className="text-gray-300 mb-5 leading-relaxed">
-            Unterstütze unsere Vision langfristig als Partner und hilf uns,
-            den Verein professionell aufzubauen.
-          </p>
-
-          <Link
-            href="/kontakt"
-            className="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-teal-400 text-black font-semibold shadow-[0_0_30px_rgba(45,212,191,0.7)] hover:bg-teal-300 hover:scale-105 transition-all duration-300"
-          >
-            Partner werden
-          </Link>
-        </div>
-      </motion.div>
-
-      {/* Unten: allgemeiner Kontakt */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.9, duration: 0.6 }}
-        className="mt-14 max-w-xl text-center"
-      >
-        <p className="text-gray-300 mb-6">
-          Wenn du Mitglied werden möchtest, melde dich einfach über unser
-          Kontaktformular. Wir melden uns persönlich bei dir.
-        </p>
-
-        <Link
-          href="/kontakt"
-          className="inline-flex items-center justify-center px-8 py-3 rounded-full bg-teal-400 text-black font-semibold text-lg shadow-[0_0_40px_rgba(45,212,191,0.7)] hover:bg-teal-300 transition-all duration-300"
-        >
-          Jetzt Mitglied werden
+        <Link href="/kontakt" style={{
+          background: "#0d9488", color: "#ffffff",
+          fontFamily: "var(--font-body, 'DM Sans', sans-serif)",
+          fontWeight: 600, fontSize: ".85rem",
+          letterSpacing: ".1em", textTransform: "uppercase",
+          padding: "1rem 2.5rem", textDecoration: "none",
+          display: "inline-block", whiteSpace: "nowrap",
+        }}>
+          Kontakt aufnehmen
         </Link>
+      </section>
 
-        <p className="mt-6 text-gray-500 text-sm">
-          Der FC Mello Wien ist ein eingetragener gemeinnütziger Verein.
-        </p>
-      </motion.div>
     </main>
   );
 }

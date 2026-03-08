@@ -3,7 +3,7 @@ import SuccessPageContent from "./success-content";
 
 export default function Page() {
   return (
-    <Suspense fallback={<div className="text-white p-10">Loading...</div>}>
+    <Suspense fallback={<div style={{ color: "#f5f5f5", padding: "10rem 3rem" }}>Laden...</div>}>
       <SuccessPageContent />
     </Suspense>
   );

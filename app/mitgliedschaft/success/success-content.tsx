@@ -1,8 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 export default function SuccessPageContent() {
   const searchParams = useSearchParams();
@@ -14,43 +14,79 @@ export default function SuccessPageContent() {
   }, [searchParams]);
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-black text-white px-6">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 0.7 }}
-        className="
-          bg-black/70 border border-[#0d9488]/40 
-          rounded-3xl p-10 text-center max-w-lg 
-          shadow-[0_0_30px_rgba(13,148,136,0.3)]
-        "
-      >
-        <h1 className="text-4xl font-bold mb-4">
-          Danke{name ? `, ${name}` : ""}! 🎉
+    <main style={{
+      background: "#080808",
+      color: "#f5f5f5",
+      fontFamily: "var(--font-body, 'DM Sans', sans-serif)",
+      minHeight: "100vh",
+      paddingTop: "64px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      position: "relative",
+      overflow: "hidden",
+    }}>
+
+      {/* Teal glow */}
+      <div style={{
+        position: "absolute", inset: 0, pointerEvents: "none",
+        background: "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(13,148,136,.07) 0%, transparent 70%)",
+      }} />
+
+      <div style={{
+        position: "relative", zIndex: 1,
+        textAlign: "center",
+        padding: "0 3rem",
+        maxWidth: "600px",
+      }}>
+        <p style={{
+          fontFamily: "var(--font-display, 'Bebas Neue', sans-serif)",
+          fontSize: "clamp(1rem, 2vw, 1.2rem)",
+          letterSpacing: ".2em", color: "#0d9488",
+          marginBottom: "1rem",
+        }}>Willkommen</p>
+
+        <h1 style={{
+          fontFamily: "var(--font-display, 'Bebas Neue', sans-serif)",
+          fontSize: "clamp(3.5rem, 8vw, 7rem)",
+          lineHeight: .9, letterSpacing: ".02em",
+          color: "#f5f5f5", marginBottom: "2rem",
+        }}>
+          Danke{name ? `, ${name}` : ""}
         </h1>
 
-        <p className="text-gray-300 text-lg mb-6 leading-relaxed">
+        <div style={{
+          width: "3rem", height: "1px",
+          background: "#0d9488",
+          margin: "0 auto 2rem",
+        }} />
+
+        <p style={{
+          fontSize: "1.05rem", color: "#888888",
+          lineHeight: 1.8, marginBottom: ".8rem",
+        }}>
           Deine Unterstützung bedeutet uns enorm viel.
-          <br />
+        </p>
+        <p style={{
+          fontSize: "1.05rem", color: "#888888",
+          lineHeight: 1.8, marginBottom: "3rem",
+        }}>
           Du bist jetzt offizielles Mitglied des{" "}
-          <span className="text-[#0d9488] font-semibold">FC Mello Wien</span>.
-          <br />
+          <span style={{ color: "#0d9488", fontWeight: 600 }}>FC Mello Wien</span>.
           Gemeinsam bauen wir etwas Neues auf.
         </p>
 
-        <motion.a
-          href="/"
-          whileHover={{ scale: 1.05 }}
-          className="
-            mt-4 inline-block bg-[#0d9488] text-black font-semibold 
-            rounded-full px-8 py-3 text-lg transition-all 
-            shadow-[0_0_20px_rgba(13,148,136,0.5)] 
-            hover:bg-[#0b7d71]
-          "
-        >
+        <Link href="/" style={{
+          background: "#0d9488", color: "#ffffff",
+          fontFamily: "var(--font-body, 'DM Sans', sans-serif)",
+          fontWeight: 600, fontSize: ".85rem",
+          letterSpacing: ".1em", textTransform: "uppercase",
+          padding: "1rem 2.5rem", textDecoration: "none",
+          display: "inline-block",
+        }}>
           Zurück zur Startseite
-        </motion.a>
-      </motion.div>
+        </Link>
+      </div>
     </main>
   );
 }

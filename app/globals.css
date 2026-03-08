@@ -1,69 +1,23 @@
-/* Tailwind v4 korrekt importieren */
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* ---------------------------------------- */
-/* 🌙 Global CSS Variablen                  */
-/* ---------------------------------------- */
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Ticker animation */
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.ticker-inner {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: ticker 18s linear infinite;
 }
 
-/* ---------------------------------------- */
-/* 🌐 Body Style                            */
-/* ---------------------------------------- */
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Responsive: hide stat cards on mobile */
+@media (max-width: 768px) {
+  .hero-stats { display: none !important; }
+  .hero-grid  { grid-template-columns: 1fr !important; padding: 7rem 1.5rem 3rem !important; }
+  .manifesto-grid { grid-template-columns: 1fr !important; gap: 2rem !important; padding: 4rem 1.5rem !important; }
+  .footer-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
 }
-
-/* ---------------------------------------- */
-/* ✨ Animationen & Effekte                 */
-/* ---------------------------------------- */
-
-@keyframes pulseGlow {
-  0% { opacity: 0.6; }
-  50% { opacity: 1; }
-  100% { opacity: 0.6; }
-}
-
-@keyframes softPulse {
-  0% { opacity: 0.6; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.05); }
-  100% { opacity: 0.6; transform: scale(1); }
-}
-
-@keyframes softPulseSlow {
-  0% { opacity: 0.7; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.08); }
-  100% { opacity: 0.7; transform: scale(1); }
-}
-
-@keyframes slowDrift {
-  0% { transform: translate3d(0,0,0) rotate(-18deg); }
-  50% { transform: translate3d(15px,-10px,0) rotate(-16deg); }
-  100% { transform: translate3d(0,0,0) rotate(-18deg); }
-}
-
-@keyframes slowDriftReverse {
-  0% { transform: translate3d(0,0,0) rotate(16deg); }
-  50% { transform: translate3d(-15px,8px,0) rotate(18deg); }
-  100% { transform: translate3d(0,0,0) rotate(16deg); }
-}
-
-/* ✨ Utility Klassen */
-
-.animate-softPulse { animation: softPulse 6s ease-in-out infinite; }
-.animate-softPulseSlow { animation: softPulseSlow 9s ease-in-out infinite; }
-.animate-slowDrift { animation: slowDrift 22s ease-in-out infinite; }
-.animate-slowDriftReverse { animation: slowDriftReverse 26s ease-in-out infinite; }
