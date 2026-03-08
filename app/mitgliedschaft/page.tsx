@@ -1,5 +1,16 @@
 import Link from "next/link";
 
+const mobileStyles = `
+  @media (max-width: 768px) {
+    .mitgl-hero    { padding: 3rem 1.5rem 2.5rem !important; }
+    .mitgl-cards   { grid-template-columns: 1fr !important; padding: 2.5rem 1.5rem !important; }
+    .mitgl-card    { border-left: none !important; border-top: 1px solid #1a1a1a; }
+    .mitgl-card:first-child { border-top: none !important; }
+    .mitgl-cta     { padding: 3rem 1.5rem !important; flex-direction: column !important; align-items: flex-start !important; }
+    .mitgl-cta-btn { width: 100% !important; text-align: center !important; box-sizing: border-box !important; }
+  }
+`;
+
 const cards = [
   {
     title: "Spieler",
@@ -28,11 +39,13 @@ export default function MitgliedschaftPage() {
       color: "#f5f5f5",
       fontFamily: "var(--font-body, 'DM Sans', sans-serif)",
       minHeight: "100vh",
-      paddingTop: "64px",
+      paddingTop: "96px",
     }}>
 
+      <style>{mobileStyles}</style>
+
       {/* ── HERO ── */}
-      <section style={{
+      <section className="mitgl-hero" style={{
         padding: "6rem 3rem 5rem",
         position: "relative",
         overflow: "hidden",
@@ -61,7 +74,7 @@ export default function MitgliedschaftPage() {
       </section>
 
       {/* ── KARTEN ── */}
-      <section style={{
+      <section className="mitgl-cards" style={{
         padding: "5rem 3rem",
         display: "grid",
         gridTemplateColumns: "repeat(3, 1fr)",
@@ -69,7 +82,7 @@ export default function MitgliedschaftPage() {
         borderBottom: "1px solid #1a1a1a",
       }}>
         {cards.map((card, i) => (
-          <div key={i} style={{
+          <div key={i} className="mitgl-card" style={{
             background: "#0f0f0f",
             padding: "3rem 2.5rem",
             borderLeft: i === 0 ? "none" : "1px solid #1a1a1a",
@@ -100,7 +113,7 @@ export default function MitgliedschaftPage() {
       </section>
 
       {/* ── CTA ── */}
-      <section style={{
+      <section className="mitgl-cta" style={{
         padding: "5rem 3rem",
         display: "flex",
         alignItems: "center",
@@ -118,7 +131,7 @@ export default function MitgliedschaftPage() {
             FC Mello Wien ist ein eingetragener gemeinnütziger Verein.
           </p>
         </div>
-        <Link href="/kontakt" style={{
+        <Link href="/kontakt" className="mitgl-cta-btn" style={{
           background: "#0d9488", color: "#ffffff",
           fontFamily: "var(--font-body, 'DM Sans', sans-serif)",
           fontWeight: 600, fontSize: ".85rem",
