@@ -24,7 +24,7 @@ export default function Home() {
       {/* Outer wrapper: exactly fills viewport below header */}
       <div style={{
         marginTop: "96px",
-        height: "calc(100dvh - 96px)",
+        minHeight: "calc(100dvh - 96px)",
         display: "flex",
         flexDirection: "column",
       }}>
