@@ -19,13 +19,13 @@ export default function Header() {
     }}>
       <style>{`
         @media (max-width: 768px) {
-          .header-inner  { padding: 0 1.2rem !important; height: 72px !important; }
-          .header-mello  { display: none !important; }
-          .desktop-nav   { display: none !important; }
-          .mobile-nav    { display: flex !important; }
-          .header-logo   { width: 44px !important; height: 44px !important; }
+          .header-inner { padding: 0 1.2rem !important; height: 72px !important; }
+          .header-mello { display: none !important; }
+          .desktop-nav  { display: none !important; }
+          .mobile-nav   { display: flex !important; }
+          .header-logo  { width: 44px !important; height: 44px !important; }
         }
-        .mobile-nav { display: none; align-items: center; gap: 1.2rem; }
+        .mobile-nav { display: none; align-items: center; gap: 1rem; flex-wrap: nowrap; }
       `}</style>
 
       <div className="header-inner" style={{
@@ -33,7 +33,7 @@ export default function Header() {
         display: "flex", alignItems: "center", justifyContent: "space-between",
       }}>
 
-        {/* Logo + MELLO (desktop) */}
+        {/* Logo + MELLO */}
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: "1.2rem", textDecoration: "none" }}>
           <img className="header-logo" src="/logo.png" alt="FC Mello Wien"
             style={{ width: "62px", height: "62px", borderRadius: "50%" }} />
@@ -60,20 +60,20 @@ export default function Header() {
           }}>Mello TV</Link>
         </nav>
 
-        {/* Mobile nav — links only, no MELLO */}
+        {/* Mobile nav — direkt sichtbar, kein Dropdown */}
         <nav className="mobile-nav">
           {navLinks.map((l) => (
             <Link key={l.href} href={l.href} style={{
               color: "#888888", textDecoration: "none",
-              fontSize: ".62rem", fontWeight: 500,
-              letterSpacing: ".1em", textTransform: "uppercase",
+              fontSize: ".6rem", fontWeight: 500,
+              letterSpacing: ".08em", textTransform: "uppercase",
               whiteSpace: "nowrap",
             }}>{l.name}</Link>
           ))}
           <Link href="/tv" style={{
             color: "#0d9488", textDecoration: "none",
-            fontSize: ".62rem", fontWeight: 600,
-            letterSpacing: ".1em", textTransform: "uppercase",
+            fontSize: ".6rem", fontWeight: 600,
+            letterSpacing: ".08em", textTransform: "uppercase",
             whiteSpace: "nowrap",
           }}>Mello TV</Link>
         </nav>
@@ -82,10 +82,3 @@ export default function Header() {
     </header>
   );
 }
-
-const navLinks = [
-  { name: "Über uns",       href: "/ueber-uns" },
-  { name: "Team",           href: "/team" },
-  { name: "Mitgliedschaft", href: "/mitgliedschaft" },
-  { name: "Kontakt",        href: "/kontakt" },
-];
