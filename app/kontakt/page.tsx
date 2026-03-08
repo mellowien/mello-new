@@ -2,6 +2,14 @@
 
 import { useState } from "react";
 
+const mobileStyles = `
+  @media (max-width: 768px) {
+    .kontakt-hero    { padding: 3rem 1.5rem 2.5rem !important; }
+    .kontakt-hero p  { white-space: normal !important; }
+    .kontakt-form    { grid-template-columns: 1fr !important; padding: 3rem 1.5rem !important; gap: 2.5rem !important; }
+  }
+`;
+
 export default function Kontakt() {
   const [formData, setFormData] = useState({
     name: "", email: "", message: "", website: "",
@@ -64,11 +72,13 @@ export default function Kontakt() {
       color: "#f5f5f5",
       fontFamily: "var(--font-body, 'DM Sans', sans-serif)",
       minHeight: "100vh",
-      paddingTop: "64px",
+      paddingTop: "96px",
     }}>
 
+      <style>{mobileStyles}</style>
+
       {/* ── HERO ── */}
-      <section style={{
+      <section className="kontakt-hero" style={{
         padding: "6rem 3rem 5rem",
         position: "relative",
         overflow: "hidden",
@@ -97,7 +107,7 @@ export default function Kontakt() {
       </section>
 
       {/* ── FORM ── */}
-      <section style={{
+      <section className="kontakt-form" style={{
         padding: "5rem 3rem",
         display: "grid",
         gridTemplateColumns: "1fr 1fr",
