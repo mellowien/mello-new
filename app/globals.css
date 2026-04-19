@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Ticker animation */
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.ticker-inner {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: ticker 18s linear infinite;
+}
+
+/* Responsive: hide stat cards on mobile */
+@media (max-width: 768px) {
+  .hero-stats { display: none !important; }
+  .hero-grid  { grid-template-columns: 1fr !important; padding: 7rem 1.5rem 3rem !important; }
+  .manifesto-grid { grid-template-columns: 1fr !important; gap: 2rem !important; padding: 4rem 1.5rem !important; }
+  .footer-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+}
