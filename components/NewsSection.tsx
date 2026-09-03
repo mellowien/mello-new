@@ -5,333 +5,455 @@ import Link from "next/link";
 const ARTICLES = [
   {
     id: 1,
-    tag: "Spielbericht",
-    date: "31. Aug 2026",
-    title: "Auftaktsieg vor heimischer Kulisse: Die Stimmen zum Spiel",
+    tag: "Vorbericht",
+    date: "06. Sep 2026",
+    title: "Der Countdown läuft: Mello vor dem ersten Spiel",
     excerpt:
-      "Trainer und Mannschaft nach dem intensiven 90-Minuten-Fight im ersten Saisonspiel.",
-    href: "/news/auftaktsieg",
+      "Am Sonntag empfängt FC Mello Wien den FC Polska zum Auftakt in der 1. Klasse A. Was die Mannschaft erwartet und worauf es in der letzten Trainingswoche ankommt.",
+    href: "/news/auftakt",
     readTime: "3 Min.",
   },
   {
     id: 2,
-    tag: "Interview",
-    date: "28. Aug 2026",
-    title: "„Wir wollen Fußball nahbar und transparent gestalten“",
+    tag: "Aus dem Training",
+    date: "Diese Woche",
+    title: "Fokus, Energie, Zusammenhalt: Stimmen aus der Vorbereitung",
     excerpt:
-      "Der Vorstand im ausführlichen Gespräch über Vereinsphilosophie, Kaderplanung und die Ziele für 2026/27.",
-    href: "/news/vorstand-interview",
-    readTime: "5 Min.",
+      "Die Mannschaft arbeitet konzentriert auf den Auftakt hin. Ein Blick auf die letzten Einheiten, die Entwicklung im Team und den gemeinsamen Anspruch.",
+    href: "/news/training",
+    readTime: "4 Min.",
   },
 ];
 
 export default function NewsSection() {
   return (
-    <section
-      style={{
-        background: "var(--mello-black, #080808)",
-        borderBottom: "1px solid var(--mello-line, #222222)",
-        color: "#f7f7f4",
-        padding: "5rem 0 6.5rem",
-        position: "relative",
-      }}
-    >
+    <section className="news-section">
       <style>{`
-        .news-card {
-          background: rgba(247, 247, 244, 0.035);
-          border: 1px solid rgba(247, 247, 244, 0.1);
-          border-radius: 1rem;
-          padding: 2rem;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          text-decoration: none;
-          color: inherit;
-          transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1),
-                      border-color 0.3s ease,
-                      background 0.3s ease,
-                      box-shadow 0.3s ease;
+        .news-section {
+          --ink: #080808;
+          --paper: #f7f7f4;
+          --teal: #0d9488;
+          --teal-bright: #14b8a6;
+          --line: rgba(247, 247, 244, .12);
+          --muted: rgba(247, 247, 244, .60);
           position: relative;
           overflow: hidden;
+          border-top: 1px solid var(--line);
+          background:
+            radial-gradient(ellipse 42% 72% at 100% 54%, rgba(13, 148, 136, .10), transparent 72%),
+            var(--ink);
+          color: var(--paper);
+          font-family: Arial, Helvetica, sans-serif;
+          padding: 6.2rem 0;
+        }
+
+        .news-section * {
+          box-sizing: border-box;
+        }
+
+        .news-shell {
+          width: min(100% - 6rem, 1440px);
+          margin: 0 auto;
+        }
+
+        .news-header {
+          display: flex;
+          align-items: end;
+          justify-content: space-between;
+          gap: 2rem;
+          margin-bottom: 2.8rem;
+        }
+
+        .news-eyebrow,
+        .news-kicker {
+          display: inline-flex;
+          align-items: center;
+          gap: .55rem;
+          color: var(--teal);
+          font-size: .67rem;
+          font-weight: 800;
+          letter-spacing: .16em;
+          text-transform: uppercase;
+        }
+
+        .news-eyebrow::before,
+        .news-kicker::before {
+          content: "";
+          width: .4rem;
+          height: .4rem;
+          border-radius: 50%;
+          background: var(--teal);
+          box-shadow: 0 0 10px rgba(13, 148, 136, .7);
+        }
+
+        .news-title {
+          margin: 1.1rem 0 0;
+          font-size: clamp(2.7rem, 5.2vw, 5.7rem);
+          font-weight: 900;
+          letter-spacing: -.075em;
+          line-height: .83;
+          text-transform: uppercase;
+        }
+
+        .news-title span {
+          display: block;
+          color: transparent;
+          -webkit-text-stroke: 1px rgba(247, 247, 244, .72);
+        }
+
+        .news-title span em {
+          color: var(--teal);
+          font-style: normal;
+          -webkit-text-stroke: 0;
+        }
+
+        .news-all-link {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 3rem;
+          gap: .55rem;
+          border: 1px solid rgba(13, 148, 136, .52);
+          border-radius: 99px;
+          padding: 0 1.25rem;
+          color: var(--teal);
+          font-size: .66rem;
+          font-weight: 900;
+          letter-spacing: .13em;
+          text-decoration: none;
+          text-transform: uppercase;
+          white-space: nowrap;
+          transition:
+            border-color .2s ease,
+            background .2s ease,
+            color .2s ease,
+            transform .2s ease;
+        }
+
+        .news-all-link:hover {
+          border-color: var(--teal);
+          background: var(--teal);
+          color: var(--ink);
+          transform: translateY(-1px);
+        }
+
+        .news-grid {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 1.25rem;
+        }
+
+        .news-card,
+        .news-cta-card {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          min-height: 25rem;
+          overflow: hidden;
+          border: 1px solid rgba(247, 247, 244, .11);
+          border-radius: 1.15rem;
+          padding: 1.75rem;
+          background:
+            linear-gradient(
+              145deg,
+              rgba(247, 247, 244, .052),
+              rgba(247, 247, 244, .018) 56%,
+              rgba(13, 148, 136, .035)
+            );
+        }
+
+        .news-card {
+          color: inherit;
+          text-decoration: none;
+          transition:
+            transform .28s cubic-bezier(.22, 1, .36, 1),
+            border-color .28s ease,
+            background .28s ease,
+            box-shadow .28s ease;
+        }
+
+        .news-card::after {
+          content: "";
+          position: absolute;
+          right: -5.5rem;
+          top: -5.5rem;
+          width: 12rem;
+          height: 12rem;
+          border: 1px solid rgba(13, 148, 136, .15);
+          border-radius: 50%;
+          transition: transform .35s cubic-bezier(.22, 1, .36, 1);
         }
 
         .news-card:hover {
-          transform: translateY(-4px);
-          border-color: rgba(13, 148, 136, 0.6);
-          background: rgba(247, 247, 244, 0.055);
-          box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(13, 148, 136, 0.08);
+          transform: translateY(-5px);
+          border-color: rgba(13, 148, 136, .64);
+          background:
+            linear-gradient(
+              145deg,
+              rgba(247, 247, 244, .075),
+              rgba(247, 247, 244, .025) 56%,
+              rgba(13, 148, 136, .075)
+            );
+          box-shadow:
+            0 1.3rem 3rem rgba(0, 0, 0, .45),
+            0 0 2rem rgba(13, 148, 136, .09);
+        }
+
+        .news-card:hover::after {
+          transform: scale(1.18);
+        }
+
+        .news-card-head {
+          position: relative;
+          z-index: 1;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: .8rem;
+        }
+
+        .news-tag {
+          display: inline-flex;
+          align-items: center;
+          min-height: 1.45rem;
+          border: 1px solid rgba(13, 148, 136, .38);
+          border-radius: 99px;
+          padding: 0 .65rem;
+          color: var(--teal);
+          background: rgba(13, 148, 136, .09);
+          font-size: .55rem;
+          font-weight: 900;
+          letter-spacing: .12em;
+          text-transform: uppercase;
+        }
+
+        .news-meta {
+          color: rgba(247, 247, 244, .40);
+          font-size: .61rem;
+          font-weight: 700;
+          letter-spacing: .03em;
+          white-space: nowrap;
+        }
+
+        .news-card-title {
+          position: relative;
+          z-index: 1;
+          max-width: 15ch;
+          margin: 4.4rem 0 1rem;
+          color: var(--paper);
+          font-size: clamp(1.4rem, 2.1vw, 1.85rem);
+          font-weight: 900;
+          letter-spacing: -.045em;
+          line-height: .98;
+          text-transform: uppercase;
+        }
+
+        .news-card-text {
+          position: relative;
+          z-index: 1;
+          max-width: 33ch;
+          margin: 0;
+          color: var(--muted);
+          font-size: .87rem;
+          line-height: 1.72;
+        }
+
+        .news-read {
+          position: relative;
+          z-index: 1;
+          display: inline-flex;
+          align-items: center;
+          gap: .45rem;
+          margin-top: auto;
+          padding-top: 2rem;
+          color: var(--teal);
+          font-size: .66rem;
+          font-weight: 900;
+          letter-spacing: .13em;
+          text-transform: uppercase;
         }
 
         .news-cta-card {
-          background: linear-gradient(145deg, rgba(13, 148, 136, 0.16), rgba(8, 8, 8, 0.95) 75%);
-          border: 1px solid rgba(13, 148, 136, 0.65);
-          border-radius: 1rem;
-          padding: 2rem;
-          display: flex;
-          flex-direction: column;
           justify-content: space-between;
+          border-color: rgba(13, 148, 136, .55);
+          background:
+            radial-gradient(circle at 92% 8%, rgba(13, 148, 136, .22), transparent 38%),
+            linear-gradient(145deg, rgba(13, 148, 136, .13), rgba(8, 8, 8, .96) 74%);
+        }
+
+        .news-cta-card::before {
+          content: "";
+          position: absolute;
+          right: -7rem;
+          bottom: -7rem;
+          width: 18rem;
+          height: 18rem;
+          border: 1px solid rgba(13, 148, 136, .20);
+          border-radius: 50%;
+          pointer-events: none;
+        }
+
+        .news-cta-title {
           position: relative;
-          overflow: hidden;
+          z-index: 1;
+          max-width: 11ch;
+          margin: 1.15rem 0 1rem;
+          font-size: clamp(1.75rem, 2.5vw, 2.3rem);
+          font-weight: 900;
+          letter-spacing: -.055em;
+          line-height: .92;
+          text-transform: uppercase;
+        }
+
+        .news-cta-text {
+          position: relative;
+          z-index: 1;
+          max-width: 30ch;
+          margin: 0;
+          color: rgba(247, 247, 244, .68);
+          font-size: .88rem;
+          line-height: 1.72;
+        }
+
+        .news-cta-link {
+          position: relative;
+          z-index: 1;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          min-height: 3.2rem;
+          gap: .55rem;
+          margin-top: 2rem;
+          border: 1px solid var(--teal);
+          border-radius: 99px;
+          background: var(--teal);
+          color: var(--ink);
+          font-size: .68rem;
+          font-weight: 900;
+          letter-spacing: .13em;
+          text-decoration: none;
+          text-transform: uppercase;
+          transition:
+            background .2s ease,
+            border-color .2s ease,
+            transform .2s ease;
+        }
+
+        .news-cta-link:hover {
+          border-color: var(--teal-bright);
+          background: var(--teal-bright);
+          transform: translateY(-1px);
+        }
+
+        @media (max-width: 1050px) {
+          .news-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+
+          .news-cta-card {
+            min-height: 19rem;
+          }
         }
 
         @media (max-width: 900px) {
+          .news-shell {
+            width: min(100% - 2.5rem, 1440px);
+          }
+
+          .news-section {
+            padding: 4.5rem 0;
+          }
+
+          .news-header {
+            align-items: start;
+            flex-direction: column;
+            margin-bottom: 2.25rem;
+          }
+
+          .news-title {
+            font-size: clamp(2.6rem, 11vw, 4.5rem);
+          }
+        }
+
+        @media (max-width: 620px) {
           .news-grid {
-            grid-template-columns: 1fr !important;
-            gap: 1.25rem !important;
+            grid-template-columns: 1fr;
+          }
+
+          .news-card,
+          .news-cta-card {
+            min-height: 21rem;
+            border-radius: .9rem;
+            padding: 1.45rem;
+          }
+
+          .news-card-title {
+            margin-top: 3.5rem;
+          }
+
+          .news-all-link {
+            width: 100%;
           }
         }
       `}</style>
 
-      <div
-        style={{
-          width: "min(100% - 6rem, 1440px)",
-          margin: "0 auto",
-        }}
-      >
-        {/* Header-Zeile */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "flex-end",
-            justifyContent: "space-between",
-            marginBottom: "2.8rem",
-            flexWrap: "wrap",
-            gap: "1rem",
-          }}
-        >
+      <div className="news-shell">
+        <header className="news-header">
           <div>
-            <div
-              style={{
-                color: "#0d9488",
-                fontFamily: "var(--font-body), Arial, sans-serif",
-                fontSize: ".68rem",
-                fontWeight: 800,
-                letterSpacing: ".18em",
-                textTransform: "uppercase",
-                marginBottom: ".6rem",
-              }}
-            >
-              Stimmen & Berichte
-            </div>
+            <div className="news-eyebrow">Stimmen & Berichte</div>
 
-            <h2
-              style={{
-                fontFamily: "var(--font-display), 'Arial Black', Arial, sans-serif",
-                fontSize: "clamp(2rem, 4vw, 3.2rem)",
-                fontWeight: 900,
-                letterSpacing: "-0.03em",
-                lineHeight: 0.95,
-                margin: 0,
-                textTransform: "uppercase",
-              }}
-            >
-              Aktuell bei Mello
+            <h2 className="news-title">
+              Aktuell
+              <span>
+                bei <em>Mello.</em>
+              </span>
             </h2>
           </div>
 
-          <Link
-            href="/tv"
-            style={{
-              color: "rgba(247, 247, 244, 0.7)",
-              fontFamily: "var(--font-body), Arial, sans-serif",
-              fontSize: ".68rem",
-              fontWeight: 800,
-              letterSpacing: ".14em",
-              textDecoration: "none",
-              textTransform: "uppercase",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: ".4rem",
-              transition: "color .2s ease",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = "#0d9488")}
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.color = "rgba(247, 247, 244, 0.7)")
-            }
-          >
-            Alle Berichte & Videos&nbsp;→
+          <Link className="news-all-link" href="/news">
+            Alle Stimmen &amp; Berichte <span aria-hidden="true">→</span>
           </Link>
-        </div>
+        </header>
 
-        {/* Grid: 2 News-Karten + 1 CTA-Karte */}
-        <div
-          className="news-grid"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "1.5rem",
-          }}
-        >
+        <div className="news-grid">
           {ARTICLES.map((article) => (
-            <Link key={article.id} href={article.href} className="news-card">
-              <div>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    marginBottom: "1.2rem",
-                  }}
-                >
-                  <span
-                    style={{
-                      background: "rgba(13, 148, 136, 0.15)",
-                      color: "#0d9488",
-                      border: "1px solid rgba(13, 148, 136, 0.35)",
-                      borderRadius: "99px",
-                      padding: ".2rem .6rem",
-                      fontSize: ".48rem",
-                      fontWeight: 800,
-                      letterSpacing: ".12em",
-                      textTransform: "uppercase",
-                      fontFamily: "var(--font-body), Arial, sans-serif",
-                    }}
-                  >
-                    {article.tag}
-                  </span>
-
-                  <span
-                    style={{
-                      color: "rgba(247, 247, 244, 0.4)",
-                      fontSize: ".58rem",
-                      fontFamily: "var(--font-body), Arial, sans-serif",
-                      fontWeight: 600,
-                    }}
-                  >
-                    {article.date} · {article.readTime}
-                  </span>
-                </div>
-
-                <h3
-                  style={{
-                    fontFamily:
-                      "var(--font-display), 'Arial Black', Arial, sans-serif",
-                    fontSize: "1.25rem",
-                    fontWeight: 800,
-                    letterSpacing: "-0.01em",
-                    lineHeight: 1.2,
-                    margin: "0 0 .8rem",
-                  }}
-                >
-                  {article.title}
-                </h3>
-
-                <p
-                  style={{
-                    color: "rgba(247, 247, 244, 0.65)",
-                    fontFamily: "var(--font-body), Arial, sans-serif",
-                    fontSize: ".82rem",
-                    lineHeight: 1.5,
-                    margin: 0,
-                  }}
-                >
-                  {article.excerpt}
-                </p>
+            <Link className="news-card" href={article.href} key={article.id}>
+              <div className="news-card-head">
+                <span className="news-tag">{article.tag}</span>
+                <span className="news-meta">
+                  {article.date} · {article.readTime}
+                </span>
               </div>
 
-              <div
-                style={{
-                  marginTop: "1.8rem",
-                  color: "#0d9488",
-                  fontSize: ".62rem",
-                  fontWeight: 800,
-                  letterSpacing: ".12em",
-                  textTransform: "uppercase",
-                  fontFamily: "var(--font-body), Arial, sans-serif",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: ".3rem",
-                }}
-              >
-                Weiterlesen&nbsp;→
+              <h3 className="news-card-title">{article.title}</h3>
+
+              <p className="news-card-text">{article.excerpt}</p>
+
+              <div className="news-read">
+                Weiterlesen <span aria-hidden="true">→</span>
               </div>
             </Link>
           ))}
 
-          {/* Die 3. Spalte: Direkter CTA */}
-          <div className="news-cta-card">
+          <article className="news-cta-card">
             <div>
-              <span
-                style={{
-                  background: "#0d9488",
-                  color: "#080808",
-                  borderRadius: "99px",
-                  padding: ".22rem .65rem",
-                  fontSize: ".48rem",
-                  fontWeight: 900,
-                  letterSpacing: ".14em",
-                  textTransform: "uppercase",
-                  fontFamily: "var(--font-body), Arial, sans-serif",
-                  display: "inline-block",
-                  marginBottom: "1.2rem",
-                }}
-              >
-                Mitglied werden
-              </span>
+              <div className="news-kicker">Mitglied werden</div>
 
-              <h3
-                style={{
-                  fontFamily:
-                    "var(--font-display), 'Arial Black', Arial, sans-serif",
-                  fontSize: "1.35rem",
-                  fontWeight: 900,
-                  letterSpacing: "-0.02em",
-                  lineHeight: 1.15,
-                  margin: "0 0 .85rem",
-                }}
-              >
-                Gestalte den Verein aktiv mit
+              <h3 className="news-cta-title">
+                Gestalte den Verein aktiv mit.
               </h3>
 
-              <p
-                style={{
-                  color: "rgba(247, 247, 244, 0.75)",
-                  fontFamily: "var(--font-body), Arial, sans-serif",
-                  fontSize: ".82rem",
-                  lineHeight: 1.5,
-                  margin: 0,
-                }}
-              >
-                Volles Stimmrecht, Community-Events und exklusiver Zugang zu allen
-                Inhalten. Werde jetzt offizielles Mello-Mitglied.
+              <p className="news-cta-text">
+                Werde offizieller Teil von Mello und unterstütze den Aufbau
+                eines Vereins, der Fußball anders denkt.
               </p>
             </div>
 
-            <div style={{ marginTop: "2rem" }}>
-              <Link
-                href="/mitgliedschaft"
-                style={{
-                  background: "#0d9488",
-                  color: "#080808",
-                  fontFamily: "var(--font-body), Arial, sans-serif",
-                  fontSize: ".68rem",
-                  fontWeight: 800,
-                  letterSpacing: ".14em",
-                  textDecoration: "none",
-                  textTransform: "uppercase",
-                  padding: ".75rem 1.3rem",
-                  borderRadius: "99px",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: ".4rem",
-                  width: "100%",
-                  boxSizing: "border-box",
-                  transition: "background .2s ease, transform .2s ease",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "#14b8a6";
-                  e.currentTarget.style.transform = "translateY(-1px)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "#0d9488";
-                  e.currentTarget.style.transform = "translateY(0)";
-                }}
-              >
-                Jetzt Mitglied werden&nbsp;→
-              </Link>
-            </div>
-          </div>
+            <Link className="news-cta-link" href="/mitgliedschaft">
+              Jetzt Mitglied werden <span aria-hidden="true">→</span>
+            </Link>
+          </article>
         </div>
       </div>
     </section>

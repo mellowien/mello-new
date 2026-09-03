@@ -763,7 +763,7 @@ export default function Countdown() {
             >
               {/* Zum Spielplan Button */}
               <a
-                href="#spielplan"
+                href="/spielplan"
                 style={{
                   alignItems: "center",
                   background: "rgba(247,247,244,.06)",

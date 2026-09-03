@@ -1,53 +1,129 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
-const mobileStyles = `
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+type Anliegen = "allgemein" | "spieler" | "community";
+
+type AnliegenContent = {
+  eyebrow: string;
+  title: string;
+  accent: string;
+  intro: string;
+  label: string;
+  formTitle: string;
+  messageLabel: string;
+  placeholder: string;
+  infoTitle: string;
+  infoText: string;
+  submitText: string;
+};
+
+const CONTENT: Record<Anliegen, AnliegenContent> = {
+  allgemein: {
+    eyebrow: "Kontakt",
+    title: "Lass uns",
+    accent: "sprechen.",
+    intro:
+      "Fragen, Ideen, Kooperationen oder ein erstes Kennenlernen: Schreib uns, worum es geht. Wir melden uns persönlich bei dir.",
+    label: "Direkter Draht zu Mello",
+    formTitle: "Deine Nachricht",
+    messageLabel: "Worum geht es?",
+    placeholder: "Erzähl uns kurz, worum es geht …",
+    infoTitle: "Mello lebt vom Austausch.",
+    infoText:
+      "Wir bauen einen Verein, der offen ist für neue Menschen, gute Ideen und echte Zusammenarbeit. Deine Nachricht landet direkt bei uns.",
+    submitText: "Nachricht senden",
+  },
+  spieler: {
+    eyebrow: "Spieleranfrage",
+    title: "Komm ins",
+    accent: "Team.",
+    intro:
+      "Du willst bei FC Mello Wien mittrainieren oder dich für unseren Kader vorstellen? Erzähl uns kurz, wer du bist und was du mitbringst.",
+    label: "Aktiv am Platz",
+    formTitle: "Deine Spieleranfrage",
+    messageLabel: "Dein Fußballprofil",
+    placeholder:
+      "Alter, Position, bisherige Vereine, Spielerfahrung und mögliche Termine für ein Probetraining …",
+    infoTitle: "Zeig, was in dir steckt.",
+    infoText:
+      "Ob Talent, Rückkehrer oder erfahrener Kicker: Entscheidend sind Einsatz, Verlässlichkeit und Lust auf ein Team, das gemeinsam wachsen will.",
+    submitText: "Spieleranfrage senden",
+  },
+  community: {
+    eyebrow: "Community & Orga",
+    title: "Gestalte",
+    accent: "Mello mit.",
+    intro:
+      "Ein Verein wächst nicht nur auf dem Platz. Wenn du Ideen, Zeit oder Fähigkeiten einbringen möchtest, freuen wir uns, von dir zu hören.",
+    label: "Verein mitgestalten",
+    formTitle: "Dein Beitrag für Mello",
+    messageLabel: "Wie möchtest du mitgestalten?",
+    placeholder:
+      "Zum Beispiel Spieltag, Events, Social Media, Foto/Video, Mello TV, Sponsoring, Organisation oder Vereinsarbeit …",
+    infoTitle: "Der Verein entsteht gemeinsam.",
+    infoText:
+      "Spieltag, Event, Social Media, Mello TV, Sponsoring oder Organisation: Jede Fähigkeit und jede helfende Hand bringt Mello weiter.",
+    submitText: "Mitgestalten",
+  },
+};
+
+function resolveAnliegen(value: string | null): Anliegen {
+  if (value === "spieler") return "spieler";
+  if (value === "community") return "community";
+  return "allgemein";
 }
 
-  @media (max-width: 768px) {
-    .kontakt-hero    { padding: 3rem 1.5rem 2.5rem !important; }
-    .kontakt-hero p  { white-space: normal !important; }
-    .kontakt-form    { grid-template-columns: 1fr !important; padding: 3rem 1.5rem !important; gap: 2.5rem !important; }
-  }
-`;
+function KontaktContent() {
+  const searchParams = useSearchParams();
+  const anliegen = resolveAnliegen(searchParams.get("anliegen"));
+  const content = CONTENT[anliegen];
 
-export default function Kontakt() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
     website: "",
+    anliegen,
   });
-
-  const [showPopup, setShowPopup] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  useEffect(() => {
+    const nextAnliegen = resolveAnliegen(searchParams.get("anliegen"));
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    setFormData((current) => ({
+      ...current,
+      anliegen: nextAnliegen,
+    }));
+  }, [searchParams]);
+
+  function handleChange(
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) {
+    setFormData((current) => ({
+      ...current,
+      [event.target.name]: event.target.value,
+    }));
+  }
+
+  async function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
     setIsSubmitting(true);
 
     try {
-      const res = await fetch("/api/contact", {
+      const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
-      const data = await res.json().catch(() => ({}));
+      const data = await response.json().catch(() => ({}));
 
-      if (!res.ok) {
+      if (!response.ok) {
         alert(
-          `❌ Es gab ein Problem beim Senden.${
+          `Es gab ein Problem beim Senden.${
             data?.error ? `\n\n${data.error}` : ""
           }`
         );
@@ -60,113 +136,431 @@ export default function Kontakt() {
         email: "",
         message: "",
         website: "",
+        anliegen,
       });
     } catch {
-      alert("❌ Netzwerkfehler. Bitte versuch es nochmal.");
+      alert("Netzwerkfehler. Bitte versuche es noch einmal.");
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const inputStyle = {
-    width: "100%",
-    padding: ".85rem 1.2rem",
-    background: "#0a0a0a",
-    border: "1px solid #222222",
-    color: "#f5f5f5",
-    fontSize: ".95rem",
-    fontFamily: "var(--font-body, 'DM Sans', sans-serif)",
-    outline: "none",
-    boxSizing: "border-box" as const,
-    transition: "border-color .2s",
-  };
-
-  const labelStyle = {
-    display: "block",
-    fontSize: ".7rem",
-    letterSpacing: ".2em",
-    textTransform: "uppercase" as const,
-    color: "#555555",
-    marginBottom: ".5rem",
-    fontFamily: "var(--font-body, 'DM Sans', sans-serif)",
-  };
+  }
 
   return (
-    <main
-      style={{
-        background: "#080808",
-        color: "#f5f5f5",
-        fontFamily: "var(--font-body, 'DM Sans', sans-serif)",
-        minHeight: "100vh",
-        paddingTop: "96px",
-      }}
-    >
-      <style>{mobileStyles}</style>
+    <main className="contact-page">
+      <style>{`
+        .contact-page {
+          --ink: #080808;
+          --paper: #f7f7f4;
+          --teal: #0d9488;
+          --teal-bright: #14b8a6;
+          --line: rgba(247, 247, 244, .12);
+          --muted: rgba(247, 247, 244, .60);
+          min-height: 100vh;
+          overflow: hidden;
+          background: var(--ink);
+          color: var(--paper);
+          font-family: Arial, Helvetica, sans-serif;
+          padding-top: 88px;
+        }
 
-      {/* HERO */}
-      <section
-        className="kontakt-hero"
-        style={{
-          padding: "6rem 3rem 5rem",
-          position: "relative",
-          overflow: "hidden",
-          borderBottom: "1px solid #1a1a1a",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            pointerEvents: "none",
-            background:
-              "radial-gradient(ellipse 50% 60% at 80% 50%, rgba(13,148,136,.07) 0%, transparent 70%)",
-          }}
-        />
+        .contact-page * {
+          box-sizing: border-box;
+        }
 
-        <div style={{ maxWidth: "800px", position: "relative", zIndex: 1 }}>
-          <h1
-            style={{
-              fontFamily: "var(--font-display, 'Bebas Neue', sans-serif)",
-              fontSize: "clamp(4rem, 9vw, 8rem)",
-              lineHeight: 0.9,
-              letterSpacing: ".02em",
-              color: "#f5f5f5",
-              marginBottom: "1.5rem",
-            }}
-          >
-            Kontaktiere <span style={{ color: "#0d9488" }}>uns</span>
+        .contact-shell {
+          width: min(100% - 6rem, 1440px);
+          margin: 0 auto;
+        }
+
+        .contact-hero {
+          position: relative;
+          overflow: hidden;
+          border-bottom: 1px solid var(--line);
+          padding: 4.7rem 0 4.3rem;
+          background:
+            radial-gradient(ellipse 44% 115% at 94% 48%, rgba(13, 148, 136, .14), transparent 74%),
+            linear-gradient(115deg, #080808 0%, #080808 55%, #0b1211 100%);
+        }
+
+        .contact-hero-inner {
+          position: relative;
+          z-index: 1;
+          max-width: 900px;
+        }
+
+        .contact-eyebrow,
+        .contact-kicker {
+          display: inline-flex;
+          align-items: center;
+          gap: .55rem;
+          color: var(--teal);
+          font-size: .67rem;
+          font-weight: 800;
+          letter-spacing: .16em;
+          text-transform: uppercase;
+        }
+
+        .contact-eyebrow::before,
+        .contact-kicker::before {
+          content: "";
+          width: .4rem;
+          height: .4rem;
+          border-radius: 50%;
+          background: var(--teal);
+          box-shadow: 0 0 10px rgba(13, 148, 136, .7);
+        }
+
+        .contact-title {
+          max-width: 850px;
+          margin: 1.25rem 0 1.35rem;
+          font-size: clamp(3.6rem, 7vw, 7.4rem);
+          font-weight: 900;
+          letter-spacing: -.075em;
+          line-height: .82;
+          text-transform: uppercase;
+        }
+
+        .contact-title span {
+          display: block;
+          color: transparent;
+          -webkit-text-stroke: 1.25px rgba(247, 247, 244, .78);
+        }
+
+        .contact-title span em {
+          color: var(--teal);
+          font-style: normal;
+          -webkit-text-stroke: 0;
+        }
+
+        .contact-intro {
+          max-width: 56ch;
+          margin: 0;
+          color: rgba(247, 247, 244, .72);
+          font-size: clamp(1rem, 1.25vw, 1.12rem);
+          line-height: 1.72;
+        }
+
+        .contact-body {
+          display: grid;
+          grid-template-columns: minmax(0, 1.16fr) minmax(280px, .84fr);
+          gap: clamp(2.5rem, 7vw, 8rem);
+          padding: 5.4rem 0 6rem;
+        }
+
+        .contact-form-card {
+          position: relative;
+          overflow: hidden;
+          border: 1px solid var(--line);
+          border-radius: 1.15rem;
+          padding: clamp(1.55rem, 3vw, 2.55rem);
+          background:
+            linear-gradient(
+              145deg,
+              rgba(247, 247, 244, .055),
+              rgba(247, 247, 244, .018) 56%,
+              rgba(13, 148, 136, .045)
+            );
+        }
+
+        .contact-form-card::after {
+          content: "";
+          position: absolute;
+          width: 20rem;
+          height: 20rem;
+          right: -13rem;
+          top: -13rem;
+          border-radius: 50%;
+          border: 1px solid rgba(13, 148, 136, .15);
+          pointer-events: none;
+        }
+
+        .contact-form-heading {
+          position: relative;
+          z-index: 1;
+          margin: 1.05rem 0 2.35rem;
+          color: var(--paper);
+          font-size: clamp(1.45rem, 2vw, 1.85rem);
+          font-weight: 900;
+          letter-spacing: -.035em;
+          line-height: 1;
+          text-transform: uppercase;
+        }
+
+        .contact-field {
+          position: relative;
+          z-index: 1;
+          margin-bottom: 1.4rem;
+        }
+
+        .contact-label {
+          display: block;
+          margin-bottom: .58rem;
+          color: rgba(247, 247, 244, .48);
+          font-size: .65rem;
+          font-weight: 800;
+          letter-spacing: .15em;
+          text-transform: uppercase;
+        }
+
+        .contact-input {
+          width: 100%;
+          border: 1px solid rgba(247, 247, 244, .13);
+          border-radius: .62rem;
+          outline: none;
+          background: rgba(0, 0, 0, .28);
+          color: var(--paper);
+          font: inherit;
+          font-size: .95rem;
+          line-height: 1.5;
+          padding: .9rem 1rem;
+          transition:
+            border-color .2s ease,
+            background .2s ease,
+            box-shadow .2s ease;
+        }
+
+        .contact-input:focus {
+          border-color: rgba(13, 148, 136, .82);
+          background: rgba(13, 148, 136, .05);
+          box-shadow: 0 0 0 3px rgba(13, 148, 136, .11);
+        }
+
+        .contact-input::placeholder {
+          color: rgba(247, 247, 244, .28);
+        }
+
+        .contact-textarea {
+          min-height: 11rem;
+          resize: vertical;
+        }
+
+        .contact-submit {
+          position: relative;
+          z-index: 1;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          min-height: 3.35rem;
+          gap: .65rem;
+          margin-top: .45rem;
+          border: 1px solid var(--teal);
+          border-radius: 99px;
+          background: var(--teal);
+          color: #080808;
+          cursor: pointer;
+          font: inherit;
+          font-size: .72rem;
+          font-weight: 900;
+          letter-spacing: .13em;
+          text-transform: uppercase;
+          transition:
+            transform .2s ease,
+            background .2s ease,
+            border-color .2s ease;
+        }
+
+        .contact-submit:hover:not(:disabled) {
+          border-color: var(--teal-bright);
+          background: var(--teal-bright);
+          transform: translateY(-1px);
+        }
+
+        .contact-submit:disabled {
+          cursor: not-allowed;
+          opacity: .65;
+        }
+
+        .contact-spinner {
+          width: .9rem;
+          height: .9rem;
+          border: 2px solid rgba(8, 8, 8, .35);
+          border-top-color: #080808;
+          border-radius: 50%;
+          animation: contact-spin .7s linear infinite;
+        }
+
+        @keyframes contact-spin {
+          to {
+            transform: rotate(360deg);
+          }
+        }
+
+        .contact-aside {
+          padding: .65rem 0;
+        }
+
+        .contact-aside-title {
+          max-width: 10ch;
+          margin: 1.05rem 0 1.5rem;
+          font-size: clamp(2.15rem, 4vw, 4rem);
+          font-weight: 900;
+          letter-spacing: -.065em;
+          line-height: .86;
+          text-transform: uppercase;
+        }
+
+        .contact-aside-text {
+          max-width: 37ch;
+          margin: 0;
+          color: var(--muted);
+          font-size: .95rem;
+          line-height: 1.78;
+        }
+
+        .contact-info {
+          margin-top: 3rem;
+          padding-top: 1.5rem;
+          border-top: 1px solid var(--line);
+        }
+
+        .contact-info-label {
+          margin: 0 0 .55rem;
+          color: rgba(247, 247, 244, .43);
+          font-size: .65rem;
+          font-weight: 800;
+          letter-spacing: .15em;
+          text-transform: uppercase;
+        }
+
+        .contact-mail {
+          color: var(--teal);
+          font-size: 1rem;
+          font-weight: 700;
+          text-decoration: none;
+        }
+
+        .contact-mail:hover {
+          color: var(--teal-bright);
+        }
+
+        .contact-note {
+          margin-top: 1.2rem;
+          color: rgba(247, 247, 244, .38);
+          font-size: .72rem;
+          line-height: 1.55;
+        }
+
+        .contact-overlay {
+          position: fixed;
+          inset: 0;
+          z-index: 80;
+          display: grid;
+          place-items: center;
+          padding: 1.5rem;
+          background: rgba(0, 0, 0, .76);
+          backdrop-filter: blur(10px);
+        }
+
+        .contact-popup {
+          width: min(100%, 30rem);
+          border: 1px solid rgba(247, 247, 244, .14);
+          border-radius: 1.15rem;
+          padding: 2.5rem;
+          background:
+            radial-gradient(
+              circle at 85% 10%,
+              rgba(13, 148, 136, .16),
+              transparent 37%
+            ),
+            #0d0e0e;
+          box-shadow: 0 1.5rem 5rem rgba(0, 0, 0, .58);
+        }
+
+        .contact-popup h2 {
+          margin: 1rem 0 .85rem;
+          font-size: clamp(2rem, 4vw, 3.2rem);
+          font-weight: 900;
+          letter-spacing: -.06em;
+          line-height: .88;
+          text-transform: uppercase;
+        }
+
+        .contact-popup p {
+          margin: 0 0 1.8rem;
+          color: var(--muted);
+          line-height: 1.7;
+        }
+
+        .contact-close {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 2.85rem;
+          border: 1px solid var(--teal);
+          border-radius: 99px;
+          padding: 0 1.35rem;
+          background: var(--teal);
+          color: #080808;
+          cursor: pointer;
+          font: inherit;
+          font-size: .68rem;
+          font-weight: 900;
+          letter-spacing: .13em;
+          text-transform: uppercase;
+        }
+
+        @media (max-width: 900px) {
+          .contact-shell {
+            width: min(100% - 2.5rem, 1440px);
+          }
+
+          .contact-body {
+            grid-template-columns: 1fr;
+            gap: 3.5rem;
+            padding: 4rem 0 4.5rem;
+          }
+
+          .contact-aside {
+            padding: 0;
+          }
+
+          .contact-aside-title {
+            max-width: 14ch;
+          }
+        }
+
+        @media (max-width: 560px) {
+          .contact-hero {
+            padding: 3.6rem 0 3.3rem;
+          }
+
+          .contact-title {
+            font-size: clamp(3.25rem, 16vw, 4.8rem);
+          }
+
+          .contact-form-card,
+          .contact-popup {
+            border-radius: .9rem;
+            padding: 1.4rem;
+          }
+
+          .contact-textarea {
+            min-height: 12.5rem;
+          }
+        }
+      `}</style>
+
+      <section className="contact-hero">
+        <div className="contact-shell contact-hero-inner">
+          <div className="contact-eyebrow">{content.eyebrow}</div>
+
+          <h1 className="contact-title">
+            {content.title}
+            <span>
+              <em>{content.accent}</em>
+            </span>
           </h1>
 
-          <p
-            style={{
-              fontSize: "clamp(1rem, 1.5vw, 1.2rem)",
-              color: "#888888",
-              lineHeight: 1.8,
-              whiteSpace: "nowrap",
-            }}
-          >
-            Fragen, Ideen oder Kooperationen? Wir freuen uns über jede
-            Nachricht.
-          </p>
+          <p className="contact-intro">{content.intro}</p>
         </div>
       </section>
 
-      {/* FORM */}
-      <section
-        className="kontakt-form"
-        style={{
-          padding: "5rem 3rem",
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "6rem",
-          alignItems: "start",
-        }}
-      >
-        <form
-          onSubmit={handleSubmit}
-          style={{ opacity: isSubmitting ? 0.6 : 1 }}
-        >
-          {/* Honeypot */}
+      <section className="contact-shell contact-body">
+        <form className="contact-form-card" onSubmit={handleSubmit}>
+          <div className="contact-kicker">{content.label}</div>
+          <h2 className="contact-form-heading">{content.formTitle}</h2>
+
           <input
             type="text"
             name="website"
@@ -174,212 +568,109 @@ export default function Kontakt() {
             onChange={handleChange}
             autoComplete="off"
             tabIndex={-1}
+            aria-hidden="true"
             style={{ display: "none" }}
           />
 
-          <div style={{ marginBottom: "2rem" }}>
-            <label htmlFor="name" style={labelStyle}>
+          <input type="hidden" name="anliegen" value={formData.anliegen} />
+
+          <div className="contact-field">
+            <label className="contact-label" htmlFor="name">
               Name
             </label>
             <input
-              type="text"
+              className="contact-input"
               id="name"
               name="name"
               value={formData.name}
               onChange={handleChange}
+              autoComplete="name"
               required
-              style={inputStyle}
             />
           </div>
 
-          <div style={{ marginBottom: "2rem" }}>
-            <label htmlFor="email" style={labelStyle}>
+          <div className="contact-field">
+            <label className="contact-label" htmlFor="email">
               E-Mail
             </label>
             <input
-              type="email"
+              className="contact-input"
               id="email"
               name="email"
+              type="email"
               value={formData.email}
               onChange={handleChange}
+              autoComplete="email"
               required
-              style={inputStyle}
             />
           </div>
 
-          <div style={{ marginBottom: "2.5rem" }}>
-            <label htmlFor="message" style={labelStyle}>
-              Nachricht
+          <div className="contact-field">
+            <label className="contact-label" htmlFor="message">
+              {content.messageLabel}
             </label>
             <textarea
+              className="contact-input contact-textarea"
               id="message"
               name="message"
-              rows={6}
               value={formData.message}
               onChange={handleChange}
+              placeholder={content.placeholder}
               required
-              style={{ ...inputStyle, resize: "none" }}
             />
           </div>
 
           <button
+            className="contact-submit"
             type="submit"
             disabled={isSubmitting}
-            style={{
-              background: isSubmitting ? "#0a5c56" : "#0d9488",
-              color: "#ffffff",
-              border: "none",
-              fontFamily: "var(--font-body, 'DM Sans', sans-serif)",
-              fontWeight: 600,
-              fontSize: ".85rem",
-              letterSpacing: ".1em",
-              textTransform: "uppercase",
-              padding: "1rem 2.5rem",
-              cursor: isSubmitting ? "not-allowed" : "pointer",
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: ".6rem",
-            }}
           >
-            {isSubmitting && (
-              <span
-                style={{
-                  width: "14px",
-                  height: "14px",
-                  border: "2px solid rgba(255,255,255,.4)",
-                  borderTop: "2px solid white",
-                  borderRadius: "50%",
-                  animation: "spin .6s linear infinite",
-                }}
-              />
-            )}
-            {isSubmitting ? "Wird gesendet..." : "Nachricht senden"}
+            {isSubmitting && <span className="contact-spinner" />}
+            {isSubmitting ? "Wird gesendet …" : content.submitText}
+            {!isSubmitting && <span aria-hidden="true">→</span>}
           </button>
         </form>
 
-        {/* INFO */}
-        <div style={{ paddingTop: "1rem" }}>
-          <h2
-            style={{
-              fontFamily: "var(--font-display, 'Bebas Neue', sans-serif)",
-              fontSize: "clamp(1.8rem, 3vw, 2.8rem)",
-              letterSpacing: ".02em",
-              color: "#f5f5f5",
-              marginBottom: "1.5rem",
-            }}
-          >
-            Schreib uns
-          </h2>
+        <aside className="contact-aside">
+          <div className="contact-kicker">{content.label}</div>
+          <h2 className="contact-aside-title">{content.infoTitle}</h2>
+          <p className="contact-aside-text">{content.infoText}</p>
 
-          <p
-            style={{
-              color: "#666666",
-              fontSize: ".95rem",
-              lineHeight: 1.8,
-              marginBottom: "2rem",
-            }}
-          >
-            Ob du mitspielen, mitgestalten oder einfach mehr erfahren
-            möchtest — wir melden uns persönlich bei dir.
-          </p>
-
-          <div
-            style={{
-              borderTop: "1px solid #1a1a1a",
-              paddingTop: "2rem",
-            }}
-          >
-            <p
-              style={{
-                fontSize: ".7rem",
-                letterSpacing: ".2em",
-                textTransform: "uppercase",
-                color: "#555555",
-                marginBottom: ".5rem",
-              }}
-            >
-              E-Mail
-            </p>
-
-            <a
-              href="mailto:kontakt@mellowien.at"
-              style={{
-                color: "#0d9488",
-                textDecoration: "none",
-                fontSize: "1rem",
-                fontWeight: 500,
-              }}
-            >
+          <div className="contact-info">
+            <p className="contact-info-label">E-Mail</p>
+            <a className="contact-mail" href="mailto:kontakt@mellowien.at">
               kontakt@mellowien.at
             </a>
+            <p className="contact-note">
+              Wir antworten dir persönlich und melden uns so bald wie möglich.
+            </p>
           </div>
-        </div>
+        </aside>
       </section>
 
-      {/* POPUP */}
       {showPopup && (
         <div
+          className="contact-overlay"
           onClick={() => setShowPopup(false)}
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,.8)",
-            backdropFilter: "blur(8px)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 50,
-          }}
+          role="presentation"
         >
           <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              background: "#0f0f0f",
-              border: "1px solid #222222",
-              padding: "3rem",
-              textAlign: "center",
-              maxWidth: "400px",
-              width: "90%",
-            }}
+            className="contact-popup"
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="contact-popup-title"
           >
-            <h2
-              style={{
-                fontFamily: "var(--font-display, 'Bebas Neue', sans-serif)",
-                fontSize: "2.5rem",
-                letterSpacing: ".05em",
-                color: "#0d9488",
-                marginBottom: "1rem",
-              }}
-            >
-              Nachricht verschickt
-            </h2>
-
-            <p
-              style={{
-                color: "#888888",
-                lineHeight: 1.7,
-                marginBottom: "2rem",
-              }}
-            >
-              Wir melden uns so bald wie möglich bei dir.
+            <div className="contact-kicker">Danke</div>
+            <h2 id="contact-popup-title">Anfrage versendet.</h2>
+            <p>
+              Danke für deine Nachricht. Wir melden uns so bald wie möglich bei
+              dir.
             </p>
-
             <button
+              className="contact-close"
+              type="button"
               onClick={() => setShowPopup(false)}
-              style={{
-                background: "#0d9488",
-                color: "#ffffff",
-                border: "none",
-                fontFamily: "var(--font-body, 'DM Sans', sans-serif)",
-                fontWeight: 600,
-                fontSize: ".85rem",
-                letterSpacing: ".1em",
-                textTransform: "uppercase",
-                padding: ".85rem 2rem",
-                cursor: "pointer",
-              }}
             >
               Schließen
             </button>
@@ -387,5 +678,23 @@ export default function Kontakt() {
         </div>
       )}
     </main>
+  );
+}
+
+export default function Kontakt() {
+  return (
+    <Suspense
+      fallback={
+        <main
+          style={{
+            minHeight: "100vh",
+            background: "#080808",
+            paddingTop: "88px",
+          }}
+        />
+      }
+    >
+      <KontaktContent />
+    </Suspense>
   );
 }

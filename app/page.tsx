@@ -2,6 +2,7 @@ import Link from "next/link";
 import LogoHero from "@/components/LogoHero";
 import Countdown from "@/components/Countdown";
 import ConvergingText from "@/components/ConvergingText";
+import NewsSection from "@/components/NewsSection";
 
 const SKYLINE_PATH = `M3116 3019 c-33 -39 -34 -88 -3 -124 l22 -27 -17 -116 c-10 -65 -33
 -234 -53 -377 -19 -143 -39 -289 -44 -325 -5 -36 -17 -152 -27 -258 -17 -189
@@ -238,8 +239,7 @@ export default function Home() {
       </div>
 
       <ConvergingText />
-
-
+      <NewsSection />
     </main>
   );
 }
