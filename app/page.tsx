@@ -149,6 +149,10 @@ export default function Home() {
             display: none !important;
           }
 
+          .hero-skyline {
+            display: none !important;
+          }
+
           .hero-copy {
             max-width: none !important;
           }
@@ -198,15 +202,6 @@ export default function Home() {
             text-align: center !important;
             width: 100% !important;
           }
-
-          .hero-section svg {
-            bottom: -2.5rem !important;
-            height: 45% !important;
-            left: auto !important;
-            opacity: .1 !important;
-            right: -45% !important;
-            width: 150% !important;
-          }
         }
 
         @media (max-width: 380px) {
@@ -238,6 +233,7 @@ export default function Home() {
           />
 
           <svg
+            className="hero-skyline"
             viewBox="0 9880 470 360"
             preserveAspectRatio="xMidYMax meet"
             aria-hidden
@@ -276,10 +272,7 @@ export default function Home() {
             <h1 className="hero-title">
               <span className="hero-title-small">Mehr als</span>
 
-              <span
-                className="hero-title-outline"
-                style={outlineStyle}
-              >
+              <span className="hero-title-outline" style={outlineStyle}>
                 nur Fußball
               </span>
             </h1>
