@@ -1,6 +1,7 @@
 import Link from "next/link";
 import LogoHero from "@/components/LogoHero";
 import Countdown from "@/components/Countdown";
+import ConvergingText from "@/components/ConvergingText";
 
 const SKYLINE_PATH = `M3116 3019 c-33 -39 -34 -88 -3 -124 l22 -27 -17 -116 c-10 -65 -33
 -234 -53 -377 -19 -143 -39 -289 -44 -325 -5 -36 -17 -152 -27 -258 -17 -189
@@ -17,67 +18,85 @@ l-72 110 3 238 c3 259 -6 385 -38 523 -25 108 -38 144 -55 144 -18 0 -21 -11
 -30 255 -2 8 -20 123 -40 255 -20 132 -40 254 -46 272 -8 25 -6 37 11 65 47
 77 6 148 -85 148 -25 0 -40 -8 -59 -31z`;
 
+const font = "Arial, Helvetica, sans-serif";
+
+const outlineStyle = {
+  display: "block",
+  color: "transparent",
+  WebkitTextStroke: "1.4px rgba(247,247,244,.72)",
+  paintOrder: "stroke fill" as const,
+};
+
 export default function Home() {
   return (
-    <main style={{ background: "#080808", color: "#f5f5f5", fontFamily: "var(--font-body, 'DM Sans', sans-serif)" }}>
-
+    <main
+      style={{
+        background: "#080808",
+        color: "#f7f7f4",
+        fontFamily: font,
+      }}
+    >
       <style>{`
+        .wwp-statement {
+          --mello-black: #080808;
+          --mello-line: #222222;
+        }
+
         @media (max-width: 768px) {
           .hero-section {
             grid-template-columns: 1fr !important;
+            min-height: auto !important;
             padding: 2rem 1.5rem !important;
             gap: 0 !important;
           }
-          .hero-logohero { display: none !important; }
-          .manifesto-section {
-            grid-template-columns: 1fr !important;
-            padding: 4rem 1.5rem !important;
-            gap: 2rem !important;
+
+          .hero-logohero {
+            display: none !important;
           }
         }
       `}</style>
 
-      {/* Outer wrapper */}
-      <div style={{
-        marginTop: "96px",
-        minHeight: "calc(100dvh - 96px)",
-        display: "flex",
-        flexDirection: "column",
-      }}>
+      <div
+        style={{
+          marginTop: "90px",
+        }}
+      >
+        <section
+          className="hero-section"
+          style={{
+            alignItems: "center",
+            display: "grid",
+            gap: "4rem",
+            gridTemplateColumns: "1fr 1fr",
+            minHeight: "calc(100dvh - 390px)",
+            overflow: "hidden",
+            padding: "1.5rem 3rem 2rem",
+            position: "relative",
+          }}
+        >
+          <div
+            style={{
+              background:
+                "radial-gradient(ellipse 60% 80% at 70% 40%, rgba(13,148,136,.08) 0%, transparent 70%)",
+              inset: 0,
+              pointerEvents: "none",
+              position: "absolute",
+            }}
+          />
 
-        {/* ── HERO ── */}
-        <section className="hero-section" style={{
-          flex: 1,
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          alignItems: "center",
-          paddingLeft: "3rem",
-          paddingRight: "3rem",
-          paddingTop: "2.5rem",
-          paddingBottom: "2.5rem",
-          gap: "4rem",
-          position: "relative",
-          overflow: "hidden",
-        }}>
-
-          {/* Teal glow */}
-          <div style={{
-            position: "absolute", inset: 0, pointerEvents: "none",
-            background: "radial-gradient(ellipse 60% 80% at 70% 40%, rgba(13,148,136,.08) 0%, transparent 70%)",
-          }} />
-
-          {/* Skyline — full width, bottom-anchored */}
           <svg
             viewBox="0 9880 470 360"
             preserveAspectRatio="xMidYMax meet"
             aria-hidden
             style={{
-              position: "absolute",
-              bottom: 0, left: 0,
-              width: "100%", height: "80%",
-              pointerEvents: "none",
-              zIndex: 0,
+              bottom: 0,
+              height: "80%",
+              left: 0,
               opacity: 0.15,
+              pointerEvents: "none",
+              position: "absolute",
+              width: "100%",
+              zIndex: 0,
             }}
           >
             <defs>
@@ -86,63 +105,125 @@ export default function Home() {
                 <stop offset="100%" stopColor="#0d9488" stopOpacity="0.1" />
               </linearGradient>
             </defs>
+
             <g transform="translate(0,10240) scale(0.1,-0.1)">
               <path d={SKYLINE_PATH} fill="url(#skyGrad)" />
-              <path d={SKYLINE_PATH} fill="none" stroke="#0d9488" strokeWidth="15" />
+              <path
+                d={SKYLINE_PATH}
+                fill="none"
+                stroke="#0d9488"
+                strokeWidth="15"
+              />
             </g>
           </svg>
 
-          {/* Left content */}
-          <div style={{ position: "relative", zIndex: 1 }}>
-            <div style={{
-              fontFamily: "var(--font-display, 'Bebas Neue', sans-serif)",
-              fontSize: "clamp(1.6rem, 2.8vw, 2.4rem)",
-              letterSpacing: ".1em",
-              color: "#0d9488",
-              marginBottom: ".4rem",
-            }}>
+          <div
+            style={{
+              position: "relative",
+              zIndex: 1,
+            }}
+          >
+            <div
+              style={{
+                color: "#0d9488",
+                fontFamily: font,
+                fontSize: "clamp(1rem, 1.55vw, 1.35rem)",
+                fontWeight: 700,
+                letterSpacing: ".11em",
+                marginBottom: "1.2rem",
+                textTransform: "uppercase",
+              }}
+            >
               Wir sind Mello
             </div>
 
-            <h1 style={{
-              fontFamily: "var(--font-display, 'Bebas Neue', sans-serif)",
-              fontSize: "clamp(3.5rem, 7vw, 7rem)",
-              lineHeight: .95, letterSpacing: ".02em",
-              color: "#f5f5f5", marginBottom: "1.8rem",
-            }}>
-              Der Verein<br />
-              <span style={{ color: "#0d9488", display: "block" }}>für eine neue</span>
-              Generation
+            <h1
+              style={{
+                color: "#f7f7f4",
+                fontFamily: font,
+                fontSize: "clamp(3.5rem, 7vw, 7rem)",
+                fontWeight: 700,
+                letterSpacing: "-.065em",
+                lineHeight: 0.84,
+                margin: "0 0 1.8rem",
+                textTransform: "uppercase",
+              }}
+            >
+              <span
+                style={{
+                  display: "block",
+                  fontSize: ".69em",
+                }}
+              >
+                Mehr als
+              </span>
+
+              <span
+                style={{
+                  ...outlineStyle,
+                  fontSize: ".69em",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                nur Fußball
+              </span>
             </h1>
 
-            <p style={{
-              fontSize: "1.05rem", color: "#888888",
-              maxWidth: "38ch", marginBottom: "2rem", lineHeight: 1.7,
-            }}>
-              Wir sind Mello. Offen, gemeinschaftlich, ambitioniert — ein Club für alle,
-              die Fußball lieben und Wiens neue Fußballkultur mitgestalten wollen.
+            <p
+              style={{
+                color: "#888888",
+                fontFamily: font,
+                fontSize: "1rem",
+                lineHeight: 1.7,
+                marginBottom: "2rem",
+                maxWidth: "38ch",
+              }}
+            >
+              Mello verbindet sportlichen Anspruch mit echter Gemeinschaft. Ein
+              Verein für Menschen, die Verantwortung übernehmen,
+              zusammenhalten und das Spiel gemeinsam leben.
             </p>
 
-            <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-              <Link href="/mitgliedschaft" style={{
-                background: "#0d9488", color: "#ffffff",
-                fontFamily: "var(--font-body, 'DM Sans', sans-serif)",
-                fontWeight: 600, fontSize: ".85rem",
-                letterSpacing: ".1em", textTransform: "uppercase",
-                padding: ".9rem 2rem", textDecoration: "none",
-                display: "inline-block",
-              }}>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "1rem",
+              }}
+            >
+              <Link
+                href="/mitgliedschaft"
+                style={{
+                  background: "#0d9488",
+                  color: "#ffffff",
+                  display: "inline-block",
+                  fontFamily: font,
+                  fontSize: ".75rem",
+                  fontWeight: 700,
+                  letterSpacing: ".1em",
+                  padding: ".95rem 2rem",
+                  textDecoration: "none",
+                  textTransform: "uppercase",
+                }}
+              >
                 Jetzt Mitglied werden
               </Link>
-              <Link href="/ueber-uns" style={{
-                border: "1px solid rgba(13,148,136,.5)",
-                color: "#0d9488",
-                fontFamily: "var(--font-body, 'DM Sans', sans-serif)",
-                fontWeight: 500, fontSize: ".85rem",
-                letterSpacing: ".1em", textTransform: "uppercase",
-                padding: ".9rem 2rem", textDecoration: "none",
-                display: "inline-block",
-              }}>
+
+              <Link
+                href="/ueber-uns"
+                style={{
+                  border: "1px solid rgba(13,148,136,.5)",
+                  color: "#0d9488",
+                  display: "inline-block",
+                  fontFamily: font,
+                  fontSize: ".75rem",
+                  fontWeight: 700,
+                  letterSpacing: ".1em",
+                  padding: ".95rem 2rem",
+                  textDecoration: "none",
+                  textTransform: "uppercase",
+                }}
+              >
                 Mehr über uns
               </Link>
             </div>
@@ -151,44 +232,13 @@ export default function Home() {
           <div className="hero-logohero">
             <LogoHero />
           </div>
-
         </section>
 
-        {/* ── COUNTDOWN ── */}
         <Countdown />
-
       </div>
 
-      {/* ── MANIFESTO ── */}
-      <section className="manifesto-section" style={{
-        padding: "7rem 3rem",
-        display: "grid", gridTemplateColumns: "1fr 1fr",
-        gap: "6rem", alignItems: "center",
-        borderTop: "1px solid #222222",
-      }}>
-        <div>
-          <p style={{
-            fontSize: ".7rem", letterSpacing: ".25em",
-            textTransform: "uppercase", color: "#0d9488",
-            marginBottom: "1.2rem", fontWeight: 500,
-          }}>Unser Ansatz</p>
-          <h2 style={{
-            fontFamily: "var(--font-display, 'Bebas Neue', sans-serif)",
-            fontSize: "clamp(2.5rem, 4vw, 4.5rem)",
-            lineHeight: 1.05, letterSpacing: ".02em", color: "#f5f5f5",
-          }}>
-            Fußball<br />neu gedacht
-          </h2>
-        </div>
-        <div style={{ color: "#888888", fontSize: "1rem", lineHeight: 1.8 }}>
-          <p>Bei uns findest du nicht nur ein Team, sondern eine Community, die zusammen trainiert, zusammen wächst und eine neue Fußballkultur prägt.</p>
-          <p style={{ marginTop: "1rem" }}>Wir denken moderner: offen für alle, transparent in unserer Struktur, ambitioniert auf und neben dem Platz.</p>
-          <p style={{ marginTop: "1rem", color: "rgba(245,245,245,.7)" }}>
-            Die erste Generation schreibt Geschichte.{" "}
-            <span style={{ color: "#0d9488" }}>Sei von Anfang an dabei.</span>
-          </p>
-        </div>
-      </section>
+      <ConvergingText />
+
 
     </main>
   );
