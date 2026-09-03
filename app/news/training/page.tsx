@@ -97,8 +97,7 @@ const interview = [
     ),
   },
   {
-    question:
-      "Wo siehst du die größten Entwicklungen innerhalb der Gruppe?",
+    question: "Wo siehst du die größten Entwicklungen innerhalb der Gruppe?",
     answer: (
       <>
         <p>
@@ -151,13 +150,13 @@ export default function TrainingPage() {
           --paper: #f7f7f4;
           --teal: #0d9488;
           --teal-bright: #14b8a6;
-          --line: rgba(247, 247, 244, .12);
-          --muted: rgba(247, 247, 244, .66);
-          min-height: 100vh;
-          overflow: hidden;
+          --line: rgba(247,247,244,.12);
+          --muted: rgba(247,247,244,.66);
           background: var(--ink);
           color: var(--paper);
           font-family: Arial, Helvetica, sans-serif;
+          min-height: 100vh;
+          overflow: hidden;
           padding-top: 88px;
         }
 
@@ -166,93 +165,90 @@ export default function TrainingPage() {
         }
 
         .report-shell {
-          width: min(100% - 6rem, 1440px);
           margin: 0 auto;
+          width: min(100% - 6rem, 1440px);
         }
 
         .report-hero {
-          position: relative;
-          overflow: hidden;
-          border-bottom: 1px solid var(--line);
-          padding: 4.7rem 0 4.45rem;
           background:
             radial-gradient(
               ellipse 45% 125% at 96% 43%,
-              rgba(13, 148, 136, .16),
+              rgba(13,148,136,.16),
               transparent 74%
             ),
-            linear-gradient(116deg, #080808 0%, #080808 55%, #091311 100%);
+            linear-gradient(116deg,#080808 0%,#080808 55%,#091311 100%);
+          border-bottom: 1px solid var(--line);
+          overflow: hidden;
+          padding: 4.7rem 0 4.45rem;
+          position: relative;
         }
 
         .report-hero::after {
+          border: 1px solid rgba(13,148,136,.14);
+          border-radius: 50%;
+          bottom: -17rem;
+          box-shadow:
+            0 0 0 3.5rem rgba(13,148,136,.025),
+            0 0 0 7rem rgba(13,148,136,.015);
           content: "";
+          height: 42rem;
+          pointer-events: none;
           position: absolute;
           right: -12rem;
-          bottom: -17rem;
           width: 42rem;
-          height: 42rem;
-          border: 1px solid rgba(13, 148, 136, .14);
-          border-radius: 50%;
-          box-shadow:
-            0 0 0 3.5rem rgba(13, 148, 136, .025),
-            0 0 0 7rem rgba(13, 148, 136, .015);
-          pointer-events: none;
         }
 
         .report-hero-inner {
+          max-width: 980px;
           position: relative;
           z-index: 1;
-          max-width: 980px;
         }
 
         .report-back {
-          display: inline-flex;
           align-items: center;
-          min-height: 2.6rem;
-          gap: .55rem;
-          border: 1px solid rgba(247, 247, 244, .16);
+          border: 1px solid rgba(247,247,244,.16);
           border-radius: 999px;
-          padding: 0 1rem;
-          color: rgba(247, 247, 244, .70);
+          color: rgba(247,247,244,.70);
+          display: inline-flex;
           font-size: .63rem;
           font-weight: 800;
+          gap: .55rem;
           letter-spacing: .12em;
+          min-height: 2.6rem;
+          padding: 0 1rem;
           text-decoration: none;
           text-transform: uppercase;
-          transition:
-            color .2s ease,
-            border-color .2s ease,
-            background .2s ease;
+          transition: color .2s ease, border-color .2s ease, background .2s ease;
         }
 
         .report-back:hover {
-          border-color: rgba(13, 148, 136, .7);
-          background: rgba(13, 148, 136, .08);
+          background: rgba(13,148,136,.08);
+          border-color: rgba(13,148,136,.7);
           color: var(--teal);
         }
 
         .report-meta {
-          display: flex;
           align-items: center;
-          margin: 2rem 0 1.65rem;
           color: var(--teal);
+          display: flex;
           font-size: .67rem;
           font-weight: 900;
           letter-spacing: .16em;
+          margin: 2rem 0 1.65rem;
           text-transform: uppercase;
         }
 
         .report-title {
+          align-items: flex-start;
           display: flex;
           flex-direction: column;
-          align-items: flex-start;
-          gap: .17em;
-          max-width: 12ch;
-          margin: 0;
-          font-size: clamp(3.35rem, 7.4vw, 7.7rem);
+          font-size: clamp(3.35rem,7.4vw,7.7rem);
           font-weight: 900;
+          gap: .17em;
           letter-spacing: -.055em;
           line-height: .84;
+          margin: 0;
+          max-width: 12ch;
           text-transform: uppercase;
         }
 
@@ -267,17 +263,17 @@ export default function TrainingPage() {
 
         .report-title .title-outline {
           color: transparent;
-          -webkit-text-stroke: 1.25px rgba(247, 247, 244, .75);
+          -webkit-text-stroke: 1.25px rgba(247,247,244,.75);
         }
 
         .report-title .title-final {
-  display: inline-block;
-  width: max-content;
-  max-width: none;
-  color: var(--paper);
-  letter-spacing: -.04em;
-  white-space: nowrap;
-}
+          color: var(--paper);
+          display: inline-block;
+          letter-spacing: -.04em;
+          max-width: none;
+          white-space: nowrap;
+          width: max-content;
+        }
 
         .report-title em {
           color: var(--teal);
@@ -286,117 +282,117 @@ export default function TrainingPage() {
         }
 
         .report-lead {
-          max-width: 64ch;
-          margin: 2.25rem 0 0;
-          color: rgba(247, 247, 244, .74);
-          font-size: clamp(1rem, 1.35vw, 1.17rem);
+          color: rgba(247,247,244,.74);
+          font-size: clamp(1rem,1.35vw,1.17rem);
           line-height: 1.78;
+          margin: 2.25rem 0 0;
+          max-width: 64ch;
         }
 
         .report-byline {
-          display: flex;
           align-items: center;
-          gap: .75rem;
-          margin: 2rem 0 0;
-          color: rgba(247, 247, 244, .52);
+          color: rgba(247,247,244,.52);
+          display: flex;
           font-size: .68rem;
           font-weight: 800;
+          gap: .75rem;
           letter-spacing: .11em;
+          margin: 2rem 0 0;
           text-transform: uppercase;
         }
 
         .report-byline::before {
-          content: "";
-          width: .45rem;
-          height: .45rem;
-          border-radius: 50%;
           background: var(--teal);
-          box-shadow: 0 0 10px rgba(13, 148, 136, .75);
+          border-radius: 50%;
+          box-shadow: 0 0 10px rgba(13,148,136,.75);
+          content: "";
+          height: .45rem;
+          width: .45rem;
         }
 
         .venue-section {
-          border-bottom: 1px solid var(--line);
           background: #090a0a;
+          border-bottom: 1px solid var(--line);
           padding: 3.8rem 0 0;
         }
 
         .venue-figure {
-          position: relative;
+          background: #101010;
+          border: 1px solid rgba(13,148,136,.45);
+          border-radius: 1rem 1rem 0 0;
           margin: 0;
           overflow: hidden;
-          border: 1px solid rgba(13, 148, 136, .45);
-          border-radius: 1rem 1rem 0 0;
-          background: #101010;
+          position: relative;
         }
 
         .venue-image {
           display: block;
-          width: 100%;
-          height: clamp(19rem, 39vw, 35rem);
+          filter: saturate(.82) contrast(1.04);
+          height: clamp(19rem,39vw,35rem);
           object-fit: cover;
           opacity: .84;
-          filter: saturate(.82) contrast(1.04);
+          width: 100%;
         }
 
         .venue-figure::after {
-          content: "";
-          position: absolute;
-          inset: 0;
           background:
             linear-gradient(
               90deg,
-              rgba(8, 8, 8, .65) 0%,
-              rgba(8, 8, 8, .10) 60%,
-              rgba(13, 148, 136, .10) 100%
+              rgba(8,8,8,.65) 0%,
+              rgba(8,8,8,.10) 60%,
+              rgba(13,148,136,.10) 100%
             ),
             linear-gradient(
               0deg,
-              rgba(8, 8, 8, .82) 0%,
+              rgba(8,8,8,.82) 0%,
               transparent 48%
             );
+          content: "";
+          inset: 0;
           pointer-events: none;
+          position: absolute;
         }
 
         .venue-caption {
+          bottom: clamp(1.25rem,4vw,3.2rem);
+          left: clamp(1.25rem,4vw,3.5rem);
+          max-width: 32rem;
           position: absolute;
           z-index: 1;
-          left: clamp(1.25rem, 4vw, 3.5rem);
-          bottom: clamp(1.25rem, 4vw, 3.2rem);
-          max-width: 32rem;
         }
 
         .venue-kicker {
-          margin: 0 0 .65rem;
           color: var(--teal);
           font-size: .64rem;
           font-weight: 900;
           letter-spacing: .16em;
+          margin: 0 0 .65rem;
           text-transform: uppercase;
         }
 
         .venue-caption h2 {
-          margin: 0;
           color: var(--paper);
-          font-size: clamp(1.8rem, 3.6vw, 3.7rem);
+          font-size: clamp(1.8rem,3.6vw,3.7rem);
           font-weight: 900;
           letter-spacing: -.07em;
           line-height: .87;
+          margin: 0;
           text-transform: uppercase;
         }
 
         .venue-caption p {
-          margin: .8rem 0 0;
-          color: rgba(247, 247, 244, .72);
+          color: rgba(247,247,244,.72);
           font-size: .83rem;
           font-weight: 700;
           letter-spacing: .04em;
           line-height: 1.55;
+          margin: .8rem 0 0;
         }
 
         .report-content {
           display: grid;
-          grid-template-columns: minmax(0, 1fr) minmax(240px, .28fr);
-          gap: clamp(3rem, 9vw, 10rem);
+          gap: clamp(3rem,9vw,10rem);
+          grid-template-columns: minmax(0,1fr) minmax(240px,.28fr);
           padding: 5.8rem 0 6.4rem;
         }
 
@@ -405,18 +401,18 @@ export default function TrainingPage() {
         }
 
         .interview-intro {
-          margin: 0 0 4rem;
           border-left: 2px solid var(--teal);
+          margin: 0 0 4rem;
           padding: .3rem 0 .3rem 1.45rem;
         }
 
         .interview-intro p {
-          margin: 0;
-          color: rgba(247, 247, 244, .84);
-          font-size: clamp(1.22rem, 2vw, 1.76rem);
+          color: rgba(247,247,244,.84);
+          font-size: clamp(1.22rem,2vw,1.76rem);
           font-weight: 800;
           letter-spacing: -.035em;
           line-height: 1.23;
+          margin: 0;
         }
 
         .interview-block {
@@ -424,22 +420,22 @@ export default function TrainingPage() {
         }
 
         .interview-question-label {
-          margin: 0 0 .8rem;
           color: var(--teal);
           font-size: .64rem;
           font-weight: 900;
           letter-spacing: .17em;
+          margin: 0 0 .8rem;
           text-transform: uppercase;
         }
 
         .interview-question {
-          max-width: 25ch;
-          margin: 0 0 1.65rem;
           color: var(--paper);
-          font-size: clamp(1.55rem, 2.8vw, 2.65rem);
+          font-size: clamp(1.55rem,2.8vw,2.65rem);
           font-weight: 900;
           letter-spacing: -.06em;
           line-height: .95;
+          margin: 0 0 1.65rem;
+          max-width: 25ch;
           text-transform: uppercase;
         }
 
@@ -448,10 +444,10 @@ export default function TrainingPage() {
         }
 
         .interview-answer p {
-          margin: 0 0 1.45rem;
           color: var(--muted);
-          font-size: clamp(1rem, 1.2vw, 1.08rem);
+          font-size: clamp(1rem,1.2vw,1.08rem);
           line-height: 1.86;
+          margin: 0 0 1.45rem;
         }
 
         .interview-answer p:last-child {
@@ -459,132 +455,132 @@ export default function TrainingPage() {
         }
 
         .captain-feature {
-          position: relative;
-          overflow: hidden;
-          margin: 4.6rem 0;
-          border: 1px solid rgba(13, 148, 136, .52);
-          border-radius: 1rem;
           background:
             radial-gradient(
               ellipse 58% 100% at 100% 52%,
-              rgba(13, 148, 136, .17),
+              rgba(13,148,136,.17),
               transparent 75%
             ),
             #0b0d0d;
+          border: 1px solid rgba(13,148,136,.52);
+          border-radius: 1rem;
+          margin: 4.6rem 0;
+          overflow: hidden;
+          position: relative;
         }
 
         .captain-image-wrap {
-          position: relative;
+          background: #111;
           min-height: 29rem;
           overflow: hidden;
-          background: #111;
+          position: relative;
         }
 
         .captain-image {
           display: block;
-          width: 100%;
+          filter: saturate(.84) contrast(1.05);
           height: 100%;
           min-height: 29rem;
           object-fit: cover;
           object-position: center;
           opacity: .88;
-          filter: saturate(.84) contrast(1.05);
+          width: 100%;
         }
 
         .captain-image-wrap::after {
-          content: "";
-          position: absolute;
-          inset: 0;
           background:
             linear-gradient(
               90deg,
-              rgba(8, 8, 8, .1) 0%,
-              rgba(8, 8, 8, .78) 100%
+              rgba(8,8,8,.1) 0%,
+              rgba(8,8,8,.78) 100%
             ),
             linear-gradient(
               0deg,
-              rgba(8, 8, 8, .55) 0%,
+              rgba(8,8,8,.55) 0%,
               transparent 48%
             );
+          content: "";
+          inset: 0;
           pointer-events: none;
+          position: absolute;
         }
 
         .captain-copy {
+          bottom: clamp(1.35rem,4vw,2.7rem);
           position: absolute;
+          right: clamp(1.35rem,4vw,3rem);
+          width: min(100% - 2.7rem,24rem);
           z-index: 1;
-          right: clamp(1.35rem, 4vw, 3rem);
-          bottom: clamp(1.35rem, 4vw, 2.7rem);
-          width: min(100% - 2.7rem, 24rem);
         }
 
         .captain-kicker {
-          margin: 0 0 .72rem;
           color: var(--teal);
           font-size: .63rem;
           font-weight: 900;
           letter-spacing: .16em;
+          margin: 0 0 .72rem;
           text-transform: uppercase;
         }
 
         .captain-copy h3 {
-          margin: 0;
           color: var(--paper);
-          font-size: clamp(2rem, 4vw, 4.15rem);
+          font-size: clamp(2rem,4vw,4.15rem);
           font-weight: 900;
           letter-spacing: -.075em;
           line-height: .84;
+          margin: 0;
           text-transform: uppercase;
         }
 
         .captain-copy p {
-          margin: 1rem 0 0;
-          color: rgba(247, 247, 244, .72);
+          color: rgba(247,247,244,.72);
           font-size: .9rem;
           line-height: 1.62;
+          margin: 1rem 0 0;
         }
 
         .report-aside {
-          position: sticky;
-          top: 7rem;
           align-self: start;
           border-top: 1px solid var(--line);
           padding-top: 1.35rem;
+          position: sticky;
+          top: 7rem;
         }
 
         .aside-block {
           border-bottom: 1px solid var(--line);
-          padding: 0 0 1.35rem;
           margin: 0 0 1.35rem;
+          padding: 0 0 1.35rem;
         }
 
         .aside-label {
-          margin: 0 0 .65rem;
-          color: rgba(247, 247, 244, .42);
+          color: rgba(247,247,244,.42);
           font-size: .62rem;
           font-weight: 900;
           letter-spacing: .15em;
+          margin: 0 0 .65rem;
           text-transform: uppercase;
         }
 
         .aside-value {
-          margin: 0;
           color: var(--paper);
           font-size: .92rem;
           font-weight: 700;
           line-height: 1.56;
+          margin: 0;
         }
 
         .quote-section {
-          border-top: 1px solid var(--line);
-          border-bottom: 1px solid var(--line);
-          padding: 5.4rem 0;
           background:
             radial-gradient(
               ellipse 48% 130% at 100% 50%,
-              rgba(13, 148, 136, .17),
+              rgba(13,148,136,.17),
               transparent 75%
             ),
             #090a0a;
+          border-bottom: 1px solid var(--line);
+          border-top: 1px solid var(--line);
+          padding: 5.4rem 0;
         }
 
         .quote-inner {
@@ -592,36 +588,36 @@ export default function TrainingPage() {
         }
 
         .quote-kicker {
-          margin: 0 0 1.15rem;
           color: var(--teal);
           font-size: .65rem;
           font-weight: 900;
           letter-spacing: .17em;
+          margin: 0 0 1.15rem;
           text-transform: uppercase;
         }
 
         .quote-text {
-          max-width: 18ch;
-          margin: 0;
           color: var(--paper);
-          font-size: clamp(2.5rem, 5.3vw, 6.15rem);
+          font-size: clamp(2.5rem,5.3vw,6.15rem);
           font-weight: 900;
           letter-spacing: -.085em;
           line-height: .85;
+          margin: 0;
+          max-width: 18ch;
           text-transform: uppercase;
         }
 
         .quote-text span {
           color: transparent;
-          -webkit-text-stroke: 1px rgba(247, 247, 244, .72);
+          -webkit-text-stroke: 1px rgba(247,247,244,.72);
         }
 
         .quote-author {
-          margin: 1.75rem 0 0;
-          color: rgba(247, 247, 244, .60);
+          color: rgba(247,247,244,.60);
           font-size: .7rem;
           font-weight: 900;
           letter-spacing: .13em;
+          margin: 1.75rem 0 0;
           text-transform: uppercase;
         }
 
@@ -634,22 +630,22 @@ export default function TrainingPage() {
         }
 
         .outro-kicker {
-          margin: 0 0 .9rem;
           color: var(--teal);
           font-size: .65rem;
           font-weight: 900;
           letter-spacing: .17em;
+          margin: 0 0 .9rem;
           text-transform: uppercase;
         }
 
         .outro-title {
-          max-width: 14ch;
-          margin: 0;
           color: var(--paper);
-          font-size: clamp(2.2rem, 4.3vw, 4.55rem);
+          font-size: clamp(2.2rem,4.3vw,4.55rem);
           font-weight: 900;
           letter-spacing: -.075em;
           line-height: .86;
+          margin: 0;
+          max-width: 14ch;
           text-transform: uppercase;
         }
 
@@ -658,28 +654,28 @@ export default function TrainingPage() {
         }
 
         .outro-copy {
-          max-width: 54ch;
-          margin: 1.65rem 0 0;
           color: var(--muted);
           font-size: 1.04rem;
           line-height: 1.8;
+          margin: 1.65rem 0 0;
+          max-width: 54ch;
         }
 
         .outro-link {
-          display: inline-flex;
           align-items: center;
-          justify-content: center;
-          min-height: 3rem;
-          gap: .65rem;
-          margin-top: 2rem;
+          background: var(--teal);
           border: 1px solid var(--teal);
           border-radius: 999px;
-          padding: 0 1.2rem;
-          background: var(--teal);
           color: var(--ink);
+          display: inline-flex;
           font-size: .64rem;
           font-weight: 900;
+          gap: .65rem;
+          justify-content: center;
           letter-spacing: .13em;
+          margin-top: 2rem;
+          min-height: 3rem;
+          padding: 0 1.2rem;
           text-decoration: none;
           text-transform: uppercase;
           transition: background .2s ease, transform .2s ease;
@@ -692,7 +688,7 @@ export default function TrainingPage() {
 
         @media (max-width: 900px) {
           .report-shell {
-            width: min(100% - 2.5rem, 1440px);
+            width: min(100% - 2.5rem,1440px);
           }
 
           .report-hero {
@@ -700,23 +696,23 @@ export default function TrainingPage() {
           }
 
           .report-content {
-            grid-template-columns: 1fr;
             gap: 1rem;
+            grid-template-columns: 1fr;
             padding: 4.7rem 0 5rem;
           }
 
           .report-aside {
-            position: static;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.25rem;
             border-top: 1px solid var(--line);
+            display: grid;
+            gap: 1.25rem;
+            grid-template-columns: repeat(3,1fr);
             margin-top: 1rem;
+            position: static;
           }
 
           .aside-block {
-            margin: 0;
             border-bottom: 0;
+            margin: 0;
           }
 
           .captain-feature {
@@ -730,67 +726,362 @@ export default function TrainingPage() {
 
         @media (max-width: 620px) {
           .training-report-page {
-            padding-top: 72px;
+            padding-top: 68px;
           }
 
           .report-shell {
-            width: min(100% - 2rem, 1440px);
+            width: min(100% - 2.25rem,40rem);
+          }
+
+          .report-hero {
+            background:
+              radial-gradient(
+                ellipse 115% 62% at 100% 6%,
+                rgba(13,148,136,.13),
+                transparent 72%
+              ),
+              linear-gradient(145deg,#080808 0%,#08110f 100%);
+            padding: 2.4rem 0 2.75rem;
+          }
+
+          .report-hero::after {
+            bottom: -9rem;
+            height: 21rem;
+            right: -8rem;
+            width: 21rem;
+          }
+
+          .report-back {
+            font-size: .57rem;
+            letter-spacing: .1em;
+            min-height: 44px;
+            padding: 0 .9rem;
+          }
+
+          .report-meta {
+            font-size: .57rem;
+            letter-spacing: .13em;
+            line-height: 1.45;
+            margin: 1.5rem 0 1.05rem;
           }
 
           .report-title {
-            gap: .20em;
-            font-size: clamp(3.05rem, 15vw, 4.8rem);
-            line-height: .86;
+            font-size: clamp(2.55rem,12.8vw,3.85rem);
+            gap: .15em;
+            letter-spacing: -.065em;
+            line-height: .88;
+            max-width: 100%;
           }
 
           .report-title span {
-            line-height: .86;
+            line-height: .88;
+          }
+
+          .report-title .title-final {
+            max-width: 100%;
+            white-space: normal;
+            width: auto;
+          }
+
+          .report-lead {
+            font-size: 1rem;
+            line-height: 1.68;
+            margin-top: 1.45rem;
+            max-width: 35ch;
+          }
+
+          .report-byline {
+            align-items: flex-start;
+            font-size: .57rem;
+            gap: .55rem;
+            letter-spacing: .09em;
+            line-height: 1.45;
+            margin-top: 1.45rem;
+          }
+
+          .report-byline::before {
+            flex: 0 0 auto;
+            height: .38rem;
+            margin-top: .23rem;
+            width: .38rem;
           }
 
           .venue-section {
-            padding-top: 2.6rem;
+            padding-top: 2.25rem;
+          }
+
+          .venue-figure {
+            border-radius: .9rem;
           }
 
           .venue-image {
-            height: 23rem;
+            height: 19.5rem;
+            object-position: 55% center;
+          }
+
+          .venue-figure::after {
+            background:
+              linear-gradient(
+                0deg,
+                rgba(8,8,8,.93) 0%,
+                rgba(8,8,8,.2) 73%,
+                rgba(13,148,136,.08) 100%
+              );
+          }
+
+          .venue-caption {
+            bottom: 1.1rem;
+            left: 1rem;
+            max-width: calc(100% - 2rem);
+          }
+
+          .venue-kicker {
+            font-size: .53rem;
+            letter-spacing: .13em;
+            margin-bottom: .45rem;
+          }
+
+          .venue-caption h2 {
+            font-size: clamp(1.8rem,8.7vw,2.55rem);
+            line-height: .92;
+          }
+
+          .venue-caption p {
+            font-size: .72rem;
+            line-height: 1.45;
+            margin-top: .55rem;
+            max-width: 34ch;
+          }
+
+          .report-content {
+            gap: 2.9rem;
+            padding: 3.4rem 0 3.85rem;
+          }
+
+          .interview {
+            max-width: 36ch;
+          }
+
+          .interview-intro {
+            margin-bottom: 2.8rem;
+            padding: .2rem 0 .2rem 1rem;
+          }
+
+          .interview-intro p {
+            font-size: clamp(1.12rem,5.6vw,1.45rem);
+            line-height: 1.25;
+          }
+
+          .interview-block {
+            margin-bottom: 3.2rem;
+          }
+
+          .interview-question-label {
+            font-size: .54rem;
+            letter-spacing: .14em;
+            margin-bottom: .6rem;
+          }
+
+          .interview-question {
+            font-size: clamp(1.5rem,7.3vw,2.05rem);
+            letter-spacing: -.052em;
+            line-height: 1;
+            margin-bottom: 1.15rem;
+            max-width: 19ch;
+          }
+
+          .interview-answer {
+            max-width: 35ch;
+          }
+
+          .interview-answer p {
+            font-size: 1rem;
+            line-height: 1.72;
+            margin-bottom: 1.18rem;
+          }
+
+          .captain-feature {
+            border-radius: .9rem;
+            margin: 3.15rem 0;
           }
 
           .captain-image-wrap,
           .captain-image {
-            min-height: 31rem;
+            min-height: 25rem;
           }
 
           .captain-image {
             object-position: 42% center;
           }
 
-          .captain-copy {
-            right: 1.25rem;
-            bottom: 1.25rem;
-            left: 1.25rem;
-            width: auto;
-          }
-
           .captain-image-wrap::after {
             background:
               linear-gradient(
                 0deg,
-                rgba(8, 8, 8, .95) 0%,
-                rgba(8, 8, 8, .20) 72%
+                rgba(8,8,8,.96) 0%,
+                rgba(8,8,8,.3) 70%,
+                transparent 100%
               );
           }
 
+          .captain-copy {
+            bottom: 1.15rem;
+            left: 1rem;
+            right: 1rem;
+            width: auto;
+          }
+
+          .captain-kicker {
+            font-size: .54rem;
+            letter-spacing: .13em;
+            margin-bottom: .5rem;
+          }
+
+          .captain-copy h3 {
+            font-size: clamp(2.25rem,11vw,3.2rem);
+            line-height: .88;
+          }
+
+          .captain-copy p {
+            font-size: .86rem;
+            line-height: 1.55;
+            margin-top: .65rem;
+            max-width: 34ch;
+          }
+
           .report-aside {
+            background: rgba(247,247,244,.025);
+            border: 1px solid rgba(247,247,244,.1);
+            border-radius: .9rem;
+            display: grid;
+            gap: 0;
             grid-template-columns: 1fr;
+            margin-top: 0;
+            overflow: hidden;
+            padding: 0;
           }
 
           .aside-block {
-            border-bottom: 1px solid var(--line);
-            padding-bottom: 1.1rem;
+            border-bottom: 1px solid rgba(247,247,244,.09);
+            margin: 0;
+            padding: .9rem 1rem .85rem;
+          }
+
+          .aside-block:last-child {
+            border-bottom: 0;
+          }
+
+          .aside-label {
+            font-size: .53rem;
+            letter-spacing: .13em;
+            margin-bottom: .38rem;
+          }
+
+          .aside-value {
+            font-size: .89rem;
+            line-height: 1.46;
+          }
+
+          .quote-section {
+            background:
+              radial-gradient(
+                ellipse 115% 80% at 100% 15%,
+                rgba(13,148,136,.14),
+                transparent 74%
+              ),
+              #090a0a;
+            padding: 3.65rem 0;
+          }
+
+          .quote-kicker {
+            font-size: .55rem;
+            letter-spacing: .14em;
+            margin-bottom: .8rem;
           }
 
           .quote-text {
-            font-size: clamp(2.55rem, 13.5vw, 4.35rem);
+            font-size: clamp(2.3rem,11.5vw,3.45rem);
+            letter-spacing: -.075em;
+            line-height: .88;
+            max-width: 13ch;
+          }
+
+          .quote-text span {
+            -webkit-text-stroke-width: 1px;
+          }
+
+          .quote-author {
+            font-size: .55rem;
+            letter-spacing: .1em;
+            line-height: 1.45;
+            margin-top: 1.15rem;
+            max-width: 33ch;
+          }
+
+          .report-outro {
+            padding: 3.75rem 0 calc(4rem + env(safe-area-inset-bottom));
+          }
+
+          .outro-kicker {
+            font-size: .55rem;
+            letter-spacing: .14em;
+            margin-bottom: .7rem;
+          }
+
+          .outro-title {
+            font-size: clamp(2rem,10vw,3rem);
+            letter-spacing: -.065em;
+            line-height: .92;
+            max-width: 13ch;
+          }
+
+          .outro-copy {
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-top: 1.2rem;
+            max-width: 35ch;
+          }
+
+          .outro-link {
+            box-sizing: border-box;
+            font-size: .63rem;
+            letter-spacing: .11em;
+            margin-top: 1.55rem;
+            min-height: 50px;
+            padding: .9rem 1rem;
+            width: 100%;
+          }
+        }
+
+        @media (max-width: 360px) {
+          .report-shell {
+            width: min(100% - 2rem,40rem);
+          }
+
+          .report-title {
+            font-size: 2.38rem;
+          }
+
+          .venue-image {
+            height: 18rem;
+          }
+
+          .interview-question {
+            font-size: 1.4rem;
+          }
+
+          .interview-answer p,
+          .outro-copy {
+            font-size: .95rem;
+          }
+
+          .captain-image-wrap,
+          .captain-image {
+            min-height: 23rem;
+          }
+
+          .quote-text {
+            font-size: 2.15rem;
           }
         }
       `}</style>
@@ -798,7 +1089,8 @@ export default function TrainingPage() {
       <section className="report-hero">
         <div className="report-shell report-hero-inner">
           <Link className="report-back" href="/">
-            <span aria-hidden="true">←</span> Zur Startseite
+            <span aria-hidden="true">←</span>
+            Zur Startseite
           </Link>
 
           <div className="report-meta">
