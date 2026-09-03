@@ -764,7 +764,7 @@ export default function AboutPage() {
             style={{ position: "relative" }}
           >
             <img
-              src="/Polizeisportanlage-3.jpg"
+              src="/Polizeisportanlage.jpg"
               alt="Polizei-Sportanlage am Kaiserwasser, 1220 Wien"
               className="about-img about-venue-image"
               style={{ height: "380px" }}
