@@ -8,13 +8,37 @@ export default function ConvergingText() {
   const targetProgress = useRef(0);
   const smoothProgress = useRef(0);
   const [progress, setProgress] = useState(0);
+  const [reduceMotion, setReduceMotion] = useState(false);
 
   useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    const updateMotionPreference = () => {
+      setReduceMotion(mediaQuery.matches);
+    };
+
+    updateMotionPreference();
+    mediaQuery.addEventListener("change", updateMotionPreference);
+
+    return () => {
+      mediaQuery.removeEventListener("change", updateMotionPreference);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      targetProgress.current = 1;
+      smoothProgress.current = 1;
+      setProgress(1);
+      return;
+    }
+
     let animationFrame = 0;
     let previousTime = 0;
 
     const updateScrollTarget = () => {
       const section = sectionRef.current;
+
       if (!section) return;
 
       const rect = section.getBoundingClientRect();
@@ -54,48 +78,62 @@ export default function ConvergingText() {
       window.removeEventListener("resize", updateScrollTarget);
       window.cancelAnimationFrame(animationFrame);
     };
-  }, []);
+  }, [reduceMotion]);
 
   const easedProgress = progress * progress * (3 - 2 * progress);
   const topOffset = -30 * (1 - easedProgress);
   const bottomOffset = 30 * (1 - easedProgress);
 
-  const copyProgress = Math.min(
-    1,
-    Math.max(0, (easedProgress - 0.22) / 0.72),
-  );
+  const copyProgress = reduceMotion
+    ? 1
+    : Math.min(1, Math.max(0, (easedProgress - 0.22) / 0.72));
 
   return (
     <section className="wwp-statement" ref={sectionRef}>
       <style>{`
         .wwp-statement {
-          position: relative;
-          overflow: clip;
           background: var(--mello-black, #080808);
           border-bottom: 1px solid var(--mello-line, #222222);
           color: #f7f7f4;
+          overflow: clip;
+          position: relative;
+        }
+
+        .wwp-statement::before {
+          background:
+            radial-gradient(
+              ellipse 45% 45% at 80% 40%,
+              rgba(13,148,136,.07) 0%,
+              transparent 72%
+            );
+          content: "";
+          inset: 0;
+          pointer-events: none;
+          position: absolute;
         }
 
         .wwp-statement-content {
-          width: min(100% - 6rem, 1440px);
           margin: 0 auto;
           padding: 4rem 0 7rem;
+          position: relative;
+          width: min(100% - 6rem, 1440px);
+          z-index: 1;
         }
 
         .wwp-statement-grid {
-          display: grid;
-          grid-template-columns: minmax(0, 1fr) minmax(17rem, 28rem);
           align-items: center;
           column-gap: clamp(3rem, 8vw, 10rem);
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) minmax(17rem, 28rem);
         }
 
         .wwp-statement-label {
-          margin-bottom: 2rem;
           color: #0d9488;
           font-family: var(--font-body), Arial, sans-serif;
           font-size: .68rem;
           font-weight: 700;
           letter-spacing: .15em;
+          margin-bottom: 2rem;
           text-transform: uppercase;
         }
 
@@ -105,27 +143,27 @@ export default function ConvergingText() {
         }
 
         .wwp-line {
-          display: block;
-          width: max-content;
           color: #f7f7f4;
+          display: block;
           font-family: var(--font-display), Arial, Helvetica, sans-serif;
           font-size: clamp(3.2rem, 8vw, 8.5rem);
           font-weight: 400;
           letter-spacing: .01em;
           line-height: .84;
           text-transform: uppercase;
+          width: max-content;
           will-change: transform;
         }
 
         .wwp-line--outline {
-          margin-top: .12em;
           color: transparent;
-          -webkit-text-stroke: 1.4px rgba(247, 247, 244, .72);
+          margin-top: .12em;
           paint-order: stroke fill;
+          -webkit-text-stroke: 1.4px rgba(247,247,244,.72);
         }
 
         .wwp-statement-copy {
-          color: rgba(247, 247, 244, .78);
+          color: rgba(247,247,244,.78);
           font-family: var(--font-body), Arial, sans-serif;
           font-size: clamp(1rem, 1.15vw, 1.08rem);
           line-height: 1.6;
@@ -137,14 +175,14 @@ export default function ConvergingText() {
         }
 
         .wwp-statement-link {
-          display: inline-block;
-          padding-bottom: .35rem;
-          border-bottom: 1px solid rgba(13, 148, 136, .7);
+          border-bottom: 1px solid rgba(13,148,136,.7);
           color: #0d9488;
+          display: inline-block;
           font-family: var(--font-body), Arial, sans-serif;
           font-size: .68rem;
           font-weight: 700;
           letter-spacing: .14em;
+          padding-bottom: .35rem;
           text-decoration: none;
           text-transform: uppercase;
           transition: border-color .2s ease, color .2s ease;
@@ -156,62 +194,146 @@ export default function ConvergingText() {
         }
 
         .wwp-statement-progress {
-          position: absolute;
+          background: rgba(247,247,244,.18);
           bottom: 1.5rem;
-          left: 50%;
-          width: min(14rem, calc(100% - 4rem));
           height: 1px;
+          left: 50%;
+          position: absolute;
           transform: translateX(-50%);
-          background: rgba(247, 247, 244, .18);
+          width: min(14rem, calc(100% - 4rem));
         }
 
         .wwp-statement-progress span {
+          background: #0d9488;
+          box-shadow: 0 0 8px rgba(13,148,136,.45);
           display: block;
-          width: 100%;
           height: 100%;
           transform-origin: left;
-          background: #0d9488;
-          box-shadow: 0 0 8px rgba(13, 148, 136, .45);
+          width: 100%;
         }
 
-        @media (max-width: 767px) {
+        @media (max-width: 768px) {
+          .wwp-statement {
+            overflow: hidden;
+          }
+
+          .wwp-statement::before {
+            background:
+              radial-gradient(
+                ellipse 76% 46% at 88% 42%,
+                rgba(13,148,136,.08) 0%,
+                transparent 72%
+              );
+          }
+
           .wwp-statement-content {
-            width: min(100% - 2.5rem, 1440px);
-            padding: 3.5rem 0 5rem;
+            padding: 3.35rem 0 4.85rem;
+            width: min(100% - 2.25rem, 40rem);
           }
 
           .wwp-statement-grid {
-            grid-template-columns: 1fr;
-            row-gap: 3rem;
+            display: block;
           }
 
           .wwp-statement-label {
-            margin-bottom: 1.5rem;
+            font-size: .62rem;
+            letter-spacing: .17em;
+            margin-bottom: 1.15rem;
+          }
+
+          .wwp-line-wrap {
+            overflow: visible;
+            white-space: normal;
           }
 
           .wwp-line {
-            font-size: clamp(2.8rem, 12.3vw, 5rem);
-            line-height: .9;
+            font-size: clamp(2.75rem, 13vw, 4.6rem);
+            letter-spacing: -.025em;
+            line-height: .88;
+            max-width: 100%;
+            transform: none !important;
+            white-space: normal;
+            width: 100%;
           }
 
           .wwp-line--outline {
-            -webkit-text-stroke-width: 1px;
+            margin-top: .1em;
+            -webkit-text-stroke: 1px rgba(247,247,244,.74);
           }
 
           .wwp-statement-copy {
-            max-width: 31rem;
-            font-size: .95rem;
+            background: rgba(247,247,244,.025);
+            border-left: 2px solid rgba(13,148,136,.72);
+            box-sizing: border-box;
+            color: rgba(247,247,244,.72);
+            font-size: .96rem;
+            line-height: 1.68;
+            margin-top: 2.15rem;
+            max-width: 34ch;
+            opacity: 1 !important;
+            padding: .15rem 0 .15rem 1rem;
+            pointer-events: auto !important;
+          }
+
+          .wwp-statement-copy p {
+            margin-bottom: 1.1rem;
+          }
+
+          .wwp-statement-link {
+            align-items: center;
+            background: #0d9488;
+            border: 1px solid #0d9488;
+            border-radius: 99px;
+            box-sizing: border-box;
+            color: #080808;
+            display: inline-flex;
+            font-size: .65rem;
+            justify-content: center;
+            letter-spacing: .13em;
+            min-height: 48px;
+            padding: .85rem 1.15rem;
+            width: 100%;
+          }
+
+          .wwp-statement-link:hover {
+            background: #14b8a6;
+            border-color: #14b8a6;
+            color: #080808;
           }
 
           .wwp-statement-progress {
-            bottom: 1rem;
-            width: min(10rem, calc(100% - 4rem));
+            bottom: 1.2rem;
+            width: min(11rem, calc(100% - 4rem));
+          }
+        }
+
+        @media (max-width: 360px) {
+          .wwp-statement-content {
+            width: min(100% - 2rem, 40rem);
+          }
+
+          .wwp-line {
+            font-size: 2.55rem;
+          }
+
+          .wwp-statement-copy {
+            font-size: .91rem;
           }
         }
 
         @media (prefers-reduced-motion: reduce) {
           .wwp-line {
             transform: none !important;
+            will-change: auto;
+          }
+
+          .wwp-statement-copy {
+            opacity: 1 !important;
+            will-change: auto;
+          }
+
+          .wwp-statement-progress span {
+            transform: scaleX(1) !important;
           }
         }
       `}</style>
@@ -225,7 +347,7 @@ export default function ConvergingText() {
               <div
                 className="wwp-line"
                 style={{
-                  transform: `translateX(${topOffset}vw)`,
+                  transform: `translateX(${reduceMotion ? 0 : topOffset}vw)`,
                 }}
               >
                 Fußball
@@ -236,7 +358,9 @@ export default function ConvergingText() {
               <div
                 className="wwp-line wwp-line--outline"
                 style={{
-                  transform: `translateX(${bottomOffset}vw)`,
+                  transform: `translateX(${
+                    reduceMotion ? 0 : bottomOffset
+                  }vw)`,
                 }}
               >
                 Neu gedacht
@@ -264,7 +388,11 @@ export default function ConvergingText() {
       </div>
 
       <div className="wwp-statement-progress" aria-hidden="true">
-        <span style={{ transform: `scaleX(${progress})` }} />
+        <span
+          style={{
+            transform: `scaleX(${reduceMotion ? 1 : progress})`,
+          }}
+        />
       </div>
     </section>
   );
