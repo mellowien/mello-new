@@ -79,12 +79,7 @@ function useCountdown(target: Date): TimeLeft {
       const difference = target.getTime() - Date.now();
 
       if (difference <= 0) {
-        setTimeLeft({
-          days: 0,
-          hours: 0,
-          minutes: 0,
-          seconds: 0,
-        });
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
         return;
       }
 
@@ -98,6 +93,7 @@ function useCountdown(target: Date): TimeLeft {
 
     update();
     const interval = window.setInterval(update, 1000);
+
     return () => window.clearInterval(interval);
   }, [target]);
 
@@ -115,6 +111,7 @@ function removeOuterWhiteBackground(
 
   const add = (x: number, y: number) => {
     if (x < 0 || y < 0 || x >= width || y >= height) return;
+
     const position = y * width + x;
     const pixel = position * 4;
 
@@ -141,10 +138,12 @@ function removeOuterWhiteBackground(
 
   while (queue.length > 0) {
     const position = queue.shift();
+
     if (position === undefined) continue;
 
     const x = position % width;
     const y = Math.floor(position / width);
+
     data[position * 4 + 3] = 0;
 
     add(x - 1, y);
@@ -160,12 +159,7 @@ function useTransparentLogo(source: string) {
   const [src, setSrc] = useState(source);
 
   useEffect(() => {
-    if (!source) {
-      setSrc("");
-      return;
-    }
-
-    if (source === MELLO_LOGO) {
+    if (!source || source === MELLO_LOGO) {
       setSrc(source);
       return;
     }
@@ -174,22 +168,32 @@ function useTransparentLogo(source: string) {
 
     image.onload = () => {
       const canvas = document.createElement("canvas");
+
       canvas.width = image.naturalWidth;
       canvas.height = image.naturalHeight;
 
       const context = canvas.getContext("2d");
+
       if (!context) {
         setSrc(source);
         return;
       }
 
       context.drawImage(image, 0, 0);
-      const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+
+      const imageData = context.getImageData(
+        0,
+        0,
+        canvas.width,
+        canvas.height,
+      );
+
       context.putImageData(
         removeOuterWhiteBackground(imageData, canvas.width, canvas.height),
         0,
         0,
       );
+
       setSrc(canvas.toDataURL("image/png"));
     };
 
@@ -203,115 +207,52 @@ function useTransparentLogo(source: string) {
   return src;
 }
 
-function Unit({ value, label }: { value: number; label: string }) {
-  return (
-    <div style={{ minWidth: "3.12rem", textAlign: "center" }}>
-      <div
-        style={{
-          color: "rgba(13,148,136,.72)",
-          fontFamily: '"Helvetica Neue", Arial, sans-serif',
-          fontSize: "clamp(1.95rem, 3vw, 2.45rem)",
-          fontVariantNumeric: "tabular-nums lining-nums",
-          fontWeight: 700,
-          letterSpacing: "-.045em",
-          lineHeight: 0.92,
-        }}
-      >
-        {String(value).padStart(2, "0")}
-      </div>
-      <div
-        style={{
-          color: "rgba(247,247,244,.3)",
-          fontFamily: "Arial, Helvetica, sans-serif",
-          fontSize: ".4rem",
-          fontWeight: 700,
-          letterSpacing: ".14em",
-          marginTop: ".3rem",
-          textTransform: "uppercase",
-        }}
-      >
-        {label}
-      </div>
-    </div>
-  );
-}
-
-function Separator() {
-  return (
-    <div
-      style={{
-        color: "rgba(13,148,136,.42)",
-        fontFamily: '"Helvetica Neue", Arial, sans-serif',
-        fontSize: "clamp(1.45rem, 2.25vw, 1.85rem)",
-        fontWeight: 700,
-        paddingBottom: ".86rem",
-      }}
-    >
-      :
-    </div>
-  );
-}
-
-function EmptyLogo({ active = false }: { active?: boolean }) {
-  const size = active ? "3.45rem" : "2.8rem";
-
-  return (
-    <div
-      aria-hidden="true"
-      style={{
-        alignItems: "center",
-        border: "1px solid rgba(247,247,244,.13)",
-        borderRadius: "50%",
-        color: "rgba(247,247,244,.2)",
-        display: "flex",
-        fontFamily: "Arial, Helvetica, sans-serif",
-        fontSize: ".38rem",
-        fontWeight: 700,
-        height: size,
-        justifyContent: "center",
-        letterSpacing: ".08em",
-        textTransform: "uppercase",
-        width: size,
-      }}
-    >
-      Logo
-    </div>
-  );
-}
-
 function ClubLogo({
   src,
   alt,
   transparentSrc,
   active = false,
+  mobile = false,
 }: {
   src: string;
   alt: string;
   transparentSrc?: string;
   active?: boolean;
+  mobile?: boolean;
 }) {
-  const size = active ? "3.45rem" : "2.8rem";
-
-  if (!src) {
-    return <EmptyLogo active={active} />;
-  }
+  const size = mobile ? "4.25rem" : active ? "3.45rem" : "2.8rem";
 
   return (
     <img
       src={transparentSrc || src}
       alt={alt}
-      width={72}
-      height={72}
+      width={80}
+      height={80}
       style={{
         display: "block",
         height: size,
         imageRendering: "auto",
         objectFit: "contain",
         width: size,
-        transition: "height 0.4s ease, width 0.4s ease",
       }}
     />
   );
+}
+
+function Unit({ value, label }: { value: number; label: string }) {
+  return (
+    <div className="countdown-unit">
+      <div className="countdown-unit-value">
+        {String(value).padStart(2, "0")}
+      </div>
+
+      <div className="countdown-unit-label">{label}</div>
+    </div>
+  );
+}
+
+function Separator() {
+  return <div className="countdown-separator">:</div>;
 }
 
 function MatchCard({
@@ -338,15 +279,15 @@ function MatchCard({
           : "1px solid rgba(247,247,244,.13)",
         borderRadius: "1rem",
         boxShadow: active ? "0 0 25px rgba(13,148,136,.08)" : "none",
+        boxSizing: "border-box",
         minHeight: "10.2rem",
+        opacity: active ? 1 : 0.65,
         padding: active ? "1.2rem 1rem .85rem" : ".85rem .8rem",
         position: "relative",
-        boxSizing: "border-box",
-        transform: active ? "scale(1)" : "scale(0.88)",
-        opacity: active ? 1 : 0.65,
-        transition:
-          "transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1), background 0.5s ease, border-color 0.5s ease, padding 0.5s ease",
+        transform: active ? "scale(1)" : "scale(.88)",
         transformOrigin: "center center",
+        transition:
+          "transform .5s cubic-bezier(.25,1,.5,1), opacity .5s cubic-bezier(.25,1,.5,1), background .5s ease, border-color .5s ease, padding .5s ease",
       }}
     >
       {isNextMatch && (
@@ -383,7 +324,6 @@ function MatchCard({
           marginTop: active && isNextMatch ? ".38rem" : 0,
           textAlign: "center",
           textTransform: "uppercase",
-          transition: "color 0.4s ease, margin 0.4s ease",
         }}
       >
         {match.competition}
@@ -394,7 +334,7 @@ function MatchCard({
           alignItems: "center",
           display: "grid",
           gap: ".45rem",
-          gridTemplateColumns: "minmax(3rem, 1fr) auto minmax(3rem, 1fr)",
+          gridTemplateColumns: "minmax(0, 1fr) auto minmax(0, 1fr)",
         }}
       >
         <div
@@ -421,9 +361,9 @@ function MatchCard({
               fontWeight: 800,
               letterSpacing: ".04em",
               lineHeight: 1.1,
+              overflowWrap: "anywhere",
               textAlign: "center",
               textTransform: "uppercase",
-              transition: "font-size 0.4s ease",
             }}
           >
             {match.homeTeam}
@@ -437,7 +377,6 @@ function MatchCard({
             fontSize: active ? ".7rem" : ".56rem",
             fontWeight: 800,
             letterSpacing: ".1em",
-            transition: "font-size 0.4s ease, color 0.4s ease",
           }}
         >
           VS
@@ -467,9 +406,9 @@ function MatchCard({
               fontWeight: 800,
               letterSpacing: ".04em",
               lineHeight: 1.1,
+              overflowWrap: "anywhere",
               textAlign: "center",
               textTransform: "uppercase",
-              transition: "font-size 0.4s ease",
             }}
           >
             {match.awayTeam}
@@ -489,7 +428,6 @@ function MatchCard({
           marginTop: active ? ".78rem" : ".95rem",
           textAlign: "center",
           textTransform: "uppercase",
-          transition: "font-size 0.4s ease, margin 0.4s ease",
         }}
       >
         {match.displayDate}
@@ -513,39 +451,20 @@ function getWatermarkTeam(teamName: string) {
   if (teamName.includes("Mello")) {
     return { fontScale: 0.8, label: "Mello", widthScale: 0.94 };
   }
+
   if (teamName.includes("Polska")) {
     return { fontScale: 0.8, label: "Polska", widthScale: 0.9 };
-  }
-  if (teamName.includes("Penarol")) {
-    return { fontScale: 0.8, label: "Penarol", widthScale: 0.9 };
-  }
-  if (teamName.includes("Yellow Star")) {
-    return { fontScale: 0.58, label: "Yellow Star", widthScale: 0.92 };
-  }
-  if (teamName.includes("Penzinger")) {
-    return { fontScale: 0.8, label: "Penzing", widthScale: 0.94 };
-  }
-  if (teamName.includes("Erlaa")) {
-    return { fontScale: 0.8, label: "Erlaa", widthScale: 0.92 };
   }
 
   return {
     fontScale: 0.8,
-    label: teamName
-      .replace(/^FC\s+/i, "")
-      .replace(/^ASK\s+/i, "")
-      .replace(/^SV\s+/i, "")
-      .replace(/^SC\s+/i, "")
-      .split(" ")[0],
+    label: teamName.replace(/^FC\s+/i, "").split(" ")[0],
     widthScale: 0.9,
   };
 }
 
 export default function Countdown() {
   const [activeIndex, setActiveIndex] = useState(0);
-
-  const nextMatchHomeWatermark = getWatermarkTeam(NEXT_MATCH.homeTeam);
-  const nextMatchAwayWatermark = getWatermarkTeam(NEXT_MATCH.awayTeam);
 
   const { days, hours, minutes, seconds } = useCountdown(NEXT_MATCH.date);
 
@@ -555,7 +474,7 @@ export default function Countdown() {
   const penzingLogo = useTransparentLogo("/penzing.png");
   const erlaaTorpedoLogo = useTransparentLogo("/erlaa-torpedo.png");
 
-  const logos = {
+  const logos: Record<string, string> = {
     "/polska-wien.png": polskaLogo,
     "/penarol-wien.png": penarolLogo,
     "/yellow-star.png": yellowStarLogo,
@@ -563,9 +482,17 @@ export default function Countdown() {
     "/erlaa-torpedo.png": erlaaTorpedoLogo,
   };
 
+  const activeMatch = MATCHES[activeIndex];
+
   const previousIndex = activeIndex > 0 ? activeIndex - 1 : null;
+
   const nextIndex =
     activeIndex < MATCHES.length - 1 ? activeIndex + 1 : null;
+
+  const nextMatchHomeWatermark = getWatermarkTeam(NEXT_MATCH.homeTeam);
+  const nextMatchAwayWatermark = getWatermarkTeam(NEXT_MATCH.awayTeam);
+
+  const transparentLogo = (source: string) => logos[source] || source;
 
   const backgroundNameStyle = {
     color: "rgba(13,148,136,.045)",
@@ -584,391 +511,880 @@ export default function Countdown() {
   };
 
   return (
-    <section
-      style={{
-        background:
-          "radial-gradient(ellipse 48% 32% at 50% 0%, rgba(13,148,136,.075), transparent 75%), #080808",
-        borderBottom: "1px solid rgba(247,247,244,.18)",
-        overflow: "hidden",
-        padding: "2.15rem 0 2.4rem",
-        position: "relative",
-      }}
-    >
-      <div
-        aria-hidden="true"
-        style={{
+    <section className="countdown-section">
+      <style>{`
+        .countdown-section {
           background:
-            "linear-gradient(135deg, transparent 0%, rgba(13,148,136,.1) 50%, transparent 100%)",
-          height: "100%",
-          left: 0,
-          opacity: 0.4,
-          pointerEvents: "none",
-          position: "absolute",
-          top: 0,
-          transform: "skewX(-22deg) translateX(-70%)",
-          width: "15rem",
-        }}
-      />
+            radial-gradient(ellipse 48% 32% at 50% 0%, rgba(13,148,136,.075), transparent 75%),
+            #080808;
+          border-bottom: 1px solid rgba(247,247,244,.18);
+          overflow: hidden;
+          padding: 2.15rem 0 2.4rem;
+          position: relative;
+        }
 
-      <div
-        aria-hidden="true"
-        style={{
-          background:
-            "linear-gradient(135deg, transparent 0%, rgba(13,148,136,.1) 50%, transparent 100%)",
-          height: "100%",
-          opacity: 0.4,
-          pointerEvents: "none",
-          position: "absolute",
-          right: 0,
-          top: 0,
-          transform: "skewX(-22deg) translateX(70%)",
-          width: "15rem",
-        }}
-      />
+        .countdown-desktop {
+          display: block;
+        }
 
-      <div
-        style={{
-          margin: "0 auto",
-          maxWidth: "78rem",
-          padding: "0 3rem",
-          position: "relative",
-        }}
-      >
+        .countdown-mobile {
+          display: none;
+        }
+
+        .countdown-unit {
+          min-width: 3.12rem;
+          text-align: center;
+        }
+
+        .countdown-unit-value {
+          color: rgba(13,148,136,.72);
+          font-family: "Helvetica Neue", Arial, sans-serif;
+          font-size: clamp(1.95rem, 3vw, 2.45rem);
+          font-variant-numeric: tabular-nums lining-nums;
+          font-weight: 700;
+          letter-spacing: -.045em;
+          line-height: .92;
+        }
+
+        .countdown-unit-label {
+          color: rgba(247,247,244,.3);
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: .4rem;
+          font-weight: 700;
+          letter-spacing: .14em;
+          margin-top: .3rem;
+          text-transform: uppercase;
+        }
+
+        .countdown-separator {
+          color: rgba(13,148,136,.42);
+          font-family: "Helvetica Neue", Arial, sans-serif;
+          font-size: clamp(1.45rem, 2.25vw, 1.85rem);
+          font-weight: 700;
+          padding-bottom: .86rem;
+        }
+
+        @media (max-width: 768px) {
+          .countdown-section {
+            padding: 2.25rem 0 2.5rem;
+          }
+
+          .countdown-desktop {
+            display: none !important;
+          }
+
+          .countdown-mobile {
+            display: block !important;
+          }
+
+          .countdown-mobile-wrap {
+            box-sizing: border-box;
+            margin: 0 auto;
+            max-width: 34rem;
+            padding: 0 1.25rem;
+            width: 100%;
+          }
+
+          .countdown-mobile-kicker {
+            align-items: center;
+            color: rgba(13,148,136,.82);
+            display: flex;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: .62rem;
+            font-weight: 800;
+            gap: .65rem;
+            justify-content: center;
+            letter-spacing: .18em;
+            margin-bottom: 1.2rem;
+            text-transform: uppercase;
+          }
+
+          .countdown-mobile-kicker::before,
+          .countdown-mobile-kicker::after {
+            background: rgba(13,148,136,.48);
+            content: "";
+            height: 1px;
+            max-width: 3.5rem;
+            width: 18%;
+          }
+
+          .countdown-mobile-match {
+            background: linear-gradient(145deg, rgba(13,148,136,.14), rgba(18,20,20,.98) 65%);
+            border: 1px solid rgba(13,148,136,.68);
+            border-radius: 1rem;
+            box-shadow: 0 0 28px rgba(13,148,136,.08);
+            box-sizing: border-box;
+            overflow: hidden;
+            padding: 1.25rem 1rem 1.1rem;
+            position: relative;
+            width: 100%;
+          }
+
+          .countdown-mobile-badge {
+            background: #0d9488;
+            border-radius: 0 0 .55rem .55rem;
+            color: #080808;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: .47rem;
+            font-weight: 900;
+            left: 50%;
+            letter-spacing: .15em;
+            padding: .3rem .75rem;
+            position: absolute;
+            text-transform: uppercase;
+            top: 0;
+            transform: translateX(-50%);
+            white-space: nowrap;
+          }
+
+          .countdown-mobile-competition {
+            color: rgba(13,148,136,.9);
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: .58rem;
+            font-weight: 800;
+            letter-spacing: .16em;
+            margin-top: .42rem;
+            text-align: center;
+            text-transform: uppercase;
+          }
+
+          .countdown-mobile-teams {
+            align-items: start;
+            display: grid;
+            gap: .45rem;
+            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+            margin: 1.05rem 0 1rem;
+          }
+
+          .countdown-mobile-team {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            gap: .5rem;
+            min-width: 0;
+          }
+
+          .countdown-mobile-team-name {
+            color: #f7f7f4;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: clamp(.72rem, 3.35vw, .88rem);
+            font-weight: 800;
+            letter-spacing: .025em;
+            line-height: 1.15;
+            min-width: 0;
+            overflow-wrap: anywhere;
+            text-align: center;
+            text-transform: uppercase;
+          }
+
+          .countdown-mobile-vs {
+            align-self: center;
+            color: #0d9488;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: .7rem;
+            font-weight: 900;
+            letter-spacing: .08em;
+            padding-bottom: 1.25rem;
+          }
+
+          .countdown-mobile-date {
+            border-top: 1px solid rgba(247,247,244,.12);
+            color: rgba(247,247,244,.78);
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: .7rem;
+            font-weight: 800;
+            letter-spacing: .09em;
+            padding-top: .85rem;
+            text-align: center;
+            text-transform: uppercase;
+          }
+
+          .countdown-mobile-date span {
+            color: #0d9488;
+            padding: 0 .3rem;
+          }
+
+          .countdown-mobile-clock {
+            display: grid;
+            gap: .5rem;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            margin: 1.6rem 0 1.85rem;
+          }
+
+          .countdown-mobile-clock-unit {
+            background: rgba(247,247,244,.045);
+            border: 1px solid rgba(247,247,244,.11);
+            border-radius: .7rem;
+            box-sizing: border-box;
+            min-width: 0;
+            padding: .8rem .2rem .7rem;
+            text-align: center;
+          }
+
+          .countdown-mobile-clock-value {
+            color: #0d9488;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            font-size: clamp(1.55rem, 8vw, 2.3rem);
+            font-variant-numeric: tabular-nums lining-nums;
+            font-weight: 800;
+            letter-spacing: -.06em;
+            line-height: 1;
+          }
+
+          .countdown-mobile-clock-label {
+            color: rgba(247,247,244,.43);
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: .43rem;
+            font-weight: 800;
+            letter-spacing: .1em;
+            margin-top: .42rem;
+            text-transform: uppercase;
+          }
+
+          .countdown-mobile-upcoming-title {
+            align-items: center;
+            color: #0d9488;
+            display: flex;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: .59rem;
+            font-weight: 800;
+            justify-content: space-between;
+            letter-spacing: .15em;
+            margin-bottom: .85rem;
+            text-transform: uppercase;
+          }
+
+          .countdown-mobile-schedule-link {
+            color: rgba(247,247,244,.82);
+            font-size: .48rem;
+            letter-spacing: .1em;
+            text-decoration: none;
+          }
+
+          .countdown-mobile-slider {
+            background: rgba(247,247,244,.045);
+            border: 1px solid rgba(247,247,244,.13);
+            border-radius: .9rem;
+            box-sizing: border-box;
+            min-height: 11.6rem;
+            padding: 1rem .9rem .85rem;
+            width: 100%;
+          }
+
+          .countdown-mobile-slider-competition {
+            color: rgba(13,148,136,.88);
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: .54rem;
+            font-weight: 800;
+            letter-spacing: .14em;
+            text-align: center;
+            text-transform: uppercase;
+          }
+
+          .countdown-mobile-slider-teams {
+            align-items: center;
+            display: grid;
+            gap: .4rem;
+            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+            margin: .9rem 0;
+          }
+
+          .countdown-mobile-slider-date {
+            color: rgba(247,247,244,.78);
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: .64rem;
+            font-weight: 800;
+            letter-spacing: .07em;
+            margin-top: .75rem;
+            text-align: center;
+            text-transform: uppercase;
+          }
+
+          .countdown-mobile-navigation {
+            align-items: center;
+            display: grid;
+            gap: .75rem;
+            grid-template-columns: 2.55rem minmax(0, 1fr) 2.55rem;
+            margin-top: 1rem;
+          }
+
+          .countdown-mobile-arrow {
+            align-items: center;
+            background: transparent;
+            border: 1px solid rgba(247,247,244,.24);
+            border-radius: 50%;
+            color: #f7f7f4;
+            cursor: pointer;
+            display: flex;
+            font-size: 1rem;
+            height: 2.5rem;
+            justify-content: center;
+            padding: 0;
+            transition: all .2s ease;
+            width: 2.5rem;
+          }
+
+          .countdown-mobile-arrow:disabled {
+            cursor: default;
+            opacity: .25;
+          }
+
+          .countdown-mobile-arrow.next {
+            background: #0d9488;
+            border-color: #0d9488;
+            color: #080808;
+          }
+
+          .countdown-mobile-dots {
+            align-items: center;
+            display: flex;
+            gap: .42rem;
+            justify-content: center;
+          }
+
+          .countdown-mobile-dot {
+            background: rgba(247,247,244,.3);
+            border: 0;
+            border-radius: 999px;
+            cursor: pointer;
+            height: .65rem;
+            padding: 0;
+            transition: width .25s ease, background .25s ease;
+            width: .65rem;
+          }
+
+          .countdown-mobile-dot.active {
+            background: #0d9488;
+            width: 1.3rem;
+          }
+        }
+
+        @media (max-width: 360px) {
+          .countdown-mobile-wrap {
+            padding-left: 1rem;
+            padding-right: 1rem;
+          }
+
+          .countdown-mobile-match {
+            padding-left: .75rem;
+            padding-right: .75rem;
+          }
+
+          .countdown-mobile-clock {
+            gap: .35rem;
+          }
+
+          .countdown-mobile-clock-unit {
+            border-radius: .55rem;
+            padding-left: .1rem;
+            padding-right: .1rem;
+          }
+
+          .countdown-mobile-clock-label {
+            font-size: .38rem;
+            letter-spacing: .06em;
+          }
+
+          .countdown-mobile-team-name {
+            font-size: .68rem;
+          }
+        }
+      `}</style>
+
+      <div className="countdown-desktop">
         <div
+          aria-hidden="true"
           style={{
-            alignItems: "center",
-            display: "flex",
-            gap: ".6rem",
-            justifyContent: "center",
-            marginBottom: ".58rem",
-            position: "relative",
-            zIndex: 1,
+            background:
+              "linear-gradient(135deg, transparent 0%, rgba(13,148,136,.1) 50%, transparent 100%)",
+            height: "100%",
+            left: 0,
+            opacity: 0.4,
+            pointerEvents: "none",
+            position: "absolute",
+            top: 0,
+            transform: "skewX(-22deg) translateX(-70%)",
+            width: "15rem",
           }}
-        >
-          <span
-            style={{
-              background: "rgba(13,148,136,.42)",
-              height: "1px",
-              width: "1.8rem",
-            }}
-          />
-          <span
-            style={{
-              color: "rgba(13,148,136,.72)",
-              fontFamily: "Arial, Helvetica, sans-serif",
-              fontSize: ".48rem",
-              fontWeight: 800,
-              letterSpacing: ".2em",
-              textTransform: "uppercase",
-            }}
-          >
-            Nächstes Spiel
-          </span>
-          <span
-            style={{
-              background: "rgba(13,148,136,.42)",
-              height: "1px",
-              width: "1.8rem",
-            }}
-          />
-        </div>
+        />
+
+        <div
+          aria-hidden="true"
+          style={{
+            background:
+              "linear-gradient(135deg, transparent 0%, rgba(13,148,136,.1) 50%, transparent 100%)",
+            height: "100%",
+            opacity: 0.4,
+            pointerEvents: "none",
+            position: "absolute",
+            right: 0,
+            top: 0,
+            transform: "skewX(-22deg) translateX(70%)",
+            width: "15rem",
+          }}
+        />
 
         <div
           style={{
-            alignItems: "center",
-            display: "grid",
-            gridTemplateColumns: "minmax(0, 1fr) auto minmax(0, 1fr)",
-            minHeight: "6.75rem",
+            margin: "0 auto",
+            maxWidth: "78rem",
+            padding: "0 3rem",
             position: "relative",
           }}
         >
           <div
-            aria-hidden="true"
             style={{
-              ...backgroundNameStyle,
-              fontSize: `calc(clamp(3.8rem, 7.3vw, 8.35rem) * ${nextMatchHomeWatermark.fontScale})`,
-              justifySelf: "end",
-              marginRight: "clamp(2.5rem, 5vw, 5.5rem)",
-              transform: `translateY(-4%) scaleX(${1.06 * nextMatchHomeWatermark.widthScale})`,
-            }}
-          >
-            {nextMatchHomeWatermark.label}
-          </div>
-
-          <div
-            style={{
-              alignItems: "flex-end",
+              alignItems: "center",
               display: "flex",
-              gap: ".28rem",
+              gap: ".6rem",
               justifyContent: "center",
+              marginBottom: ".58rem",
               position: "relative",
               zIndex: 1,
             }}
           >
-            <Unit value={days} label="Tage" />
-            <Separator />
-            <Unit value={hours} label="Std." />
-            <Separator />
-            <Unit value={minutes} label="Min." />
-            <Separator />
-            <Unit value={seconds} label="Sek." />
-          </div>
-
-          <div
-            aria-hidden="true"
-            style={{
-              ...backgroundNameStyle,
-              fontSize: `calc(clamp(3.8rem, 7.3vw, 8.35rem) * ${nextMatchAwayWatermark.fontScale})`,
-              justifySelf: "start",
-              marginLeft: "clamp(2.5rem, 5vw, 5.5rem)",
-              transform: `translateY(-4%) scaleX(${1.06 * nextMatchAwayWatermark.widthScale})`,
-            }}
-          >
-            {nextMatchAwayWatermark.label}
-          </div>
-        </div>
-
-        <div
-          style={{
-            marginTop: "clamp(7rem, 11vh, 10rem)",
-          }}
-        >
-          <div
-            style={{
-              alignItems: "center",
-              display: "flex",
-              justifyContent: "space-between",
-              marginBottom: ".85rem",
-            }}
-          >
-            <div
+            <span
               style={{
-                color: "#0d9488",
+                background: "rgba(13,148,136,.42)",
+                height: "1px",
+                width: "1.8rem",
+              }}
+            />
+            <span
+              style={{
+                color: "rgba(13,148,136,.72)",
                 fontFamily: "Arial, Helvetica, sans-serif",
-                fontSize: ".52rem",
+                fontSize: ".48rem",
                 fontWeight: 800,
-                letterSpacing: ".16em",
+                letterSpacing: ".2em",
                 textTransform: "uppercase",
               }}
             >
-              Die nächsten Spiele
+              Nächstes Spiel
+            </span>
+            <span
+              style={{
+                background: "rgba(13,148,136,.42)",
+                height: "1px",
+                width: "1.8rem",
+              }}
+            />
+          </div>
+
+          <div
+            style={{
+              alignItems: "center",
+              display: "grid",
+              gridTemplateColumns: "minmax(0, 1fr) auto minmax(0, 1fr)",
+              minHeight: "6.75rem",
+              position: "relative",
+            }}
+          >
+            <div
+              aria-hidden="true"
+              style={{
+                ...backgroundNameStyle,
+                fontSize: `calc(clamp(3.8rem, 7.3vw, 8.35rem) * ${nextMatchHomeWatermark.fontScale})`,
+                justifySelf: "end",
+                marginRight: "clamp(2.5rem, 5vw, 5.5rem)",
+                transform: `translateY(-4%) scaleX(${1.06 * nextMatchHomeWatermark.widthScale})`,
+              }}
+            >
+              {nextMatchHomeWatermark.label}
             </div>
 
             <div
               style={{
-                alignItems: "center",
+                alignItems: "flex-end",
                 display: "flex",
-                gap: ".75rem",
+                gap: ".28rem",
+                justifyContent: "center",
+                position: "relative",
+                zIndex: 1,
               }}
             >
-              {/* Zum Spielplan Button */}
-              <a
-                href="/spielplan"
+              <Unit value={days} label="Tage" />
+              <Separator />
+              <Unit value={hours} label="Std." />
+              <Separator />
+              <Unit value={minutes} label="Min." />
+              <Separator />
+              <Unit value={seconds} label="Sek." />
+            </div>
+
+            <div
+              aria-hidden="true"
+              style={{
+                ...backgroundNameStyle,
+                fontSize: `calc(clamp(3.8rem, 7.3vw, 8.35rem) * ${nextMatchAwayWatermark.fontScale})`,
+                justifySelf: "start",
+                marginLeft: "clamp(2.5rem, 5vw, 5.5rem)",
+                transform: `translateY(-4%) scaleX(${1.06 * nextMatchAwayWatermark.widthScale})`,
+              }}
+            >
+              {nextMatchAwayWatermark.label}
+            </div>
+          </div>
+
+          <div style={{ marginTop: "clamp(7rem, 11vh, 10rem)" }}>
+            <div
+              style={{
+                alignItems: "center",
+                display: "flex",
+                justifyContent: "space-between",
+                marginBottom: ".85rem",
+              }}
+            >
+              <div
                 style={{
-                  alignItems: "center",
-                  background: "rgba(247,247,244,.06)",
-                  border: "1px solid rgba(247,247,244,.18)",
-                  borderRadius: "99px",
-                  color: "#f7f7f4",
-                  display: "inline-flex",
+                  color: "#0d9488",
                   fontFamily: "Arial, Helvetica, sans-serif",
-                  fontSize: ".46rem",
+                  fontSize: ".52rem",
                   fontWeight: 800,
-                  gap: ".35rem",
-                  letterSpacing: ".12em",
-                  padding: ".48rem .95rem",
-                  textDecoration: "none",
+                  letterSpacing: ".16em",
                   textTransform: "uppercase",
-                  transition: "all 0.2s ease",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = "rgba(13,148,136,.7)";
-                  e.currentTarget.style.color = "#0d9488";
-                  e.currentTarget.style.background = "rgba(13,148,136,.08)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = "rgba(247,247,244,.18)";
-                  e.currentTarget.style.color = "#f7f7f4";
-                  e.currentTarget.style.background = "rgba(247,247,244,.06)";
                 }}
               >
-                Zum Spielplan
-                <span style={{ fontSize: ".6rem" }}>→</span>
-              </a>
+                Die nächsten Spiele
+              </div>
 
               <div
                 style={{
+                  alignItems: "center",
                   display: "flex",
-                  gap: ".4rem",
+                  gap: ".75rem",
                 }}
               >
-                <button
-                  aria-disabled={previousIndex === null}
-                  aria-label="Vorheriges Spiel"
-                  disabled={previousIndex === null}
-                  onClick={() => {
-                    if (previousIndex !== null) {
-                      setActiveIndex(previousIndex);
-                    }
-                  }}
-                  type="button"
+                <a
+                  href="/spielplan"
                   style={{
                     alignItems: "center",
-                    background: "transparent",
-                    border: "1px solid rgba(247,247,244,.22)",
-                    borderRadius: "50%",
+                    background: "rgba(247,247,244,.06)",
+                    border: "1px solid rgba(247,247,244,.18)",
+                    borderRadius: "99px",
                     color: "#f7f7f4",
-                    cursor: previousIndex === null ? "default" : "pointer",
-                    display: "flex",
-                    fontSize: ".9rem",
-                    height: "2rem",
-                    justifyContent: "center",
-                    opacity: previousIndex === null ? 0.25 : 1,
-                    transition: "all 0.2s ease",
-                    width: "2rem",
+                    display: "inline-flex",
+                    fontFamily: "Arial, Helvetica, sans-serif",
+                    fontSize: ".46rem",
+                    fontWeight: 800,
+                    gap: ".35rem",
+                    letterSpacing: ".12em",
+                    padding: ".48rem .95rem",
+                    textDecoration: "none",
+                    textTransform: "uppercase",
                   }}
                 >
-                  ←
-                </button>
+                  Zum Spielplan
+                  <span style={{ fontSize: ".6rem" }}>→</span>
+                </a>
 
-                <button
-                  aria-disabled={nextIndex === null}
-                  aria-label="Nächstes Spiel"
-                  disabled={nextIndex === null}
-                  onClick={() => {
-                    if (nextIndex !== null) {
-                      setActiveIndex(nextIndex);
-                    }
-                  }}
-                  type="button"
-                  style={{
-                    alignItems: "center",
-                    background: "#0d9488",
-                    border: "1px solid #0d9488",
-                    borderRadius: "50%",
-                    color: "#080808",
-                    cursor: nextIndex === null ? "default" : "pointer",
-                    display: "flex",
-                    fontSize: ".9rem",
-                    height: "2rem",
-                    justifyContent: "center",
-                    opacity: nextIndex === null ? 0.25 : 1,
-                    transition: "all 0.2s ease",
-                    width: "2rem",
-                  }}
-                >
-                  →
-                </button>
+                <div style={{ display: "flex", gap: ".4rem" }}>
+                  <button
+                    aria-label="Vorheriges Spiel"
+                    disabled={previousIndex === null}
+                    onClick={() => {
+                      if (previousIndex !== null) {
+                        setActiveIndex(previousIndex);
+                      }
+                    }}
+                    type="button"
+                    style={{
+                      alignItems: "center",
+                      background: "transparent",
+                      border: "1px solid rgba(247,247,244,.22)",
+                      borderRadius: "50%",
+                      color: "#f7f7f4",
+                      cursor: previousIndex === null ? "default" : "pointer",
+                      display: "flex",
+                      fontSize: ".9rem",
+                      height: "2rem",
+                      justifyContent: "center",
+                      opacity: previousIndex === null ? 0.25 : 1,
+                      width: "2rem",
+                    }}
+                  >
+                    ←
+                  </button>
+
+                  <button
+                    aria-label="Nächstes Spiel"
+                    disabled={nextIndex === null}
+                    onClick={() => {
+                      if (nextIndex !== null) {
+                        setActiveIndex(nextIndex);
+                      }
+                    }}
+                    type="button"
+                    style={{
+                      alignItems: "center",
+                      background: "#0d9488",
+                      border: "1px solid #0d9488",
+                      borderRadius: "50%",
+                      color: "#080808",
+                      cursor: nextIndex === null ? "default" : "pointer",
+                      display: "flex",
+                      fontSize: ".9rem",
+                      height: "2rem",
+                      justifyContent: "center",
+                      opacity: nextIndex === null ? 0.25 : 1,
+                      width: "2rem",
+                    }}
+                  >
+                    →
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Der fließende Bayern-Track */}
-          <div
-            style={{
-              position: "relative",
-              overflow: "hidden",
-              width: "100%",
-              padding: "1rem 0 1.5rem",
-            }}
-          >
             <div
               style={{
-                display: "flex",
-                alignItems: "center",
+                overflow: "hidden",
+                padding: "1rem 0 1.5rem",
+                position: "relative",
                 width: "100%",
-                transform: `translate3d(calc(50% - 15rem - ${activeIndex} * 31.2rem), 0, 0)`,
-                transition: "transform 0.65s cubic-bezier(0.25, 1, 0.5, 1)",
-                willChange: "transform",
               }}
             >
-              {MATCHES.map((match, idx) => (
-                <div
-                  key={`${match.displayDate}-${match.homeTeam}`}
-                  onClick={() => setActiveIndex(idx)}
-                  style={{
-                    flex: "0 0 30rem",
-                    marginRight: "1.2rem",
-                    cursor: idx === activeIndex ? "default" : "pointer",
-                  }}
-                >
-                  <MatchCard
-                    active={idx === activeIndex}
-                    isNextMatch={idx === 0}
-                    logos={logos}
-                    match={match}
+              <div
+                style={{
+                  alignItems: "center",
+                  display: "flex",
+                  transform: `translate3d(calc(50% - 15rem - ${activeIndex} * 31.2rem), 0, 0)`,
+                  transition: "transform .65s cubic-bezier(.25,1,.5,1)",
+                  width: "100%",
+                  willChange: "transform",
+                }}
+              >
+                {MATCHES.map((match, index) => (
+                  <div
+                    key={`${match.displayDate}-${match.homeTeam}`}
+                    onClick={() => setActiveIndex(index)}
+                    style={{
+                      cursor: index === activeIndex ? "default" : "pointer",
+                      flex: "0 0 30rem",
+                      marginRight: "1.2rem",
+                    }}
+                  >
+                    <MatchCard
+                      active={index === activeIndex}
+                      isNextMatch={index === 0}
+                      logos={logos}
+                      match={match}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div
+              aria-label="Spielauswahl"
+              style={{
+                alignItems: "center",
+                display: "flex",
+                gap: ".4rem",
+                justifyContent: "center",
+                marginTop: ".4rem",
+                position: "relative",
+                zIndex: 2,
+              }}
+            >
+              {MATCHES.map((match, index) => {
+                const isActive = index === activeIndex;
+
+                return (
+                  <button
+                    aria-current={isActive ? "true" : undefined}
+                    aria-label={`${index + 1}. Spiel: ${match.homeTeam} gegen ${match.awayTeam}`}
+                    key={`${match.displayDate}-${match.homeTeam}`}
+                    onClick={() => setActiveIndex(index)}
+                    type="button"
+                    style={{
+                      background: isActive
+                        ? "#0d9488"
+                        : "rgba(247,247,244,.32)",
+                      border: 0,
+                      borderRadius: "999px",
+                      cursor: "pointer",
+                      height: ".7rem",
+                      padding: 0,
+                      transition:
+                        "width .35s cubic-bezier(.25,1,.5,1), background .25s ease",
+                      width: isActive ? "1.25rem" : ".7rem",
+                    }}
                   />
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
+        </div>
+      </div>
 
-          {/* Dots */}
-          <div
-            aria-label="Spielauswahl"
-            style={{
-              alignItems: "center",
-              display: "flex",
-              gap: ".4rem",
-              justifyContent: "center",
-              marginTop: ".4rem",
-              position: "relative",
-              zIndex: 2,
-            }}
-          >
-            {MATCHES.map((match, index) => {
-              const isActive = index === activeIndex;
+      <div className="countdown-mobile">
+        <div className="countdown-mobile-wrap">
+          <div className="countdown-mobile-kicker">Nächstes Spiel</div>
 
-              return (
+          <article className="countdown-mobile-match">
+            <div className="countdown-mobile-badge">Nächstes Spiel</div>
+
+            <div className="countdown-mobile-competition">
+              {NEXT_MATCH.competition}
+            </div>
+
+            <div className="countdown-mobile-teams">
+              <div className="countdown-mobile-team">
+                <ClubLogo
+                  alt={NEXT_MATCH.homeTeam}
+                  mobile
+                  src={NEXT_MATCH.homeLogo}
+                  transparentSrc={transparentLogo(NEXT_MATCH.homeLogo)}
+                />
+
+                <div className="countdown-mobile-team-name">
+                  {NEXT_MATCH.homeTeam}
+                </div>
+              </div>
+
+              <div className="countdown-mobile-vs">VS</div>
+
+              <div className="countdown-mobile-team">
+                <ClubLogo
+                  alt={NEXT_MATCH.awayTeam}
+                  mobile
+                  src={NEXT_MATCH.awayLogo}
+                  transparentSrc={transparentLogo(NEXT_MATCH.awayLogo)}
+                />
+
+                <div className="countdown-mobile-team-name">
+                  {NEXT_MATCH.awayTeam}
+                </div>
+              </div>
+            </div>
+
+            <div className="countdown-mobile-date">
+              {NEXT_MATCH.displayDate}
+              <span>·</span>
+              {NEXT_MATCH.displayTime}
+            </div>
+          </article>
+
+          <div className="countdown-mobile-clock">
+            {[
+              { label: "Tage", value: days },
+              { label: "Std.", value: hours },
+              { label: "Min.", value: minutes },
+              { label: "Sek.", value: seconds },
+            ].map((unit) => (
+              <div
+                className="countdown-mobile-clock-unit"
+                key={unit.label}
+              >
+                <div className="countdown-mobile-clock-value">
+                  {String(unit.value).padStart(2, "0")}
+                </div>
+
+                <div className="countdown-mobile-clock-label">
+                  {unit.label}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="countdown-mobile-upcoming-title">
+            <span>Die nächsten Spiele</span>
+
+            <a className="countdown-mobile-schedule-link" href="/spielplan">
+              Spielplan →
+            </a>
+          </div>
+
+          <article className="countdown-mobile-slider">
+            <div className="countdown-mobile-slider-competition">
+              {activeMatch.competition}
+            </div>
+
+            <div className="countdown-mobile-slider-teams">
+              <div className="countdown-mobile-team">
+                <ClubLogo
+                  alt={activeMatch.homeTeam}
+                  mobile
+                  src={activeMatch.homeLogo}
+                  transparentSrc={transparentLogo(activeMatch.homeLogo)}
+                />
+
+                <div className="countdown-mobile-team-name">
+                  {activeMatch.homeTeam}
+                </div>
+              </div>
+
+              <div className="countdown-mobile-vs">VS</div>
+
+              <div className="countdown-mobile-team">
+                <ClubLogo
+                  alt={activeMatch.awayTeam}
+                  mobile
+                  src={activeMatch.awayLogo}
+                  transparentSrc={transparentLogo(activeMatch.awayLogo)}
+                />
+
+                <div className="countdown-mobile-team-name">
+                  {activeMatch.awayTeam}
+                </div>
+              </div>
+            </div>
+
+            <div className="countdown-mobile-slider-date">
+              {activeMatch.displayDate}
+
+              <span style={{ color: "#0d9488", padding: "0 .28rem" }}>
+                ·
+              </span>
+
+              {activeMatch.displayTime}
+            </div>
+          </article>
+
+          <div className="countdown-mobile-navigation">
+            <button
+              aria-label="Vorheriges Spiel"
+              className="countdown-mobile-arrow"
+              disabled={previousIndex === null}
+              onClick={() => {
+                if (previousIndex !== null) {
+                  setActiveIndex(previousIndex);
+                }
+              }}
+              type="button"
+            >
+              ←
+            </button>
+
+            <div className="countdown-mobile-dots">
+              {MATCHES.map((match, index) => (
                 <button
-                  aria-current={isActive ? "true" : undefined}
+                  aria-current={index === activeIndex ? "true" : undefined}
                   aria-label={`${index + 1}. Spiel: ${match.homeTeam} gegen ${match.awayTeam}`}
+                  className={`countdown-mobile-dot ${
+                    index === activeIndex ? "active" : ""
+                  }`}
                   key={`${match.displayDate}-${match.homeTeam}`}
                   onClick={() => setActiveIndex(index)}
                   type="button"
-                  style={{
-                    alignItems: "center",
-                    background: isActive
-                      ? "#0d9488"
-                      : "rgba(247,247,244,.32)",
-                    border: 0,
-                    borderRadius: "999px",
-                    cursor: "pointer",
-                    display: "flex",
-                    height: ".7rem",
-                    justifyContent: "center",
-                    padding: 0,
-                    position: "relative",
-                    transition:
-                      "width 350ms cubic-bezier(0.25, 1, 0.5, 1), background 250ms ease",
-                    width: isActive ? "1.25rem" : ".7rem",
-                  }}
-                  onMouseEnter={(event) => {
-                    if (!isActive) {
-                      event.currentTarget.style.background =
-                        "rgba(13,148,136,.72)";
-                    }
-                  }}
-                  onMouseLeave={(event) => {
-                    if (!isActive) {
-                      event.currentTarget.style.background =
-                        "rgba(247,247,244,.32)";
-                    }
-                  }}
-                >
-                  <span
-                    style={{
-                      height: 1,
-                      overflow: "hidden",
-                      position: "absolute",
-                      width: 1,
-                    }}
-                  >
-                    {`${index + 1}. Spiel`}
-                  </span>
-                </button>
-              );
-            })}
+                />
+              ))}
+            </div>
+
+            <button
+              aria-label="Nächstes Spiel"
+              className="countdown-mobile-arrow next"
+              disabled={nextIndex === null}
+              onClick={() => {
+                if (nextIndex !== null) {
+                  setActiveIndex(nextIndex);
+                }
+              }}
+              type="button"
+            >
+              →
+            </button>
           </div>
         </div>
       </div>
