@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 
 const navLinks = [
   { name: "Über uns", href: "/ueber-uns" },
@@ -10,6 +11,12 @@ const navLinks = [
 ];
 
 export default function Header() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const closeMenu = () => {
+    setMenuOpen(false);
+  };
+
   return (
     <header
       style={{
@@ -57,42 +64,160 @@ export default function Header() {
           color: #14b8a6;
         }
 
-        /* MOBILE */
+        .mobile-menu-button,
+        .mobile-menu-panel {
+          display: none;
+        }
+
         @media (max-width: 768px) {
           .header-inner {
-            padding: 0 1rem !important;
-            height: 64px !important;
+            box-sizing: border-box !important;
+            height: 68px !important;
+            padding: 0 1.1rem !important;
+          }
+
+          .header-brand {
+            gap: .7rem !important;
+          }
+
+          .header-logo-wrap {
+            height: 39px !important;
+            width: 39px !important;
           }
 
           .header-logo {
-            width: 40px !important;
-            height: 40px !important;
+            height: 39px !important;
+            width: 39px !important;
           }
 
           .header-mello {
             font-size: 1.45rem !important;
+            letter-spacing: .04em !important;
           }
 
           .desktop-nav {
             display: none !important;
           }
 
-          .mobile-nav {
-            display: flex !important;
+          .mobile-menu-button {
             align-items: center;
-            gap: 0.6rem;
+            background: transparent;
+            border: 1px solid rgba(247,247,244,.26);
+            border-radius: .55rem;
+            color: #f7f7f4;
+            cursor: pointer;
+            display: inline-flex !important;
+            height: 42px;
+            justify-content: center;
+            padding: 0;
+            transition: border-color .2s ease, background .2s ease;
+            width: 46px;
           }
 
-          .header-nav-link,
-          .header-tv-link {
-            font-size: 0.52rem !important;
-            letter-spacing: 0.08em !important;
+          .mobile-menu-button:hover,
+          .mobile-menu-button.is-open {
+            background: rgba(13,148,136,.1);
+            border-color: rgba(13,148,136,.78);
           }
-        }
 
-        /* default */
-        .mobile-nav {
-          display: none;
+          .mobile-menu-icon {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            width: 19px;
+          }
+
+          .mobile-menu-icon span {
+            background: currentColor;
+            display: block;
+            height: 1.5px;
+            transform-origin: center;
+            transition: transform .22s ease, opacity .22s ease;
+            width: 100%;
+          }
+
+          .mobile-menu-button.is-open .mobile-menu-icon span:nth-child(1) {
+            transform: translateY(6.5px) rotate(45deg);
+          }
+
+          .mobile-menu-button.is-open .mobile-menu-icon span:nth-child(2) {
+            opacity: 0;
+          }
+
+          .mobile-menu-button.is-open .mobile-menu-icon span:nth-child(3) {
+            transform: translateY(-6.5px) rotate(-45deg);
+          }
+
+          .mobile-menu-panel {
+            background: rgba(8,8,8,.98);
+            border-bottom: 1px solid rgba(247,247,244,.14);
+            box-shadow: 0 14px 32px rgba(0,0,0,.28);
+            box-sizing: border-box;
+            display: block !important;
+            left: 0;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            padding: 0 1.1rem;
+            pointer-events: none;
+            position: absolute;
+            right: 0;
+            top: 68px;
+            transform: translateY(-8px);
+            transition: max-height .28s ease, opacity .22s ease, transform .28s ease, padding .28s ease;
+          }
+
+          .mobile-menu-panel.is-open {
+            max-height: 32rem;
+            opacity: 1;
+            padding: .8rem 1.1rem 1.15rem;
+            pointer-events: auto;
+            transform: translateY(0);
+          }
+
+          .mobile-menu-link {
+            align-items: center;
+            border-bottom: 1px solid rgba(247,247,244,.1);
+            color: #f7f7f4;
+            display: flex;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: .76rem;
+            font-weight: 800;
+            justify-content: space-between;
+            letter-spacing: .13em;
+            min-height: 52px;
+            text-decoration: none;
+            text-transform: uppercase;
+          }
+
+          .mobile-menu-link::after {
+            color: #0d9488;
+            content: "→";
+            font-size: 1rem;
+            font-weight: 700;
+          }
+
+          .mobile-menu-tv {
+            align-items: center;
+            background: #0d9488;
+            color: #080808;
+            display: flex;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: .72rem;
+            font-weight: 900;
+            justify-content: center;
+            letter-spacing: .14em;
+            margin-top: 1rem;
+            min-height: 49px;
+            text-decoration: none;
+            text-transform: uppercase;
+          }
+
+          .mobile-menu-tv::after {
+            content: "→";
+            font-size: 1rem;
+            margin-left: .55rem;
+          }
         }
       `}</style>
 
@@ -109,9 +234,10 @@ export default function Header() {
           width: "100%",
         }}
       >
-        {/* Logo + MELLO */}
         <Link
           href="/"
+          className="header-brand"
+          onClick={closeMenu}
           style={{
             display: "flex",
             alignItems: "center",
@@ -120,6 +246,7 @@ export default function Header() {
           }}
         >
           <div
+            className="header-logo-wrap"
             style={{
               display: "flex",
               alignItems: "center",
@@ -160,7 +287,6 @@ export default function Header() {
           </span>
         </Link>
 
-        {/* Desktop Navigation */}
         <nav
           className="desktop-nav"
           style={{
@@ -169,9 +295,13 @@ export default function Header() {
             gap: "2.4rem",
           }}
         >
-          {navLinks.map((l) => (
-            <Link key={l.href} href={l.href} className="header-nav-link">
-              {l.name}
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="header-nav-link"
+            >
+              {link.name}
             </Link>
           ))}
 
@@ -180,19 +310,42 @@ export default function Header() {
           </Link>
         </nav>
 
-        {/* Mobile Navigation */}
-        <nav className="mobile-nav">
-          {navLinks.map((l) => (
-            <Link key={l.href} href={l.href} className="header-nav-link">
-              {l.name}
-            </Link>
-          ))}
-
-          <Link href="/tv" className="header-tv-link">
-            Mello TV
-          </Link>
-        </nav>
+        <button
+          type="button"
+          className={`mobile-menu-button ${menuOpen ? "is-open" : ""}`}
+          aria-label={menuOpen ? "Menü schließen" : "Menü öffnen"}
+          aria-expanded={menuOpen}
+          aria-controls="mobile-navigation"
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          <span className="mobile-menu-icon" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </span>
+        </button>
       </div>
+
+      <nav
+        id="mobile-navigation"
+        className={`mobile-menu-panel ${menuOpen ? "is-open" : ""}`}
+        aria-label="Mobile Navigation"
+      >
+        {navLinks.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            className="mobile-menu-link"
+            onClick={closeMenu}
+          >
+            {link.name}
+          </Link>
+        ))}
+
+        <Link href="/tv" className="mobile-menu-tv" onClick={closeMenu}>
+          Mello TV
+        </Link>
+      </nav>
     </header>
   );
 }
