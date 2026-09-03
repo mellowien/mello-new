@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 type ContributionPlan = "monthly" | "annual";
 
@@ -31,7 +31,7 @@ const PLAN_DETAILS: Record<
   },
 };
 
-export default function MitgliedschaftAntragPage() {
+function MitgliedschaftAntragContent() {
   const searchParams = useSearchParams();
 
   const [plan, setPlan] = useState<ContributionPlan>("annual");
@@ -973,5 +973,40 @@ export default function MitgliedschaftAntragPage() {
         </div>
       )}
     </main>
+  );
+}
+
+export default function MitgliedschaftAntragPage() {
+  return (
+    <Suspense
+      fallback={
+        <main
+          style={{
+            alignItems: "center",
+            background: "var(--mello-black, #080808)",
+            color: "#f7f7f4",
+            display: "flex",
+            fontFamily: "var(--font-body), Arial, sans-serif",
+            justifyContent: "center",
+            minHeight: "100vh",
+            paddingTop: "88px",
+          }}
+        >
+          <p
+            style={{
+              color: "rgba(247, 247, 244, .6)",
+              fontSize: ".75rem",
+              fontWeight: 800,
+              letterSpacing: ".14em",
+              textTransform: "uppercase",
+            }}
+          >
+            Antrag wird geladen …
+          </p>
+        </main>
+      }
+    >
+      <MitgliedschaftAntragContent />
+    </Suspense>
   );
 }
