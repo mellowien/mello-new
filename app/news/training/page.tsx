@@ -823,34 +823,36 @@ export default function TrainingPage() {
             background:
               linear-gradient(
                 0deg,
-                rgba(8,8,8,.93) 0%,
-                rgba(8,8,8,.2) 73%,
+                rgba(8,8,8,.95) 0%,
+                rgba(8,8,8,.66) 40%,
+                rgba(8,8,8,.18) 76%,
                 rgba(13,148,136,.08) 100%
               );
           }
 
           .venue-caption {
-            bottom: 1.1rem;
-            left: 1rem;
-            max-width: calc(100% - 2rem);
+            bottom: .9rem;
+            left: .9rem;
+            max-width: calc(100% - 1.8rem);
           }
 
           .venue-kicker {
-            font-size: .53rem;
-            letter-spacing: .13em;
-            margin-bottom: .45rem;
+            font-size: .46rem;
+            letter-spacing: .11em;
+            margin-bottom: .32rem;
           }
 
           .venue-caption h2 {
-            font-size: clamp(1.8rem,8.7vw,2.55rem);
-            line-height: .92;
+            font-size: clamp(1.48rem,7vw,2rem);
+            letter-spacing: -.055em;
+            line-height: .95;
           }
 
           .venue-caption p {
-            font-size: .72rem;
-            line-height: 1.45;
-            margin-top: .55rem;
-            max-width: 34ch;
+            font-size: .63rem;
+            line-height: 1.4;
+            margin-top: .38rem;
+            max-width: 31ch;
           }
 
           .report-content {
@@ -918,35 +920,37 @@ export default function TrainingPage() {
             background:
               linear-gradient(
                 0deg,
-                rgba(8,8,8,.96) 0%,
-                rgba(8,8,8,.3) 70%,
+                rgba(8,8,8,.98) 0%,
+                rgba(8,8,8,.78) 38%,
+                rgba(8,8,8,.16) 74%,
                 transparent 100%
               );
           }
 
           .captain-copy {
-            bottom: 1.15rem;
-            left: 1rem;
-            right: 1rem;
+            bottom: .9rem;
+            left: .9rem;
+            right: .9rem;
             width: auto;
           }
 
           .captain-kicker {
-            font-size: .54rem;
-            letter-spacing: .13em;
-            margin-bottom: .5rem;
+            font-size: .47rem;
+            letter-spacing: .11em;
+            margin-bottom: .32rem;
           }
 
           .captain-copy h3 {
-            font-size: clamp(2.25rem,11vw,3.2rem);
-            line-height: .88;
+            font-size: clamp(1.9rem,9.5vw,2.6rem);
+            letter-spacing: -.065em;
+            line-height: .9;
           }
 
           .captain-copy p {
-            font-size: .86rem;
-            line-height: 1.55;
-            margin-top: .65rem;
-            max-width: 34ch;
+            font-size: .74rem;
+            line-height: 1.45;
+            margin-top: .42rem;
+            max-width: 32ch;
           }
 
           .report-aside {
@@ -1066,6 +1070,14 @@ export default function TrainingPage() {
             height: 18rem;
           }
 
+          .venue-caption h2 {
+            font-size: 1.38rem;
+          }
+
+          .venue-caption p {
+            font-size: .58rem;
+          }
+
           .interview-question {
             font-size: 1.4rem;
           }
@@ -1078,6 +1090,14 @@ export default function TrainingPage() {
           .captain-image-wrap,
           .captain-image {
             min-height: 23rem;
+          }
+
+          .captain-copy h3 {
+            font-size: 1.75rem;
+          }
+
+          .captain-copy p {
+            font-size: .7rem;
           }
 
           .quote-text {
