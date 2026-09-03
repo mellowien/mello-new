@@ -216,7 +216,7 @@ export default function AboutPage() {
             {/* Bild: Lorenz & Daniel */}
             <div style={{ position: "relative" }}>
               <img
-                src="/dani-lorenz.png"
+                src="/dani-lorenz.PNG"
                 alt="Lorenz Predcechtel und Daniel Rezai – FC Mello Wien"
                 className="about-img"
                 style={{ height: "300px" }}
