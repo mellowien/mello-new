@@ -19,13 +19,13 @@ export default function AuftaktPage() {
           --paper: #f7f7f4;
           --teal: #0d9488;
           --teal-bright: #14b8a6;
-          --line: rgba(247, 247, 244, .12);
-          --muted: rgba(247, 247, 244, .62);
-          min-height: 100vh;
-          overflow: hidden;
+          --line: rgba(247,247,244,.12);
+          --muted: rgba(247,247,244,.62);
           background: var(--ink);
           color: var(--paper);
           font-family: Arial, Helvetica, sans-serif;
+          min-height: 100vh;
+          overflow: hidden;
           padding-top: 88px;
         }
 
@@ -34,81 +34,78 @@ export default function AuftaktPage() {
         }
 
         .article-shell {
-          width: min(100% - 6rem, 1440px);
           margin: 0 auto;
+          width: min(100% - 6rem, 1440px);
         }
 
         .article-hero {
-          position: relative;
-          overflow: hidden;
-          border-bottom: 1px solid var(--line);
-          padding: 4.7rem 0 4.4rem;
           background:
             radial-gradient(
               ellipse 43% 120% at 94% 48%,
-              rgba(13, 148, 136, .15),
+              rgba(13,148,136,.15),
               transparent 74%
             ),
             linear-gradient(115deg, #080808 0%, #080808 56%, #0a1211 100%);
+          border-bottom: 1px solid var(--line);
+          overflow: hidden;
+          padding: 4.7rem 0 4.4rem;
+          position: relative;
         }
 
         .article-hero-inner {
+          max-width: 1060px;
           position: relative;
           z-index: 1;
-          max-width: 1060px;
         }
 
         .article-back {
-          display: inline-flex;
           align-items: center;
-          min-height: 2.6rem;
-          gap: .55rem;
-          border: 1px solid rgba(247, 247, 244, .16);
+          border: 1px solid rgba(247,247,244,.16);
           border-radius: 99px;
-          padding: 0 1rem;
-          color: rgba(247, 247, 244, .70);
+          color: rgba(247,247,244,.70);
+          display: inline-flex;
           font-size: .63rem;
           font-weight: 800;
+          gap: .55rem;
           letter-spacing: .12em;
+          min-height: 2.6rem;
+          padding: 0 1rem;
           text-decoration: none;
           text-transform: uppercase;
-          transition:
-            color .2s ease,
-            border-color .2s ease,
-            background .2s ease;
+          transition: color .2s ease, border-color .2s ease, background .2s ease;
         }
 
         .article-back:hover {
-          border-color: rgba(13, 148, 136, .65);
-          background: rgba(13, 148, 136, .08);
+          background: rgba(13,148,136,.08);
+          border-color: rgba(13,148,136,.65);
           color: var(--teal);
         }
 
         .article-meta {
-          display: flex;
           align-items: center;
-          margin: 2rem 0 1.65rem;
           color: var(--teal);
+          display: flex;
           font-size: .67rem;
           font-weight: 800;
           letter-spacing: .16em;
+          margin: 2rem 0 1.65rem;
           text-transform: uppercase;
         }
 
         .article-title {
-          max-width: 13ch;
-          margin: 0 0 .35rem;
           font-size: clamp(3.15rem, 7vw, 7.4rem);
           font-weight: 900;
           letter-spacing: -.08em;
           line-height: .81;
+          margin: 0 0 .35rem;
+          max-width: 13ch;
           text-transform: uppercase;
         }
 
         .article-title span {
-          display: block;
           color: transparent;
-          -webkit-text-stroke: 1.25px rgba(247, 247, 244, .76);
+          display: block;
+          -webkit-text-stroke: 1.25px rgba(247,247,244,.76);
         }
 
         .article-title span em {
@@ -118,11 +115,11 @@ export default function AuftaktPage() {
         }
 
         .article-lead {
-          max-width: 61ch;
-          margin: 2.1rem 0 0;
-          color: rgba(247, 247, 244, .73);
+          color: rgba(247,247,244,.73);
           font-size: clamp(1rem, 1.3vw, 1.16rem);
           line-height: 1.76;
+          margin: 2.1rem 0 0;
+          max-width: 61ch;
         }
 
         .article-match-wrap {
@@ -130,73 +127,74 @@ export default function AuftaktPage() {
         }
 
         .article-match {
-          position: relative;
-          display: grid;
-          grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
           align-items: center;
-          gap: clamp(1rem, 3vw, 3.5rem);
-          overflow: hidden;
-          border: 1px solid rgba(13, 148, 136, .58);
-          border-radius: 1.15rem;
-          padding: clamp(1.6rem, 4vw, 3.3rem);
           background:
             radial-gradient(
               circle at 88% 12%,
-              rgba(13, 148, 136, .20),
+              rgba(13,148,136,.20),
               transparent 34%
             ),
             linear-gradient(
               145deg,
-              rgba(13, 148, 136, .10),
-              rgba(8, 8, 8, .95) 70%
+              rgba(13,148,136,.10),
+              rgba(8,8,8,.95) 70%
             );
+          border: 1px solid rgba(13,148,136,.58);
+          border-radius: 1.15rem;
+          display: grid;
+          gap: clamp(1rem, 3vw, 3.5rem);
+          grid-template-columns: minmax(0,1fr) auto minmax(0,1fr);
+          overflow: hidden;
+          padding: clamp(1.6rem,4vw,3.3rem);
+          position: relative;
         }
 
         .article-match::before {
+          border: 1px solid rgba(13,148,136,.18);
+          border-radius: 50%;
+          bottom: -8rem;
           content: "";
+          height: 22rem;
+          pointer-events: none;
           position: absolute;
           right: -8rem;
-          bottom: -8rem;
           width: 22rem;
-          height: 22rem;
-          border: 1px solid rgba(13, 148, 136, .18);
-          border-radius: 50%;
-          pointer-events: none;
         }
 
         .article-team {
-          position: relative;
-          z-index: 1;
+          align-items: center;
           display: flex;
           flex-direction: column;
-          align-items: center;
           gap: .9rem;
           min-width: 0;
+          position: relative;
+          z-index: 1;
         }
 
         .article-team-logo {
           display: block;
-          width: clamp(4.8rem, 10vw, 7rem);
-          height: clamp(4.8rem, 10vw, 7rem);
+          filter: drop-shadow(0 0 1rem rgba(13,148,136,.16));
+          height: clamp(4.8rem,10vw,7rem);
           object-fit: contain;
-          filter: drop-shadow(0 0 1rem rgba(13, 148, 136, .16));
+          width: clamp(4.8rem,10vw,7rem);
         }
 
         .article-team-name {
-          margin: 0;
           color: var(--paper);
-          font-size: clamp(1rem, 1.8vw, 1.55rem);
+          font-size: clamp(1rem,1.8vw,1.55rem);
           font-weight: 900;
           letter-spacing: -.04em;
           line-height: 1;
+          margin: 0;
+          overflow-wrap: anywhere;
           text-align: center;
           text-transform: uppercase;
         }
 
         .article-versus {
           position: relative;
-          z-index: 1;
           text-align: center;
+          z-index: 1;
         }
 
         .article-competition {
@@ -208,16 +206,16 @@ export default function AuftaktPage() {
         }
 
         .article-vs {
-          margin: .75rem 0;
           color: var(--paper);
-          font-size: clamp(2rem, 4vw, 3.7rem);
+          font-size: clamp(2rem,4vw,3.7rem);
           font-weight: 900;
           letter-spacing: -.08em;
           line-height: .8;
+          margin: .75rem 0;
         }
 
         .article-kickoff {
-          color: rgba(247, 247, 244, .66);
+          color: rgba(247,247,244,.66);
           font-size: .68rem;
           font-weight: 800;
           letter-spacing: .11em;
@@ -228,8 +226,8 @@ export default function AuftaktPage() {
 
         .article-content {
           display: grid;
-          grid-template-columns: minmax(0, .76fr) minmax(280px, .24fr);
-          gap: clamp(2.5rem, 8vw, 9rem);
+          gap: clamp(2.5rem,8vw,9rem);
+          grid-template-columns: minmax(0,.76fr) minmax(280px,.24fr);
           padding: 5.8rem 0 6.5rem;
         }
 
@@ -238,19 +236,19 @@ export default function AuftaktPage() {
         }
 
         .article-copy p {
-          margin: 0 0 1.45rem;
-          color: rgba(247, 247, 244, .70);
-          font-size: clamp(1rem, 1.2vw, 1.08rem);
+          color: rgba(247,247,244,.70);
+          font-size: clamp(1rem,1.2vw,1.08rem);
           line-height: 1.86;
+          margin: 0 0 1.45rem;
         }
 
         .article-copy h2 {
-          margin: 3rem 0 1.15rem;
           color: var(--paper);
-          font-size: clamp(1.7rem, 3vw, 2.65rem);
+          font-size: clamp(1.7rem,3vw,2.65rem);
           font-weight: 900;
           letter-spacing: -.055em;
           line-height: .95;
+          margin: 3rem 0 1.15rem;
           text-transform: uppercase;
         }
 
@@ -259,87 +257,87 @@ export default function AuftaktPage() {
         }
 
         .article-quote {
-          margin: 2.8rem 0;
           border-left: 2px solid var(--teal);
+          margin: 2.8rem 0;
           padding: .35rem 0 .35rem 1.4rem;
         }
 
         .article-quote p {
-          margin: 0;
           color: var(--paper);
-          font-size: clamp(1.3rem, 2.2vw, 1.85rem);
+          font-size: clamp(1.3rem,2.2vw,1.85rem);
           font-weight: 800;
           letter-spacing: -.035em;
           line-height: 1.15;
+          margin: 0;
         }
 
         .article-quote span {
-          display: block;
-          margin-top: .8rem;
           color: var(--teal);
+          display: block;
           font-size: .62rem;
           font-weight: 800;
           letter-spacing: .14em;
+          margin-top: .8rem;
           text-transform: uppercase;
         }
 
         .article-aside {
-          position: sticky;
-          top: 7rem;
           align-self: start;
           border-top: 1px solid var(--line);
           padding-top: 1.35rem;
+          position: sticky;
+          top: 7rem;
         }
 
         .article-aside-label {
-          margin: 0 0 .75rem;
-          color: rgba(247, 247, 244, .42);
+          color: rgba(247,247,244,.42);
           font-size: .63rem;
           font-weight: 800;
           letter-spacing: .15em;
+          margin: 0 0 .75rem;
           text-transform: uppercase;
         }
 
         .article-aside-value {
-          margin: 0 0 1.55rem;
           color: var(--paper);
           font-size: .96rem;
           font-weight: 700;
           line-height: 1.55;
+          margin: 0 0 1.55rem;
         }
 
         .article-cta {
-          margin-top: 2.6rem;
-          border: 1px solid rgba(13, 148, 136, .55);
+          background: rgba(13,148,136,.07);
+          border: 1px solid rgba(13,148,136,.55);
           border-radius: 1rem;
+          margin-top: 2.6rem;
           padding: 1.35rem;
-          background: rgba(13, 148, 136, .07);
         }
 
         .article-cta p {
-          margin: .9rem 0 1.25rem;
           color: var(--muted);
           font-size: .84rem;
           line-height: 1.65;
+          margin: .9rem 0 1.25rem;
         }
 
         .article-cta-link {
-          display: inline-flex;
           align-items: center;
-          justify-content: center;
-          min-height: 2.8rem;
-          width: 100%;
-          gap: .5rem;
+          background: var(--teal);
           border: 1px solid var(--teal);
           border-radius: 99px;
-          background: var(--teal);
           color: var(--ink);
+          display: inline-flex;
           font-size: .65rem;
           font-weight: 900;
+          gap: .5rem;
+          justify-content: center;
           letter-spacing: .13em;
+          min-height: 2.8rem;
           text-decoration: none;
           text-transform: uppercase;
           transition: background .2s ease, transform .2s ease;
+          width: 100%;
         }
 
         .article-cta-link:hover {
@@ -357,17 +355,17 @@ export default function AuftaktPage() {
           }
 
           .article-content {
-            grid-template-columns: 1fr;
             gap: 1rem;
+            grid-template-columns: 1fr;
             padding: 4.3rem 0 5rem;
           }
 
           .article-aside {
-            position: static;
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
+            grid-template-columns: repeat(3,1fr);
             margin-top: 1.5rem;
+            position: static;
           }
 
           .article-aside-value {
@@ -381,30 +379,243 @@ export default function AuftaktPage() {
         }
 
         @media (max-width: 620px) {
+          .article-page {
+            padding-top: 68px;
+          }
+
+          .article-shell {
+            width: min(100% - 2.25rem, 40rem);
+          }
+
+          .article-hero {
+            background:
+              radial-gradient(
+                ellipse 110% 55% at 100% 10%,
+                rgba(13,148,136,.12),
+                transparent 72%
+              ),
+              linear-gradient(145deg,#080808 0%,#08100f 100%);
+            padding: 2.4rem 0 2.75rem;
+          }
+
+          .article-back {
+            font-size: .57rem;
+            letter-spacing: .1em;
+            min-height: 44px;
+            padding: 0 .9rem;
+          }
+
+          .article-meta {
+            font-size: .58rem;
+            letter-spacing: .14em;
+            margin: 1.55rem 0 1.05rem;
+          }
+
           .article-title {
-            font-size: clamp(2.95rem, 15vw, 4.5rem);
+            font-size: clamp(2.55rem,13vw,3.75rem);
+            letter-spacing: -.075em;
+            line-height: .86;
+            max-width: 12ch;
+          }
+
+          .article-title span {
+            -webkit-text-stroke-width: 1px;
+          }
+
+          .article-lead {
+            color: rgba(247,247,244,.72);
+            font-size: 1rem;
+            line-height: 1.68;
+            margin-top: 1.45rem;
+            max-width: 35ch;
+          }
+
+          .article-match-wrap {
+            padding: 2.2rem 0 0;
           }
 
           .article-match {
-            grid-template-columns: 1fr;
-            gap: 1.25rem;
             border-radius: .9rem;
+            display: flex;
+            flex-direction: row;
+            gap: .65rem;
+            justify-content: space-between;
+            min-height: 12rem;
+            padding: 1.15rem .85rem 1rem;
+          }
+
+          .article-match::before {
+            bottom: -6rem;
+            height: 15rem;
+            right: -6rem;
+            width: 15rem;
+          }
+
+          .article-team {
+            flex: 1 1 0;
+            gap: .5rem;
+            justify-content: center;
+            min-width: 0;
+          }
+
+          .article-team-logo {
+            height: clamp(3.65rem,18vw,4.7rem);
+            width: clamp(3.65rem,18vw,4.7rem);
+          }
+
+          .article-team-name {
+            font-size: clamp(.72rem,3.4vw,.92rem);
+            letter-spacing: -.025em;
+            line-height: 1.08;
+            max-width: 10ch;
           }
 
           .article-versus {
-            order: 2;
+            align-items: center;
+            display: flex;
+            flex: 0 0 3.75rem;
+            flex-direction: column;
+            justify-content: center;
+            min-width: 0;
           }
 
-          .article-team:first-child {
-            order: 1;
+          .article-competition {
+            font-size: .45rem;
+            letter-spacing: .08em;
+            line-height: 1.15;
+            max-width: 100%;
+            text-align: center;
           }
 
-          .article-team:last-child {
-            order: 3;
+          .article-vs {
+            font-size: 1.65rem;
+            line-height: 1;
+            margin: .45rem 0;
+          }
+
+          .article-kickoff {
+            font-size: .46rem;
+            letter-spacing: .045em;
+            line-height: 1.4;
+            text-align: center;
+            white-space: normal;
+          }
+
+          .article-content {
+            gap: 2.65rem;
+            padding: 3.6rem 0 4rem;
+          }
+
+          .article-copy {
+            max-width: 36ch;
+          }
+
+          .article-copy p {
+            font-size: 1rem;
+            line-height: 1.75;
+            margin-bottom: 1.25rem;
+          }
+
+          .article-copy h2 {
+            font-size: clamp(1.7rem,8vw,2.2rem);
+            line-height: 1;
+            margin: 2.4rem 0 .9rem;
+          }
+
+          .article-quote {
+            margin: 2.15rem 0;
+            padding-left: 1rem;
+          }
+
+          .article-quote p {
+            font-size: clamp(1.18rem,5.8vw,1.55rem);
+            line-height: 1.2;
+          }
+
+          .article-quote span {
+            font-size: .54rem;
+            letter-spacing: .11em;
+            line-height: 1.4;
+            margin-top: .65rem;
           }
 
           .article-aside {
+            background: rgba(247,247,244,.025);
+            border: 1px solid rgba(247,247,244,.1);
+            border-radius: .9rem;
+            display: grid;
+            gap: 0;
             grid-template-columns: 1fr;
+            margin-top: 0;
+            overflow: hidden;
+            padding: 0;
+          }
+
+          .article-aside > div:not(.article-cta) {
+            border-bottom: 1px solid rgba(247,247,244,.09);
+            padding: .9rem 1rem .85rem;
+          }
+
+          .article-aside-label {
+            font-size: .54rem;
+            letter-spacing: .13em;
+            margin-bottom: .38rem;
+          }
+
+          .article-aside-value {
+            font-size: .9rem;
+            line-height: 1.45;
+          }
+
+          .article-cta {
+            background: rgba(13,148,136,.075);
+            border: 0;
+            border-radius: 0;
+            margin: 0;
+            padding: 1.1rem 1rem 1rem;
+          }
+
+          .article-cta .article-meta {
+            font-size: .55rem;
+            margin: 0;
+          }
+
+          .article-cta p {
+            font-size: .87rem;
+            line-height: 1.6;
+            margin: .65rem 0 1rem;
+          }
+
+          .article-cta-link {
+            font-size: .62rem;
+            min-height: 49px;
+          }
+        }
+
+        @media (max-width: 360px) {
+          .article-shell {
+            width: min(100% - 2rem,40rem);
+          }
+
+          .article-title {
+            font-size: 2.42rem;
+          }
+
+          .article-match {
+            padding-left: .65rem;
+            padding-right: .65rem;
+          }
+
+          .article-versus {
+            flex-basis: 3.25rem;
+          }
+
+          .article-team-name {
+            font-size: .68rem;
+          }
+
+          .article-copy p {
+            font-size: .95rem;
           }
         }
       `}</style>
@@ -412,7 +623,8 @@ export default function AuftaktPage() {
       <section className="article-hero">
         <div className="article-shell article-hero-inner">
           <Link className="article-back" href="/">
-            <span aria-hidden="true">←</span> Zur Startseite
+            <span aria-hidden="true">←</span>
+            Zur Startseite
           </Link>
 
           <div className="article-meta">Vorbericht · 3 Min. Lesezeit</div>
@@ -540,9 +752,11 @@ export default function AuftaktPage() {
             <div className="article-meta" style={{ margin: 0 }}>
               Mello TV
             </div>
+
             <p>
               Livestreams, Highlights und Einblicke aus dem Vereinsalltag.
             </p>
+
             <Link className="article-cta-link" href="/tv">
               Zu Mello TV <span aria-hidden="true">→</span>
             </Link>
