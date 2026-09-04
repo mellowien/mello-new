@@ -372,6 +372,8 @@ export default function DirectionsPage() {
 
         .directions-game-day-title span {
           color: var(--directions-teal);
+          display: block;
+          margin-top: .08em;
         }
 
         .directions-game-day-copy {
@@ -586,6 +588,10 @@ export default function DirectionsPage() {
             margin-bottom: .75rem;
           }
 
+          .directions-game-day-title span {
+            margin-top: .12em;
+          }
+
           .directions-game-day-copy {
             font-size: .94rem;
             line-height: 1.65;
@@ -697,7 +703,9 @@ export default function DirectionsPage() {
           <div className="directions-routes-grid">
             {directions.map((direction) => (
               <article className="directions-route" key={direction.number}>
-                <div className="directions-route-number">{direction.number}</div>
+                <div className="directions-route-number">
+                  {direction.number}
+                </div>
 
                 <h3 className="directions-route-title">{direction.title}</h3>
 
@@ -712,7 +720,8 @@ export default function DirectionsPage() {
         <div className="directions-shell directions-game-day-wrap">
           <div className="directions-game-day-content">
             <h2 className="directions-game-day-title">
-              Rechtzeitig da. <span>Gemeinsam laut.</span>
+              Rechtzeitig da.
+              <span>Gemeinsam laut.</span>
             </h2>
 
             <p className="directions-game-day-copy">
