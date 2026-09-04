@@ -13,26 +13,14 @@ const currentLinks = [
   { href: "/news", label: "News & Berichte" },
 ];
 
-const contactLinks = [
-  {
-    href: "/kontakt?anliegen=spieler",
-    label: "Spieleranfrage",
-    description: "Du möchtest für FC Mello Wien spielen?",
-  },
-  {
-    href: "/kontakt?anliegen=community",
-    label: "Verein mitgestalten",
-    description: "Content, Organisation oder neue Ideen für Mello.",
-  },
-  {
-    href: "/mitgliedschaft/vorteile",
-    label: "Mitgliedschaft entdecken",
-    description: "Alle Vorteile und Möglichkeiten auf einen Blick.",
-  },
+const participateLinks = [
+  { href: "/kontakt?anliegen=spieler", label: "Spieleranfrage" },
+  { href: "/kontakt?anliegen=community", label: "Verein mitgestalten" },
+  { href: "/mitgliedschaft/vorteile", label: "Mitgliedschaft entdecken" },
+  { href: "/mitgliedschaft/antrag", label: "Mitgliedschaft beantragen" },
 ];
 
-const legalLinks = [
-  { href: "/mitgliedschaft/antrag", label: "Mitgliedschaft beantragen" },
+const contactLinks = [
   { href: "/kontakt", label: "Kontaktseite" },
   { href: "/impressum", label: "Impressum" },
 ];
@@ -161,20 +149,32 @@ const socialLinks = [
   },
 ];
 
-function FooterLink({
-  href,
-  children,
+function FooterColumn({
+  title,
+  links,
+  accent = false,
 }: {
-  href: string;
-  children: React.ReactNode;
+  title: string;
+  links: { href: string; label: string }[];
+  accent?: boolean;
 }) {
   return (
-    <Link href={href} className="footer-link">
-      <span>{children}</span>
-      <span className="footer-link-arrow" aria-hidden="true">
-        →
-      </span>
-    </Link>
+    <div className="footer-column">
+      <p className="footer-column-title">{title}</p>
+
+      <ul className="footer-links-list">
+        {links.map((link) => (
+          <li key={link.href}>
+            <Link
+              href={link.href}
+              className={`footer-link ${accent ? "footer-link-accent" : ""}`}
+            >
+              {link.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
@@ -186,18 +186,11 @@ export default function Footer() {
           --footer-ink: #080808;
           --footer-paper: #f7f7f4;
           --footer-teal: #0d9488;
-          --footer-teal-bright: #14b8a6;
           --footer-line: rgba(247,247,244,.12);
-          background:
-            radial-gradient(
-              ellipse 38% 46% at 100% 0%,
-              rgba(13,148,136,.09),
-              transparent 74%
-            ),
-            var(--footer-ink);
+          background: var(--footer-ink);
           border-top: 1px solid var(--footer-line);
           color: var(--footer-paper);
-          padding: 5rem 0 2.25rem;
+          padding: 5rem 0 3.2rem;
           position: relative;
         }
 
@@ -205,33 +198,16 @@ export default function Footer() {
           box-sizing: border-box;
         }
 
-        .footer::before {
-          background:
-            linear-gradient(
-              90deg,
-              transparent,
-              rgba(13,148,136,.18),
-              transparent
-            );
-          content: "";
-          height: 1px;
-          left: 0;
-          opacity: .6;
-          position: absolute;
-          right: 0;
-          top: 0;
-        }
-
         .footer-content {
           margin: 0 auto;
           width: min(100% - 6rem, 1440px);
         }
 
-        .footer-top {
+        .footer-grid {
           display: grid;
-          gap: 4.5rem;
-          grid-template-columns: 1.45fr .8fr .8fr 1.2fr;
-          padding-bottom: 4.25rem;
+          gap: 4.25rem;
+          grid-template-columns: 1.65fr .8fr .9fr 1.05fr;
+          margin-bottom: 4.2rem;
         }
 
         .footer-brand {
@@ -241,8 +217,8 @@ export default function Footer() {
         .footer-brand-link {
           align-items: center;
           display: inline-flex;
-          gap: .85rem;
-          margin-bottom: 1.15rem;
+          gap: .9rem;
+          margin-bottom: 1.2rem;
           text-decoration: none;
         }
 
@@ -251,10 +227,10 @@ export default function Footer() {
           border: 1px solid rgba(13,148,136,.4);
           border-radius: 50%;
           display: flex;
-          height: 2.6rem;
+          height: 2.7rem;
           justify-content: center;
           overflow: hidden;
-          width: 2.6rem;
+          width: 2.7rem;
         }
 
         .footer-brand-mark img {
@@ -268,17 +244,17 @@ export default function Footer() {
           color: var(--footer-paper);
           font-family: "Helvetica Neue", Arial, sans-serif;
           font-size: 1.85rem;
-          font-weight: 800;
-          letter-spacing: .025em;
+          font-weight: 700;
+          letter-spacing: .02em;
           line-height: 1;
           text-transform: uppercase;
         }
 
         .footer-brand-copy {
-          color: rgba(247,247,244,.64);
+          color: rgba(247,247,244,.65);
           font-family: var(--font-body), Arial, sans-serif;
-          font-size: .9rem;
-          line-height: 1.68;
+          font-size: .88rem;
+          line-height: 1.65;
           margin: 0;
           max-width: 34ch;
         }
@@ -286,10 +262,10 @@ export default function Footer() {
         .footer-column-title {
           color: var(--footer-teal);
           font-family: var(--font-body), Arial, sans-serif;
-          font-size: .63rem;
-          font-weight: 900;
-          letter-spacing: .17em;
-          margin: 0 0 1.15rem;
+          font-size: .67rem;
+          font-weight: 800;
+          letter-spacing: .16em;
+          margin: 0 0 1.25rem;
           text-transform: uppercase;
         }
 
@@ -300,28 +276,18 @@ export default function Footer() {
         }
 
         .footer-links-list li {
-          margin-bottom: .75rem;
+          margin-bottom: .78rem;
         }
 
         .footer-link {
-          align-items: center;
-          color: rgba(247,247,244,.66);
-          display: inline-flex;
+          color: rgba(247,247,244,.65);
+          display: inline-block;
           font-family: var(--font-body), Arial, sans-serif;
           font-size: .84rem;
           font-weight: 600;
-          gap: .4rem;
-          line-height: 1.35;
+          line-height: 1.4;
           text-decoration: none;
           transition: color .2s ease, transform .2s ease;
-        }
-
-        .footer-link-arrow {
-          color: var(--footer-teal);
-          font-size: .9rem;
-          opacity: 0;
-          transform: translateX(-4px);
-          transition: opacity .2s ease, transform .2s ease;
         }
 
         .footer-link:hover {
@@ -329,134 +295,13 @@ export default function Footer() {
           transform: translateX(2px);
         }
 
-        .footer-link:hover .footer-link-arrow {
-          opacity: 1;
-          transform: translateX(0);
-        }
-
-        .footer-requests {
-          background:
-            linear-gradient(
-              135deg,
-              rgba(13,148,136,.11),
-              rgba(13,148,136,.035) 64%,
-              rgba(247,247,244,.018)
-            );
-          border: 1px solid rgba(13,148,136,.38);
-          border-radius: 1rem;
-          padding: 1.3rem;
-        }
-
-        .footer-requests-title {
-          color: var(--footer-paper);
-          font-family: "Helvetica Neue", Arial, sans-serif;
-          font-size: 1.18rem;
-          font-weight: 800;
-          letter-spacing: -.02em;
-          line-height: 1;
-          margin: 0 0 .45rem;
-          text-transform: uppercase;
-        }
-
-        .footer-requests-copy {
-          color: rgba(247,247,244,.62);
-          font-family: var(--font-body), Arial, sans-serif;
-          font-size: .77rem;
-          line-height: 1.5;
-          margin: 0 0 1rem;
-        }
-
-        .footer-request-link {
-          align-items: center;
-          border-top: 1px solid rgba(247,247,244,.12);
-          color: var(--footer-paper);
-          display: flex;
-          font-family: var(--font-body), Arial, sans-serif;
-          gap: .75rem;
-          min-height: 3.3rem;
-          padding: .72rem 0;
-          text-decoration: none;
-          transition: color .2s ease;
-        }
-
-        .footer-request-link:first-of-type {
-          border-top: 0;
-        }
-
-        .footer-request-link:hover {
-          color: var(--footer-teal-bright);
-        }
-
-        .footer-request-icon {
-          align-items: center;
-          background: rgba(13,148,136,.14);
-          border: 1px solid rgba(13,148,136,.3);
-          border-radius: 50%;
-          color: var(--footer-teal);
-          display: flex;
-          flex: 0 0 auto;
-          font-size: .9rem;
-          font-weight: 800;
-          height: 1.8rem;
-          justify-content: center;
-          width: 1.8rem;
-        }
-
-        .footer-request-content {
-          flex: 1;
-          min-width: 0;
-        }
-
-        .footer-request-label {
-          color: currentColor;
-          display: block;
-          font-size: .72rem;
-          font-weight: 800;
-          letter-spacing: .04em;
-          line-height: 1.2;
-        }
-
-        .footer-request-description {
-          color: rgba(247,247,244,.5);
-          display: block;
-          font-size: .64rem;
-          line-height: 1.35;
-          margin-top: .12rem;
-        }
-
-        .footer-request-arrow {
-          color: var(--footer-teal);
-          flex: 0 0 auto;
-          font-size: 1rem;
+        .footer-link-accent {
+          color: rgba(13,148,136,.94);
           font-weight: 700;
         }
 
-        .footer-utility {
-          border-top: 1px solid var(--footer-line);
-          display: flex;
-          gap: 1.25rem;
-          justify-content: space-between;
-          padding: 1.55rem 0 1.65rem;
-        }
-
-        .footer-utility-group {
-          align-items: center;
-          display: flex;
-          flex-wrap: wrap;
-          gap: .7rem 1.25rem;
-        }
-
-        .footer-utility-link {
-          color: rgba(247,247,244,.5);
-          font-family: var(--font-body), Arial, sans-serif;
-          font-size: .7rem;
-          font-weight: 600;
-          text-decoration: none;
-          transition: color .2s ease;
-        }
-
-        .footer-utility-link:hover {
-          color: var(--footer-teal);
+        .footer-link-accent:hover {
+          color: #14b8a6;
         }
 
         .footer-bottom {
@@ -466,14 +311,14 @@ export default function Footer() {
           flex-wrap: wrap;
           gap: 1.5rem;
           justify-content: space-between;
-          padding-top: 1.8rem;
+          padding-top: 2rem;
         }
 
         .footer-copyright {
-          color: rgba(247,247,244,.42);
+          color: rgba(247,247,244,.45);
           font-family: var(--font-body), Arial, sans-serif;
-          font-size: .72rem;
-          letter-spacing: .035em;
+          font-size: .74rem;
+          letter-spacing: .04em;
         }
 
         .footer-copyright-accent {
@@ -484,7 +329,7 @@ export default function Footer() {
         .footer-socials {
           align-items: center;
           display: flex;
-          gap: .65rem;
+          gap: .75rem;
         }
 
         .footer-social-label {
@@ -493,7 +338,7 @@ export default function Footer() {
           font-size: .52rem;
           font-weight: 800;
           letter-spacing: .15em;
-          margin-right: .25rem;
+          margin-right: .1rem;
           text-transform: uppercase;
         }
 
@@ -502,7 +347,7 @@ export default function Footer() {
           background: rgba(247,247,244,.03);
           border: 1px solid rgba(247,247,244,.12);
           border-radius: 50%;
-          color: rgba(247,247,244,.52);
+          color: rgba(247,247,244,.45);
           display: flex;
           height: 36px;
           justify-content: center;
@@ -518,15 +363,14 @@ export default function Footer() {
           transform: translateY(-2px);
         }
 
-        @media (max-width: 1120px) {
-          .footer-top {
+        @media (max-width: 1100px) {
+          .footer-grid {
             gap: 2.5rem;
-            grid-template-columns: 1.35fr 1fr 1fr;
+            grid-template-columns: 1.45fr 1fr 1fr;
           }
 
-          .footer-requests {
-            grid-column: 1 / -1;
-            max-width: 37rem;
+          .footer-column-participate {
+            grid-column: 2 / 4;
           }
         }
 
@@ -539,15 +383,15 @@ export default function Footer() {
             width: min(100% - 2.25rem, 40rem);
           }
 
-          .footer-top {
-            gap: 2.25rem;
+          .footer-grid {
+            gap: 2.3rem;
             grid-template-columns: 1fr;
-            padding-bottom: 2.75rem;
+            margin-bottom: 2.6rem;
           }
 
           .footer-brand {
             border-bottom: 1px solid rgba(247,247,244,.1);
-            padding: 0 0 1.8rem;
+            padding: 0 0 1.9rem;
           }
 
           .footer-brand-name {
@@ -565,10 +409,14 @@ export default function Footer() {
             grid-template-columns: minmax(0,1fr) minmax(0,1fr);
           }
 
+          .footer-column-participate {
+            grid-column: auto;
+          }
+
           .footer-column-title {
-            font-size: .6rem;
+            font-size: .61rem;
             letter-spacing: .15em;
-            margin-bottom: .7rem;
+            margin-bottom: .65rem;
           }
 
           .footer-links-list li {
@@ -580,66 +428,34 @@ export default function Footer() {
             border-bottom: 1px solid rgba(247,247,244,.08);
             box-sizing: border-box;
             display: flex;
-            font-size: .78rem;
+            font-size: .79rem;
             min-height: 44px;
             padding: .65rem 0;
           }
 
-          .footer-link-arrow {
-            opacity: 1;
+          .footer-link::after {
+            color: var(--footer-teal);
+            content: "→";
+            font-size: .95rem;
+            font-weight: 700;
             margin-left: auto;
-            transform: none;
           }
 
           .footer-link:hover {
             transform: none;
           }
 
-          .footer-requests {
-            border-radius: .9rem;
-            grid-column: auto;
-            max-width: none;
-            padding: 1.05rem;
-          }
-
-          .footer-requests-title {
-            font-size: 1.08rem;
-          }
-
-          .footer-request-link {
-            min-height: 3.55rem;
-          }
-
-          .footer-request-description {
-            font-size: .62rem;
-          }
-
-          .footer-utility {
-            align-items: flex-start;
-            flex-direction: column;
-            gap: .85rem;
-            padding: 1.25rem 0 1.45rem;
-          }
-
-          .footer-utility-group {
-            gap: .55rem 1rem;
-          }
-
-          .footer-utility-link {
-            font-size: .68rem;
-          }
-
           .footer-bottom {
             align-items: center;
             flex-direction: column-reverse;
-            gap: 1.45rem;
+            gap: 1.55rem;
             justify-content: center;
-            padding-top: 1.55rem;
+            padding-top: 1.65rem;
             text-align: center;
           }
 
           .footer-copyright {
-            font-size: .67rem;
+            font-size: .68rem;
             line-height: 1.6;
             max-width: 30ch;
           }
@@ -685,15 +501,11 @@ export default function Footer() {
             height: 42px;
             width: 42px;
           }
-
-          .footer-request-label {
-            font-size: .68rem;
-          }
         }
       `}</style>
 
       <div className="footer-content">
-        <div className="footer-top">
+        <div className="footer-grid">
           <div className="footer-brand">
             <Link href="/" className="footer-brand-link">
               <span className="footer-brand-mark" aria-hidden="true">
@@ -710,91 +522,20 @@ export default function Footer() {
           </div>
 
           <div className="footer-mobile-columns">
-            <div>
-              <p className="footer-column-title">Verein</p>
-
-              <ul className="footer-links-list">
-                {clubLinks.map((link) => (
-                  <li key={link.href}>
-                    <FooterLink href={link.href}>{link.label}</FooterLink>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <p className="footer-column-title">Aktuell</p>
-
-              <ul className="footer-links-list">
-                {currentLinks.map((link) => (
-                  <li key={link.href}>
-                    <FooterLink href={link.href}>{link.label}</FooterLink>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <FooterColumn title="Verein" links={clubLinks} />
+            <FooterColumn title="Aktuell" links={currentLinks} />
           </div>
 
-          <div className="footer-requests">
-            <p className="footer-column-title">Mitmachen</p>
-
-            <h2 className="footer-requests-title">
-              Teil von Mello werden.
-            </h2>
-
-            <p className="footer-requests-copy">
-              Ob am Platz, im Verein oder als Mitglied: Wir freuen uns auf
-              Menschen, die Mello mitgestalten wollen.
-            </p>
-
-            {contactLinks.map((link, index) => (
-              <Link
-                href={link.href}
-                className="footer-request-link"
-                key={link.href}
-              >
-                <span className="footer-request-icon" aria-hidden="true">
-                  {index === 0 ? "↗" : index === 1 ? "+" : "✓"}
-                </span>
-
-                <span className="footer-request-content">
-                  <span className="footer-request-label">{link.label}</span>
-                  <span className="footer-request-description">
-                    {link.description}
-                  </span>
-                </span>
-
-                <span className="footer-request-arrow" aria-hidden="true">
-                  →
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        <div className="footer-utility">
-          <div className="footer-utility-group">
-            <Link href="/mitgliedschaft/antrag" className="footer-utility-link">
-              Mitgliedschaft beantragen
-            </Link>
-
-            <Link href="/kontakt" className="footer-utility-link">
-              Kontaktseite
-            </Link>
-
-            <Link href="/impressum" className="footer-utility-link">
-              Impressum
-            </Link>
+          <div className="footer-column footer-column-participate">
+            <FooterColumn
+              title="Mitmachen"
+              links={participateLinks}
+              accent
+            />
           </div>
 
-          <div className="footer-utility-group">
-            <Link href="/spielplan" className="footer-utility-link">
-              Zum Spielplan
-            </Link>
-
-            <Link href="/news" className="footer-utility-link">
-              Zu den News
-            </Link>
+          <div className="footer-column">
+            <FooterColumn title="Kontakt" links={contactLinks} />
           </div>
         </div>
 
