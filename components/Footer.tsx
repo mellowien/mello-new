@@ -203,13 +203,13 @@ export default function Footer() {
         .footer-layout {
           align-items: start;
           display: grid;
-          gap: clamp(2.5rem, 5vw, 5.5rem);
-          grid-template-columns: minmax(14rem, 1.65fr) minmax(7rem, .75fr) minmax(10rem, 1fr) minmax(9rem, .9fr);
+          gap: clamp(1.8rem, 3.2vw, 3.7rem);
+          grid-template-columns: minmax(15rem, 1.85fr) minmax(7rem, .78fr) minmax(9rem, 1fr) minmax(9rem, .95fr);
           margin-bottom: 4.2rem;
         }
 
         .footer-brand {
-          padding-right: .75rem;
+          padding-right: .5rem;
         }
 
         .footer-brand-link {
@@ -293,10 +293,10 @@ export default function Footer() {
           transform: translateX(2px);
         }
 
-        .footer-media-stack {
+        .footer-media-contact {
           display: flex;
           flex-direction: column;
-          gap: 3.5rem;
+          gap: 3.35rem;
         }
 
         .footer-bottom {
@@ -358,72 +358,89 @@ export default function Footer() {
           transform: translateY(-2px);
         }
 
-        @media (max-width: 1050px) {
+        @media (max-width: 1050px) and (min-width: 821px) {
           .footer-layout {
-            gap: 2.5rem;
-            grid-template-columns: minmax(13rem, 1.45fr) minmax(7rem, .8fr) minmax(9rem, 1fr);
+            gap: 2rem;
+            grid-template-columns: minmax(13rem, 1.55fr) minmax(7rem, .85fr) minmax(9rem, 1fr);
           }
 
-          .footer-media-stack {
+          .footer-media-contact {
             grid-column: 3;
           }
         }
 
         @media (max-width: 820px) {
           .footer {
-            padding: 3.5rem 0 calc(2rem + env(safe-area-inset-bottom));
+            padding: 3.25rem 0 calc(2.25rem + env(safe-area-inset-bottom));
           }
 
           .footer-content {
-            width: min(100% - 2.25rem, 40rem);
+            width: min(100% - 2.25rem, 36rem);
           }
 
           .footer-layout {
-            display: grid;
-            gap: 2.3rem;
-            grid-template-columns: 1fr;
-            margin-bottom: 2.6rem;
+            display: block;
+            margin-bottom: 2.7rem;
           }
 
           .footer-brand {
             border-bottom: 1px solid rgba(247,247,244,.1);
-            padding: 0 0 1.9rem;
+            margin-bottom: 2.15rem;
+            padding: 0 0 1.8rem;
+          }
+
+          .footer-brand-link {
+            gap: .75rem;
+            margin-bottom: 1rem;
+          }
+
+          .footer-brand-mark {
+            height: 2.5rem;
+            width: 2.5rem;
           }
 
           .footer-brand-name {
-            font-size: 1.7rem;
+            font-size: 1.65rem;
           }
 
           .footer-brand-copy {
-            font-size: .88rem;
-            max-width: 36ch;
+            color: rgba(247,247,244,.64);
+            font-size: .9rem;
+            line-height: 1.68;
+            max-width: 34ch;
           }
 
-          .footer-mobile-main {
+          .footer-mobile-primary {
             display: grid;
-            gap: 1.25rem;
-            grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+            gap: 1.2rem;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            margin-bottom: 2.15rem;
           }
 
           .footer-desktop-club,
           .footer-desktop-participate {
-            display: none;
+            display: none !important;
           }
 
-          .footer-media-stack {
-            display: flex;
-            gap: 2.15rem;
+          .footer-media-contact {
+            display: block;
+          }
+
+          .footer-column-media {
+            border-top: 1px solid rgba(247,247,244,.1);
+            padding-top: 1.85rem;
           }
 
           .footer-column-contact {
             border-top: 1px solid rgba(247,247,244,.1);
-            padding-top: 2rem;
+            margin-top: 2.1rem;
+            padding-top: 1.85rem;
           }
 
           .footer-column-title {
-            font-size: .61rem;
+            font-size: .62rem;
             letter-spacing: .15em;
-            margin-bottom: .65rem;
+            margin-bottom: .7rem;
           }
 
           .footer-links-list li {
@@ -436,14 +453,14 @@ export default function Footer() {
             box-sizing: border-box;
             display: flex;
             font-size: .79rem;
-            min-height: 44px;
-            padding: .65rem 0;
+            min-height: 46px;
+            padding: .7rem 0;
           }
 
           .footer-link::after {
             color: var(--footer-teal);
             content: "→";
-            font-size: .95rem;
+            font-size: 1rem;
             font-weight: 700;
             margin-left: auto;
           }
@@ -457,7 +474,7 @@ export default function Footer() {
             flex-direction: column-reverse;
             gap: 1.55rem;
             justify-content: center;
-            padding-top: 1.65rem;
+            padding-top: 1.7rem;
             text-align: center;
           }
 
@@ -492,18 +509,22 @@ export default function Footer() {
         }
 
         @media (min-width: 821px) {
-          .footer-mobile-main {
+          .footer-mobile-primary {
             display: none;
           }
         }
 
         @media (max-width: 360px) {
           .footer-content {
-            width: min(100% - 2rem, 40rem);
+            width: min(100% - 2rem, 36rem);
           }
 
-          .footer-mobile-main {
-            gap: .9rem;
+          .footer-mobile-primary {
+            gap: .85rem;
+          }
+
+          .footer-brand-copy {
+            font-size: .86rem;
           }
 
           .footer-socials {
@@ -542,13 +563,17 @@ export default function Footer() {
             <FooterColumn title="Mitmachen" links={participateLinks} />
           </div>
 
-          <div className="footer-mobile-main">
+          <div className="footer-mobile-primary">
             <FooterColumn title="Verein" links={clubLinks} />
             <FooterColumn title="Mitmachen" links={participateLinks} />
           </div>
 
-          <div className="footer-media-stack">
-            <FooterColumn title="Medien" links={mediaLinks} />
+          <div className="footer-media-contact">
+            <FooterColumn
+              title="Medien"
+              links={mediaLinks}
+              className="footer-column-media"
+            />
 
             <FooterColumn
               title="Kontakt"
