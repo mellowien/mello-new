@@ -5,7 +5,7 @@ const MATCH = {
   date: "Sonntag, 06. September 2026",
   time: "11:30 Uhr",
   home: "FC Mello Wien",
-  away: "FC Polska",
+  away: "FC Polska Wien",
   homeLogo: "/mello-wien.png",
   awayLogo: "/polska-wien.png",
 };
@@ -637,9 +637,9 @@ export default function AuftaktPage() {
           </h1>
 
           <p className="article-lead">
-            Am Sonntag startet FC Mello Wien in die neue Saison. Mit dem FC
+            Am Sonntag startet der FC Mello Wien in die neue Saison. Mit dem FC
             Polska wartet zum Auftakt in der 1. Klasse A die erste echte
-            Standortbestimmung – und ein Moment, auf den das Team seit Wochen
+            Standortbestimmung und ein Moment, auf den das Team seit Monaten
             hinarbeitet.
           </p>
         </div>
@@ -700,7 +700,7 @@ export default function AuftaktPage() {
 
           <div className="article-quote">
             <p>
-              „Wir wollen als Team auftreten – mutig, geschlossen und mit der
+              „Wir wollen als Team auftreten. Mutig, geschlossen und mit der
               Freude, für Mello zu spielen.“
             </p>
             <span>FC Mello Wien · Saisonauftakt</span>
@@ -744,7 +744,7 @@ export default function AuftaktPage() {
             <p className="article-aside-value">
               FC Mello Wien
               <br />
-              vs. FC Polska
+              vs. FC Polska Wien
             </p>
           </div>
 
