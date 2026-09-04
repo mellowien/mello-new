@@ -4,24 +4,24 @@ import Link from "next/link";
 
 const clubLinks = [
   { href: "/ueber-uns", label: "Über uns" },
-  { href: "/team", label: "Mannschaft" },
-  { href: "/tv", label: "Mello TV" },
-];
-
-const currentLinks = [
+  { href: "/team", label: "Team" },
   { href: "/spielplan", label: "Spielplan" },
-  { href: "/news", label: "News & Berichte" },
 ];
 
 const participateLinks = [
   { href: "/kontakt?anliegen=spieler", label: "Spieleranfrage" },
   { href: "/kontakt?anliegen=community", label: "Verein mitgestalten" },
   { href: "/mitgliedschaft/vorteile", label: "Mitgliedschaft entdecken" },
-  { href: "/mitgliedschaft/antrag", label: "Mitgliedschaft beantragen" },
+];
+
+const mediaLinks = [
+  { href: "/news", label: "News & Berichte" },
+  { href: "/tv", label: "Mello TV" },
 ];
 
 const contactLinks = [
   { href: "/kontakt", label: "Kontaktseite" },
+  { href: "/anfahrt", label: "Anfahrt & Platz" },
   { href: "/impressum", label: "Impressum" },
 ];
 
@@ -152,11 +152,9 @@ const socialLinks = [
 function FooterColumn({
   title,
   links,
-  accent = false,
 }: {
   title: string;
   links: { href: string; label: string }[];
-  accent?: boolean;
 }) {
   return (
     <div className="footer-column">
@@ -165,10 +163,7 @@ function FooterColumn({
       <ul className="footer-links-list">
         {links.map((link) => (
           <li key={link.href}>
-            <Link
-              href={link.href}
-              className={`footer-link ${accent ? "footer-link-accent" : ""}`}
-            >
+            <Link href={link.href} className="footer-link">
               {link.label}
             </Link>
           </li>
@@ -205,13 +200,13 @@ export default function Footer() {
 
         .footer-grid {
           display: grid;
-          gap: 4.25rem;
-          grid-template-columns: 1.65fr .8fr .9fr 1.05fr;
+          gap: 4.5rem;
+          grid-template-columns: 1.55fr .85fr 1.05fr .82fr .88fr;
           margin-bottom: 4.2rem;
         }
 
         .footer-brand {
-          padding-right: 1.5rem;
+          padding-right: 1rem;
         }
 
         .footer-brand-link {
@@ -295,15 +290,6 @@ export default function Footer() {
           transform: translateX(2px);
         }
 
-        .footer-link-accent {
-          color: rgba(13,148,136,.94);
-          font-weight: 700;
-        }
-
-        .footer-link-accent:hover {
-          color: #14b8a6;
-        }
-
         .footer-bottom {
           align-items: center;
           border-top: 1px solid var(--footer-line);
@@ -363,14 +349,25 @@ export default function Footer() {
           transform: translateY(-2px);
         }
 
-        @media (max-width: 1100px) {
+        @media (max-width: 1240px) {
           .footer-grid {
-            gap: 2.5rem;
+            gap: 2.6rem;
+            grid-template-columns: 1.45fr 1fr 1fr 1fr;
+          }
+
+          .footer-column-contact {
+            grid-column: 2 / 3;
+          }
+        }
+
+        @media (max-width: 960px) {
+          .footer-grid {
             grid-template-columns: 1.45fr 1fr 1fr;
           }
 
-          .footer-column-participate {
-            grid-column: 2 / 4;
+          .footer-column-media,
+          .footer-column-contact {
+            grid-column: auto;
           }
         }
 
@@ -403,14 +400,10 @@ export default function Footer() {
             max-width: 36ch;
           }
 
-          .footer-mobile-columns {
+          .footer-mobile-top-columns {
             display: grid;
             gap: 1.25rem;
             grid-template-columns: minmax(0,1fr) minmax(0,1fr);
-          }
-
-          .footer-column-participate {
-            grid-column: auto;
           }
 
           .footer-column-title {
@@ -489,7 +482,7 @@ export default function Footer() {
             width: min(100% - 2rem, 40rem);
           }
 
-          .footer-mobile-columns {
+          .footer-mobile-top-columns {
             gap: .9rem;
           }
 
@@ -521,20 +514,16 @@ export default function Footer() {
             </p>
           </div>
 
-          <div className="footer-mobile-columns">
+          <div className="footer-mobile-top-columns">
             <FooterColumn title="Verein" links={clubLinks} />
-            <FooterColumn title="Aktuell" links={currentLinks} />
+            <FooterColumn title="Mitmachen" links={participateLinks} />
           </div>
 
-          <div className="footer-column footer-column-participate">
-            <FooterColumn
-              title="Mitmachen"
-              links={participateLinks}
-              accent
-            />
+          <div className="footer-column-media">
+            <FooterColumn title="Medien" links={mediaLinks} />
           </div>
 
-          <div className="footer-column">
+          <div className="footer-column-contact">
             <FooterColumn title="Kontakt" links={contactLinks} />
           </div>
         </div>
