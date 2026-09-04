@@ -58,6 +58,7 @@ const MATCHES = [
 ];
 
 const NEXT_MATCH = MATCHES[0];
+const UPCOMING_MATCHES = MATCHES.slice(1);
 
 type TimeLeft = {
   days: number;
@@ -466,6 +467,7 @@ function getWatermarkTeam(teamName: string) {
 
 export default function Countdown() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [mobileActiveIndex, setMobileActiveIndex] = useState(0);
 
   const swipeStartX = useRef<number | null>(null);
   const swipeStartY = useRef<number | null>(null);
@@ -488,11 +490,19 @@ export default function Countdown() {
   };
 
   const activeMatch = MATCHES[activeIndex];
+  const mobileActiveMatch = UPCOMING_MATCHES[mobileActiveIndex];
 
   const previousIndex = activeIndex > 0 ? activeIndex - 1 : null;
-
   const nextIndex =
     activeIndex < MATCHES.length - 1 ? activeIndex + 1 : null;
+
+  const previousMobileIndex =
+    mobileActiveIndex > 0 ? mobileActiveIndex - 1 : null;
+
+  const nextMobileIndex =
+    mobileActiveIndex < UPCOMING_MATCHES.length - 1
+      ? mobileActiveIndex + 1
+      : null;
 
   const nextMatchHomeWatermark = getWatermarkTeam(NEXT_MATCH.homeTeam);
   const nextMatchAwayWatermark = getWatermarkTeam(NEXT_MATCH.awayTeam);
@@ -507,14 +517,26 @@ export default function Countdown() {
     setActiveIndex((current) => Math.min(MATCHES.length - 1, current + 1));
   };
 
-  const handleSwipeStart = (event: React.PointerEvent<HTMLElement>) => {
+  const goToPreviousMobileMatch = () => {
+    setMobileActiveIndex((current) => Math.max(0, current - 1));
+  };
+
+  const goToNextMobileMatch = () => {
+    setMobileActiveIndex((current) =>
+      Math.min(UPCOMING_MATCHES.length - 1, current + 1),
+    );
+  };
+
+  const handleDesktopSwipeStart = (
+    event: React.PointerEvent<HTMLElement>,
+  ) => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
 
     swipeStartX.current = event.clientX;
     swipeStartY.current = event.clientY;
   };
 
-  const handleSwipeEnd = (event: React.PointerEvent<HTMLElement>) => {
+  const handleDesktopSwipeEnd = (event: React.PointerEvent<HTMLElement>) => {
     if (swipeStartX.current === null || swipeStartY.current === null) return;
 
     const deltaX = event.clientX - swipeStartX.current;
@@ -523,10 +545,8 @@ export default function Countdown() {
     swipeStartX.current = null;
     swipeStartY.current = null;
 
-    const minimumSwipeDistance = 48;
     const isHorizontalSwipe =
-      Math.abs(deltaX) > minimumSwipeDistance &&
-      Math.abs(deltaX) > Math.abs(deltaY) * 1.35;
+      Math.abs(deltaX) > 48 && Math.abs(deltaX) > Math.abs(deltaY) * 1.35;
 
     if (!isHorizontalSwipe) return;
 
@@ -537,7 +557,39 @@ export default function Countdown() {
     }
   };
 
-  const handleTrackpadWheel = (event: React.WheelEvent<HTMLElement>) => {
+  const handleMobileSwipeStart = (
+    event: React.PointerEvent<HTMLElement>,
+  ) => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+
+    swipeStartX.current = event.clientX;
+    swipeStartY.current = event.clientY;
+  };
+
+  const handleMobileSwipeEnd = (event: React.PointerEvent<HTMLElement>) => {
+    if (swipeStartX.current === null || swipeStartY.current === null) return;
+
+    const deltaX = event.clientX - swipeStartX.current;
+    const deltaY = event.clientY - swipeStartY.current;
+
+    swipeStartX.current = null;
+    swipeStartY.current = null;
+
+    const isHorizontalSwipe =
+      Math.abs(deltaX) > 48 && Math.abs(deltaX) > Math.abs(deltaY) * 1.35;
+
+    if (!isHorizontalSwipe) return;
+
+    if (deltaX < 0) {
+      goToNextMobileMatch();
+    } else {
+      goToPreviousMobileMatch();
+    }
+  };
+
+  const handleDesktopTrackpadWheel = (
+    event: React.WheelEvent<HTMLElement>,
+  ) => {
     const isHorizontalGesture =
       Math.abs(event.deltaX) > Math.abs(event.deltaY) &&
       Math.abs(event.deltaX) > 12;
@@ -551,6 +603,29 @@ export default function Countdown() {
       goToNextMatch();
     } else {
       goToPreviousMatch();
+    }
+
+    window.setTimeout(() => {
+      wheelLock.current = false;
+    }, 500);
+  };
+
+  const handleMobileTrackpadWheel = (
+    event: React.WheelEvent<HTMLElement>,
+  ) => {
+    const isHorizontalGesture =
+      Math.abs(event.deltaX) > Math.abs(event.deltaY) &&
+      Math.abs(event.deltaX) > 12;
+
+    if (!isHorizontalGesture || wheelLock.current) return;
+
+    event.preventDefault();
+    wheelLock.current = true;
+
+    if (event.deltaX > 0) {
+      goToNextMobileMatch();
+    } else {
+      goToPreviousMobileMatch();
     }
 
     window.setTimeout(() => {
@@ -607,7 +682,7 @@ export default function Countdown() {
         .countdown-unit-value {
           color: rgba(13,148,136,.72);
           font-family: "Helvetica Neue", Arial, sans-serif;
-          font-size: clamp(1.95rem, 3vw, 2.45rem);
+          font-size: clamp(1.95rem,3vw,2.45rem);
           font-variant-numeric: tabular-nums lining-nums;
           font-weight: 700;
           letter-spacing: -.045em;
@@ -627,14 +702,14 @@ export default function Countdown() {
         .countdown-separator {
           color: rgba(13,148,136,.42);
           font-family: "Helvetica Neue", Arial, sans-serif;
-          font-size: clamp(1.45rem, 2.25vw, 1.85rem);
+          font-size: clamp(1.45rem,2.25vw,1.85rem);
           font-weight: 700;
           padding-bottom: .86rem;
         }
 
         @media (max-width: 768px) {
           .countdown-section {
-            padding: 2.25rem 0 2.5rem;
+            padding: 2.05rem 0 2.4rem;
           }
 
           .countdown-desktop {
@@ -658,12 +733,12 @@ export default function Countdown() {
             color: rgba(13,148,136,.82);
             display: flex;
             font-family: Arial, Helvetica, sans-serif;
-            font-size: .62rem;
+            font-size: .61rem;
             font-weight: 800;
             gap: .65rem;
             justify-content: center;
             letter-spacing: .18em;
-            margin-bottom: 1.2rem;
+            margin-bottom: 1rem;
             text-transform: uppercase;
           }
 
@@ -677,13 +752,15 @@ export default function Countdown() {
           }
 
           .countdown-mobile-match {
-            background: linear-gradient(145deg, rgba(13,148,136,.14), rgba(18,20,20,.98) 65%);
+            background:
+              radial-gradient(circle at 82% 11%, rgba(13,148,136,.18), transparent 32%),
+              linear-gradient(145deg, rgba(13,148,136,.13), rgba(18,20,20,.98) 70%);
             border: 1px solid rgba(13,148,136,.68);
             border-radius: 1rem;
-            box-shadow: 0 0 28px rgba(13,148,136,.08);
+            box-shadow: 0 0 28px rgba(13,148,136,.07);
             box-sizing: border-box;
             overflow: hidden;
-            padding: 1.25rem 1rem 1.1rem;
+            padding: 1.15rem .95rem .9rem;
             position: relative;
             width: 100%;
           }
@@ -693,11 +770,11 @@ export default function Countdown() {
             border-radius: 0 0 .55rem .55rem;
             color: #080808;
             font-family: Arial, Helvetica, sans-serif;
-            font-size: .47rem;
+            font-size: .45rem;
             font-weight: 900;
             left: 50%;
-            letter-spacing: .15em;
-            padding: .3rem .75rem;
+            letter-spacing: .14em;
+            padding: .28rem .72rem;
             position: absolute;
             text-transform: uppercase;
             top: 0;
@@ -706,11 +783,11 @@ export default function Countdown() {
           }
 
           .countdown-mobile-competition {
-            color: rgba(13,148,136,.9);
+            color: rgba(13,148,136,.92);
             font-family: Arial, Helvetica, sans-serif;
-            font-size: .58rem;
+            font-size: .56rem;
             font-weight: 800;
-            letter-spacing: .16em;
+            letter-spacing: .15em;
             margin-top: .42rem;
             text-align: center;
             text-transform: uppercase;
@@ -720,22 +797,22 @@ export default function Countdown() {
             align-items: start;
             display: grid;
             gap: .45rem;
-            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-            margin: 1.05rem 0 1rem;
+            grid-template-columns: minmax(0,1fr) auto minmax(0,1fr);
+            margin: .95rem 0 .9rem;
           }
 
           .countdown-mobile-team {
             align-items: center;
             display: flex;
             flex-direction: column;
-            gap: .5rem;
+            gap: .45rem;
             min-width: 0;
           }
 
           .countdown-mobile-team-name {
             color: #f7f7f4;
             font-family: Arial, Helvetica, sans-serif;
-            font-size: clamp(.72rem, 3.35vw, .88rem);
+            font-size: clamp(.72rem,3.35vw,.88rem);
             font-weight: 800;
             letter-spacing: .025em;
             line-height: 1.15;
@@ -749,63 +826,65 @@ export default function Countdown() {
             align-self: center;
             color: #0d9488;
             font-family: Arial, Helvetica, sans-serif;
-            font-size: .7rem;
+            font-size: .68rem;
             font-weight: 900;
             letter-spacing: .08em;
-            padding-bottom: 1.25rem;
+            padding-bottom: 1.1rem;
           }
 
           .countdown-mobile-date {
             border-top: 1px solid rgba(247,247,244,.12);
             color: rgba(247,247,244,.78);
             font-family: Arial, Helvetica, sans-serif;
-            font-size: .7rem;
+            font-size: .67rem;
             font-weight: 800;
-            letter-spacing: .09em;
-            padding-top: .85rem;
+            letter-spacing: .08em;
+            padding-top: .75rem;
             text-align: center;
             text-transform: uppercase;
           }
 
           .countdown-mobile-date span {
             color: #0d9488;
-            padding: 0 .3rem;
+            padding: 0 .28rem;
           }
 
           .countdown-mobile-clock {
-            display: grid;
-            gap: .5rem;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            margin: 1.6rem 0 1.85rem;
+            align-items: center;
+            border-bottom: 1px solid rgba(247,247,244,.1);
+            display: flex;
+            justify-content: space-between;
+            margin: 1.3rem 0 1.75rem;
+            padding: 0 0 1.15rem;
           }
 
           .countdown-mobile-clock-unit {
-            background: rgba(247,247,244,.045);
-            border: 1px solid rgba(247,247,244,.11);
-            border-radius: .7rem;
+            background: transparent;
+            border: 0;
+            border-radius: 0;
             box-sizing: border-box;
             min-width: 0;
-            padding: .8rem .2rem .7rem;
+            padding: 0;
             text-align: center;
           }
 
           .countdown-mobile-clock-value {
             color: #0d9488;
             font-family: "Helvetica Neue", Arial, sans-serif;
-            font-size: clamp(1.55rem, 8vw, 2.3rem);
+            font-size: clamp(1.85rem,9vw,2.55rem);
             font-variant-numeric: tabular-nums lining-nums;
             font-weight: 800;
-            letter-spacing: -.06em;
+            letter-spacing: -.07em;
             line-height: 1;
           }
 
           .countdown-mobile-clock-label {
-            color: rgba(247,247,244,.43);
+            color: rgba(247,247,244,.42);
             font-family: Arial, Helvetica, sans-serif;
-            font-size: .43rem;
+            font-size: .42rem;
             font-weight: 800;
             letter-spacing: .1em;
-            margin-top: .42rem;
+            margin-top: .35rem;
             text-transform: uppercase;
           }
 
@@ -818,7 +897,7 @@ export default function Countdown() {
             font-weight: 800;
             justify-content: space-between;
             letter-spacing: .15em;
-            margin-bottom: .85rem;
+            margin-bottom: .8rem;
             text-transform: uppercase;
           }
 
@@ -830,12 +909,13 @@ export default function Countdown() {
           }
 
           .countdown-mobile-slider {
-            background: rgba(247,247,244,.045);
+            background:
+              linear-gradient(145deg, rgba(247,247,244,.045), rgba(247,247,244,.018));
             border: 1px solid rgba(247,247,244,.13);
             border-radius: .9rem;
             box-sizing: border-box;
-            min-height: 11.6rem;
-            padding: 1rem .9rem .85rem;
+            min-height: 10.35rem;
+            padding: .9rem .8rem .8rem;
             user-select: none;
             width: 100%;
           }
@@ -843,7 +923,7 @@ export default function Countdown() {
           .countdown-mobile-slider-competition {
             color: rgba(13,148,136,.88);
             font-family: Arial, Helvetica, sans-serif;
-            font-size: .54rem;
+            font-size: .52rem;
             font-weight: 800;
             letter-spacing: .14em;
             text-align: center;
@@ -853,18 +933,18 @@ export default function Countdown() {
           .countdown-mobile-slider-teams {
             align-items: center;
             display: grid;
-            gap: .4rem;
-            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-            margin: .9rem 0;
+            gap: .35rem;
+            grid-template-columns: minmax(0,1fr) auto minmax(0,1fr);
+            margin: .7rem 0;
           }
 
           .countdown-mobile-slider-date {
-            color: rgba(247,247,244,.78);
+            color: rgba(247,247,244,.75);
             font-family: Arial, Helvetica, sans-serif;
-            font-size: .64rem;
+            font-size: .61rem;
             font-weight: 800;
-            letter-spacing: .07em;
-            margin-top: .75rem;
+            letter-spacing: .065em;
+            margin-top: .6rem;
             text-align: center;
             text-transform: uppercase;
           }
@@ -873,8 +953,8 @@ export default function Countdown() {
             align-items: center;
             display: grid;
             gap: .75rem;
-            grid-template-columns: 2.55rem minmax(0, 1fr) 2.55rem;
-            margin-top: 1rem;
+            grid-template-columns: 2.55rem minmax(0,1fr) 2.55rem;
+            margin-top: .9rem;
           }
 
           .countdown-mobile-arrow {
@@ -916,26 +996,15 @@ export default function Countdown() {
             border: 0;
             border-radius: 999px;
             cursor: pointer;
-            height: .65rem;
+            height: .62rem;
             padding: 0;
             transition: width .25s ease, background .25s ease;
-            width: .65rem;
+            width: .62rem;
           }
 
           .countdown-mobile-dot.active {
             background: #0d9488;
-            width: 1.3rem;
-          }
-
-          .countdown-swipe-hint {
-            color: rgba(247,247,244,.35);
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: .48rem;
-            font-weight: 700;
-            letter-spacing: .1em;
-            margin-top: .8rem;
-            text-align: center;
-            text-transform: uppercase;
+            width: 1.25rem;
           }
         }
 
@@ -950,23 +1019,22 @@ export default function Countdown() {
             padding-right: .75rem;
           }
 
-          .countdown-mobile-clock {
-            gap: .35rem;
-          }
-
-          .countdown-mobile-clock-unit {
-            border-radius: .55rem;
-            padding-left: .1rem;
-            padding-right: .1rem;
+          .countdown-mobile-clock-value {
+            font-size: 1.7rem;
           }
 
           .countdown-mobile-clock-label {
-            font-size: .38rem;
+            font-size: .37rem;
             letter-spacing: .06em;
           }
 
           .countdown-mobile-team-name {
             font-size: .68rem;
+          }
+
+          .countdown-mobile-slider {
+            padding-left: .65rem;
+            padding-right: .65rem;
           }
         }
       `}</style>
@@ -1210,10 +1278,10 @@ export default function Countdown() {
 
             <div
               className="countdown-swipe-area"
-              onPointerDown={handleSwipeStart}
-              onPointerUp={handleSwipeEnd}
-              onPointerCancel={handleSwipeEnd}
-              onWheel={handleTrackpadWheel}
+              onPointerDown={handleDesktopSwipeStart}
+              onPointerUp={handleDesktopSwipeEnd}
+              onPointerCancel={handleDesktopSwipeEnd}
+              onWheel={handleDesktopTrackpadWheel}
               style={{
                 cursor: "grab",
                 overflow: "hidden",
@@ -1378,29 +1446,29 @@ export default function Countdown() {
 
           <article
             className="countdown-mobile-slider countdown-swipe-area"
-            onPointerDown={handleSwipeStart}
-            onPointerUp={handleSwipeEnd}
-            onPointerCancel={handleSwipeEnd}
-            onWheel={handleTrackpadWheel}
+            onPointerDown={handleMobileSwipeStart}
+            onPointerUp={handleMobileSwipeEnd}
+            onPointerCancel={handleMobileSwipeEnd}
+            onWheel={handleMobileTrackpadWheel}
             style={{
               touchAction: "pan-y",
             }}
           >
             <div className="countdown-mobile-slider-competition">
-              {activeMatch.competition}
+              {mobileActiveMatch.competition}
             </div>
 
             <div className="countdown-mobile-slider-teams">
               <div className="countdown-mobile-team">
                 <ClubLogo
-                  alt={activeMatch.homeTeam}
+                  alt={mobileActiveMatch.homeTeam}
                   mobile
-                  src={activeMatch.homeLogo}
-                  transparentSrc={transparentLogo(activeMatch.homeLogo)}
+                  src={mobileActiveMatch.homeLogo}
+                  transparentSrc={transparentLogo(mobileActiveMatch.homeLogo)}
                 />
 
                 <div className="countdown-mobile-team-name">
-                  {activeMatch.homeTeam}
+                  {mobileActiveMatch.homeTeam}
                 </div>
               </div>
 
@@ -1408,68 +1476,64 @@ export default function Countdown() {
 
               <div className="countdown-mobile-team">
                 <ClubLogo
-                  alt={activeMatch.awayTeam}
+                  alt={mobileActiveMatch.awayTeam}
                   mobile
-                  src={activeMatch.awayLogo}
-                  transparentSrc={transparentLogo(activeMatch.awayLogo)}
+                  src={mobileActiveMatch.awayLogo}
+                  transparentSrc={transparentLogo(mobileActiveMatch.awayLogo)}
                 />
 
                 <div className="countdown-mobile-team-name">
-                  {activeMatch.awayTeam}
+                  {mobileActiveMatch.awayTeam}
                 </div>
               </div>
             </div>
 
             <div className="countdown-mobile-slider-date">
-              {activeMatch.displayDate}
-
+              {mobileActiveMatch.displayDate}
               <span style={{ color: "#0d9488", padding: "0 .28rem" }}>
                 ·
               </span>
-
-              {activeMatch.displayTime}
+              {mobileActiveMatch.displayTime}
             </div>
           </article>
 
           <div className="countdown-mobile-navigation">
             <button
-              aria-label="Vorheriges Spiel"
+              aria-label="Vorheriges kommendes Spiel"
               className="countdown-mobile-arrow"
-              disabled={previousIndex === null}
-              onClick={goToPreviousMatch}
+              disabled={previousMobileIndex === null}
+              onClick={goToPreviousMobileMatch}
               type="button"
             >
               ←
             </button>
 
             <div className="countdown-mobile-dots">
-              {MATCHES.map((match, index) => (
+              {UPCOMING_MATCHES.map((match, index) => (
                 <button
-                  aria-current={index === activeIndex ? "true" : undefined}
-                  aria-label={`${index + 1}. Spiel: ${match.homeTeam} gegen ${match.awayTeam}`}
+                  aria-current={
+                    index === mobileActiveIndex ? "true" : undefined
+                  }
+                  aria-label={`${index + 1}. kommendes Spiel: ${match.homeTeam} gegen ${match.awayTeam}`}
                   className={`countdown-mobile-dot ${
-                    index === activeIndex ? "active" : ""
+                    index === mobileActiveIndex ? "active" : ""
                   }`}
                   key={`${match.displayDate}-${match.homeTeam}`}
-                  onClick={() => setActiveIndex(index)}
+                  onClick={() => setMobileActiveIndex(index)}
                   type="button"
                 />
               ))}
             </div>
 
             <button
-              aria-label="Nächstes Spiel"
+              aria-label="Nächstes kommendes Spiel"
               className="countdown-mobile-arrow next"
-              disabled={nextIndex === null}
-              onClick={goToNextMatch}
+              disabled={nextMobileIndex === null}
+              onClick={goToNextMobileMatch}
               type="button"
             >
               →
             </button>
-          </div>
-
-          <div className="countdown-swipe-hint">
-            Wische für das nächste Spiel
           </div>
         </div>
       </div>
