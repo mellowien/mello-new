@@ -152,14 +152,12 @@ const socialLinks = [
 function FooterColumn({
   title,
   links,
-  className = "",
 }: {
   title: string;
   links: { href: string; label: string }[];
-  className?: string;
 }) {
   return (
-    <section className={`footer-column ${className}`}>
+    <section className="footer-column">
       <p className="footer-column-title">{title}</p>
 
       <ul className="footer-links-list">
@@ -203,13 +201,13 @@ export default function Footer() {
         .footer-layout {
           align-items: start;
           display: grid;
-          gap: clamp(1.8rem, 3.2vw, 3.7rem);
-          grid-template-columns: minmax(15rem, 1.85fr) minmax(7rem, .78fr) minmax(9rem, 1fr) minmax(9rem, .95fr);
+          gap: clamp(1.5rem, 2.3vw, 2.75rem);
+          grid-template-columns: minmax(13rem, 1.5fr) minmax(7rem, .72fr) minmax(9rem, .94fr) minmax(8.5rem, .85fr);
           margin-bottom: 4.2rem;
         }
 
         .footer-brand {
-          padding-right: .5rem;
+          padding-right: .25rem;
         }
 
         .footer-brand-link {
@@ -360,8 +358,8 @@ export default function Footer() {
 
         @media (max-width: 1050px) and (min-width: 821px) {
           .footer-layout {
-            gap: 2rem;
-            grid-template-columns: minmax(13rem, 1.55fr) minmax(7rem, .85fr) minmax(9rem, 1fr);
+            gap: 1.7rem;
+            grid-template-columns: minmax(12rem, 1.3fr) minmax(7rem, .8fr) minmax(8.5rem, 1fr);
           }
 
           .footer-media-contact {
@@ -410,35 +408,22 @@ export default function Footer() {
             max-width: 34ch;
           }
 
-          .footer-mobile-primary {
+          .footer-mobile-grid {
             display: grid;
-            gap: 1.2rem;
+            gap: 2rem 1.2rem;
             grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-            margin-bottom: 2.15rem;
           }
 
-          .footer-desktop-club,
-          .footer-desktop-participate {
+          .footer-desktop-columns {
             display: none !important;
           }
 
           .footer-media-contact {
-            display: block;
-          }
-
-          .footer-column-media {
-            border-top: 1px solid rgba(247,247,244,.1);
-            padding-top: 1.85rem;
-          }
-
-          .footer-column-contact {
-            border-top: 1px solid rgba(247,247,244,.1);
-            margin-top: 2.1rem;
-            padding-top: 1.85rem;
+            display: contents;
           }
 
           .footer-column-title {
-            font-size: .62rem;
+            font-size: .61rem;
             letter-spacing: .15em;
             margin-bottom: .7rem;
           }
@@ -452,7 +437,8 @@ export default function Footer() {
             border-bottom: 1px solid rgba(247,247,244,.08);
             box-sizing: border-box;
             display: flex;
-            font-size: .79rem;
+            font-size: .76rem;
+            line-height: 1.25;
             min-height: 46px;
             padding: .7rem 0;
           }
@@ -463,6 +449,7 @@ export default function Footer() {
             font-size: 1rem;
             font-weight: 700;
             margin-left: auto;
+            padding-left: .4rem;
           }
 
           .footer-link:hover {
@@ -509,7 +496,7 @@ export default function Footer() {
         }
 
         @media (min-width: 821px) {
-          .footer-mobile-primary {
+          .footer-mobile-grid {
             display: none;
           }
         }
@@ -519,8 +506,12 @@ export default function Footer() {
             width: min(100% - 2rem, 36rem);
           }
 
-          .footer-mobile-primary {
-            gap: .85rem;
+          .footer-mobile-grid {
+            gap: 1.75rem .85rem;
+          }
+
+          .footer-link {
+            font-size: .71rem;
           }
 
           .footer-brand-copy {
@@ -555,31 +546,24 @@ export default function Footer() {
             </p>
           </div>
 
-          <div className="footer-desktop-club">
+          <div className="footer-desktop-columns">
             <FooterColumn title="Verein" links={clubLinks} />
           </div>
 
-          <div className="footer-desktop-participate">
+          <div className="footer-desktop-columns">
             <FooterColumn title="Mitmachen" links={participateLinks} />
           </div>
 
-          <div className="footer-mobile-primary">
+          <div className="footer-desktop-columns footer-media-contact">
+            <FooterColumn title="Medien" links={mediaLinks} />
+            <FooterColumn title="Kontakt" links={contactLinks} />
+          </div>
+
+          <div className="footer-mobile-grid">
             <FooterColumn title="Verein" links={clubLinks} />
             <FooterColumn title="Mitmachen" links={participateLinks} />
-          </div>
-
-          <div className="footer-media-contact">
-            <FooterColumn
-              title="Medien"
-              links={mediaLinks}
-              className="footer-column-media"
-            />
-
-            <FooterColumn
-              title="Kontakt"
-              links={contactLinks}
-              className="footer-column-contact"
-            />
+            <FooterColumn title="Medien" links={mediaLinks} />
+            <FooterColumn title="Kontakt" links={contactLinks} />
           </div>
         </div>
 
