@@ -159,7 +159,7 @@ function FooterColumn({
   className?: string;
 }) {
   return (
-    <div className={`footer-column ${className}`}>
+    <section className={`footer-column ${className}`}>
       <p className="footer-column-title">{title}</p>
 
       <ul className="footer-links-list">
@@ -171,7 +171,7 @@ function FooterColumn({
           </li>
         ))}
       </ul>
-    </div>
+    </section>
   );
 }
 
@@ -200,16 +200,16 @@ export default function Footer() {
           width: min(100% - 6rem, 1440px);
         }
 
-        .footer-grid {
+        .footer-layout {
           align-items: start;
           display: grid;
-          gap: 4.35rem;
-          grid-template-columns: 1.65fr .82fr 1.1fr .9fr;
-          margin-bottom: 4.15rem;
+          gap: clamp(2.5rem, 5vw, 5.5rem);
+          grid-template-columns: minmax(14rem, 1.65fr) minmax(7rem, .75fr) minmax(10rem, 1fr) minmax(9rem, .9fr);
+          margin-bottom: 4.2rem;
         }
 
         .footer-brand {
-          padding-right: 1rem;
+          padding-right: .75rem;
         }
 
         .footer-brand-link {
@@ -293,14 +293,10 @@ export default function Footer() {
           transform: translateX(2px);
         }
 
-        .footer-right-stack {
+        .footer-media-stack {
           display: flex;
           flex-direction: column;
-          gap: 3.2rem;
-        }
-
-        .footer-column-contact {
-          padding-top: .2rem;
+          gap: 3.5rem;
         }
 
         .footer-bottom {
@@ -362,28 +358,14 @@ export default function Footer() {
           transform: translateY(-2px);
         }
 
-        @media (max-width: 1120px) {
-          .footer-grid {
-            gap: 2.7rem;
-            grid-template-columns: 1.5fr 1fr 1.15fr;
+        @media (max-width: 1050px) {
+          .footer-layout {
+            gap: 2.5rem;
+            grid-template-columns: minmax(13rem, 1.45fr) minmax(7rem, .8fr) minmax(9rem, 1fr);
           }
 
-          .footer-right-stack {
+          .footer-media-stack {
             grid-column: 3;
-          }
-        }
-
-        @media (max-width: 900px) {
-          .footer-grid {
-            grid-template-columns: 1.5fr 1fr;
-          }
-
-          .footer-right-stack {
-            grid-column: auto;
-          }
-
-          .footer-column-media {
-            grid-column: 2;
           }
         }
 
@@ -396,7 +378,7 @@ export default function Footer() {
             width: min(100% - 2.25rem, 40rem);
           }
 
-          .footer-grid {
+          .footer-layout {
             display: grid;
             gap: 2.3rem;
             grid-template-columns: 1fr;
@@ -417,15 +399,25 @@ export default function Footer() {
             max-width: 36ch;
           }
 
-          .footer-mobile-main-columns {
+          .footer-mobile-main {
             display: grid;
             gap: 1.25rem;
             grid-template-columns: minmax(0,1fr) minmax(0,1fr);
           }
 
-          .footer-right-stack {
-            display: grid;
+          .footer-desktop-club,
+          .footer-desktop-participate {
+            display: none;
+          }
+
+          .footer-media-stack {
+            display: flex;
             gap: 2.15rem;
+          }
+
+          .footer-column-contact {
+            border-top: 1px solid rgba(247,247,244,.1);
+            padding-top: 2rem;
           }
 
           .footer-column-title {
@@ -458,11 +450,6 @@ export default function Footer() {
 
           .footer-link:hover {
             transform: none;
-          }
-
-          .footer-column-contact {
-            border-top: 1px solid rgba(247,247,244,.1);
-            padding-top: 2rem;
           }
 
           .footer-bottom {
@@ -504,12 +491,18 @@ export default function Footer() {
           }
         }
 
+        @media (min-width: 821px) {
+          .footer-mobile-main {
+            display: none;
+          }
+        }
+
         @media (max-width: 360px) {
           .footer-content {
             width: min(100% - 2rem, 40rem);
           }
 
-          .footer-mobile-main-columns {
+          .footer-mobile-main {
             gap: .9rem;
           }
 
@@ -525,7 +518,7 @@ export default function Footer() {
       `}</style>
 
       <div className="footer-content">
-        <div className="footer-grid">
+        <div className="footer-layout">
           <div className="footer-brand">
             <Link href="/" className="footer-brand-link">
               <span className="footer-brand-mark" aria-hidden="true">
@@ -541,18 +534,22 @@ export default function Footer() {
             </p>
           </div>
 
-          <div className="footer-mobile-main-columns">
+          <div className="footer-desktop-club">
+            <FooterColumn title="Verein" links={clubLinks} />
+          </div>
+
+          <div className="footer-desktop-participate">
+            <FooterColumn title="Mitmachen" links={participateLinks} />
+          </div>
+
+          <div className="footer-mobile-main">
             <FooterColumn title="Verein" links={clubLinks} />
             <FooterColumn title="Mitmachen" links={participateLinks} />
           </div>
 
-          <FooterColumn
-            title="Medien"
-            links={mediaLinks}
-            className="footer-column-media"
-          />
+          <div className="footer-media-stack">
+            <FooterColumn title="Medien" links={mediaLinks} />
 
-          <div className="footer-right-stack">
             <FooterColumn
               title="Kontakt"
               links={contactLinks}
