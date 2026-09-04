@@ -632,12 +632,12 @@ export default function AuftaktPage() {
           <h1 className="article-title">
             Der Countdown
             <span>
-              läuft: <em>Auftakt.</em>
+              läuft: <em>Auftakt</em>
             </span>
           </h1>
 
           <p className="article-lead">
-            Am Sonntag startet der FC Mello Wien in die neue Saison. Mit dem FC
+            Am Sonntag startet der FC Mello Wien in die erste Saison der Vereinsgeschichte. Mit dem FC
             Polska wartet zum Auftakt in der 1. Klasse A die erste echte
             Standortbestimmung und ein Moment, auf den das Team seit Monaten
             hinarbeitet.
@@ -687,7 +687,7 @@ export default function AuftaktPage() {
           </p>
 
           <h2>
-            Die letzte Woche <span>vor dem Start.</span>
+            Die letzte Woche <span>vor dem Start</span>
           </h2>
 
           <p>
@@ -707,7 +707,7 @@ export default function AuftaktPage() {
           </div>
 
           <h2>
-            Ein erstes <span>Zeichen setzen.</span>
+            Ein erstes <span>Zeichen setzen</span>
           </h2>
 
           <p>
@@ -754,7 +754,7 @@ export default function AuftaktPage() {
             </div>
 
             <p>
-              Livestreams, Highlights und Einblicke aus dem Vereinsalltag.
+              Livestreams, Highlights und Einblicke aus dem Vereinsalltag
             </p>
 
             <Link className="article-cta-link" href="/tv">
