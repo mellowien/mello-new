@@ -58,7 +58,7 @@ const MATCHES = [
 ];
 
 const NEXT_MATCH = MATCHES[0];
-const UPCOMING_MATCHES = MATCHES.slice(1);
+const UPCOMING_MATCHES = MATCHES;
 
 type TimeLeft = {
   days: number;
@@ -707,8 +707,8 @@ export default function Countdown() {
           }
 
           .countdown-mobile-top {
-            min-height: 11.4rem;
-            overflow: hidden;
+            min-height: auto;
+            padding-top: .1rem;
             position: relative;
           }
 
@@ -737,36 +737,12 @@ export default function Countdown() {
             width: 18%;
           }
 
-          .countdown-mobile-watermark {
-            color: rgba(13,148,136,.08);
-            font-family: "Arial Black", "Arial Bold", Impact, Arial, sans-serif;
-            font-size: clamp(3.1rem,16.5vw,5.6rem);
-            font-weight: 900;
-            letter-spacing: -.085em;
-            line-height: .72;
-            pointer-events: none;
-            position: absolute;
-            text-transform: uppercase;
-            top: 3.15rem;
-            user-select: none;
-            white-space: nowrap;
-            z-index: 0;
-          }
-
-          .countdown-mobile-watermark.home {
-            left: -1.15rem;
-          }
-
-          .countdown-mobile-watermark.away {
-            right: -1.45rem;
-          }
-
           .countdown-mobile-clock {
             align-items: flex-end;
             display: flex;
             gap: .18rem;
             justify-content: center;
-            margin-top: 2.35rem;
+            margin-top: 1.25rem;
             position: relative;
             z-index: 1;
           }
@@ -983,14 +959,6 @@ export default function Countdown() {
           .countdown-mobile-wrap {
             padding-left: 1rem;
             padding-right: 1rem;
-          }
-
-          .countdown-mobile-top {
-            min-height: 10.4rem;
-          }
-
-          .countdown-mobile-watermark {
-            font-size: 3rem;
           }
 
           .countdown-mobile-clock .countdown-unit {
@@ -1348,9 +1316,6 @@ export default function Countdown() {
           <div className="countdown-mobile-top">
             <div className="countdown-mobile-kicker">Nächstes Spiel</div>
 
-            <div className="countdown-mobile-watermark home">Mello</div>
-            <div className="countdown-mobile-watermark away">Polska</div>
-
             <div className="countdown-mobile-clock">
               <Unit value={days} label="Tage" />
               <Separator />
@@ -1436,7 +1401,7 @@ export default function Countdown() {
 
             <div className="countdown-mobile-navigation">
               <button
-                aria-label="Vorheriges kommendes Spiel"
+                aria-label="Vorheriges Spiel"
                 className="countdown-mobile-arrow"
                 disabled={previousMobileIndex === null}
                 onClick={goToPreviousMobileMatch}
@@ -1451,7 +1416,7 @@ export default function Countdown() {
                     aria-current={
                       index === mobileActiveIndex ? "true" : undefined
                     }
-                    aria-label={`${index + 1}. kommendes Spiel: ${match.homeTeam} gegen ${match.awayTeam}`}
+                    aria-label={`${index + 1}. Spiel: ${match.homeTeam} gegen ${match.awayTeam}`}
                     className={`countdown-mobile-dot ${
                       index === mobileActiveIndex ? "active" : ""
                     }`}
@@ -1463,7 +1428,7 @@ export default function Countdown() {
               </div>
 
               <button
-                aria-label="Nächstes kommendes Spiel"
+                aria-label="Nächstes Spiel"
                 className="countdown-mobile-arrow next"
                 disabled={nextMobileIndex === null}
                 onClick={goToNextMobileMatch}
