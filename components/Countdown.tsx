@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const MELLO_LOGO = "/mello-wien.png";
 
@@ -92,6 +92,7 @@ function useCountdown(target: Date): TimeLeft {
     };
 
     update();
+
     const interval = window.setInterval(update, 1000);
 
     return () => window.clearInterval(interval);
@@ -466,6 +467,10 @@ function getWatermarkTeam(teamName: string) {
 export default function Countdown() {
   const [activeIndex, setActiveIndex] = useState(0);
 
+  const swipeStartX = useRef<number | null>(null);
+  const swipeStartY = useRef<number | null>(null);
+  const wheelLock = useRef(false);
+
   const { days, hours, minutes, seconds } = useCountdown(NEXT_MATCH.date);
 
   const polskaLogo = useTransparentLogo("/polska-wien.png");
@@ -493,6 +498,65 @@ export default function Countdown() {
   const nextMatchAwayWatermark = getWatermarkTeam(NEXT_MATCH.awayTeam);
 
   const transparentLogo = (source: string) => logos[source] || source;
+
+  const goToPreviousMatch = () => {
+    setActiveIndex((current) => Math.max(0, current - 1));
+  };
+
+  const goToNextMatch = () => {
+    setActiveIndex((current) => Math.min(MATCHES.length - 1, current + 1));
+  };
+
+  const handleSwipeStart = (event: React.PointerEvent<HTMLElement>) => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+
+    swipeStartX.current = event.clientX;
+    swipeStartY.current = event.clientY;
+  };
+
+  const handleSwipeEnd = (event: React.PointerEvent<HTMLElement>) => {
+    if (swipeStartX.current === null || swipeStartY.current === null) return;
+
+    const deltaX = event.clientX - swipeStartX.current;
+    const deltaY = event.clientY - swipeStartY.current;
+
+    swipeStartX.current = null;
+    swipeStartY.current = null;
+
+    const minimumSwipeDistance = 48;
+    const isHorizontalSwipe =
+      Math.abs(deltaX) > minimumSwipeDistance &&
+      Math.abs(deltaX) > Math.abs(deltaY) * 1.35;
+
+    if (!isHorizontalSwipe) return;
+
+    if (deltaX < 0) {
+      goToNextMatch();
+    } else {
+      goToPreviousMatch();
+    }
+  };
+
+  const handleTrackpadWheel = (event: React.WheelEvent<HTMLElement>) => {
+    const isHorizontalGesture =
+      Math.abs(event.deltaX) > Math.abs(event.deltaY) &&
+      Math.abs(event.deltaX) > 12;
+
+    if (!isHorizontalGesture || wheelLock.current) return;
+
+    event.preventDefault();
+    wheelLock.current = true;
+
+    if (event.deltaX > 0) {
+      goToNextMatch();
+    } else {
+      goToPreviousMatch();
+    }
+
+    window.setTimeout(() => {
+      wheelLock.current = false;
+    }, 500);
+  };
 
   const backgroundNameStyle = {
     color: "rgba(13,148,136,.045)",
@@ -529,6 +593,10 @@ export default function Countdown() {
 
         .countdown-mobile {
           display: none;
+        }
+
+        .countdown-swipe-area {
+          touch-action: pan-y;
         }
 
         .countdown-unit {
@@ -768,6 +836,7 @@ export default function Countdown() {
             box-sizing: border-box;
             min-height: 11.6rem;
             padding: 1rem .9rem .85rem;
+            user-select: none;
             width: 100%;
           }
 
@@ -856,6 +925,17 @@ export default function Countdown() {
           .countdown-mobile-dot.active {
             background: #0d9488;
             width: 1.3rem;
+          }
+
+          .countdown-swipe-hint {
+            color: rgba(247,247,244,.35);
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: .48rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            margin-top: .8rem;
+            text-align: center;
+            text-transform: uppercase;
           }
         }
 
@@ -1082,11 +1162,7 @@ export default function Countdown() {
                   <button
                     aria-label="Vorheriges Spiel"
                     disabled={previousIndex === null}
-                    onClick={() => {
-                      if (previousIndex !== null) {
-                        setActiveIndex(previousIndex);
-                      }
-                    }}
+                    onClick={goToPreviousMatch}
                     type="button"
                     style={{
                       alignItems: "center",
@@ -1109,11 +1185,7 @@ export default function Countdown() {
                   <button
                     aria-label="Nächstes Spiel"
                     disabled={nextIndex === null}
-                    onClick={() => {
-                      if (nextIndex !== null) {
-                        setActiveIndex(nextIndex);
-                      }
-                    }}
+                    onClick={goToNextMatch}
                     type="button"
                     style={{
                       alignItems: "center",
@@ -1137,10 +1209,18 @@ export default function Countdown() {
             </div>
 
             <div
+              className="countdown-swipe-area"
+              onPointerDown={handleSwipeStart}
+              onPointerUp={handleSwipeEnd}
+              onPointerCancel={handleSwipeEnd}
+              onWheel={handleTrackpadWheel}
               style={{
+                cursor: "grab",
                 overflow: "hidden",
                 padding: "1rem 0 1.5rem",
                 position: "relative",
+                touchAction: "pan-y",
+                userSelect: "none",
                 width: "100%",
               }}
             >
@@ -1296,7 +1376,16 @@ export default function Countdown() {
             </a>
           </div>
 
-          <article className="countdown-mobile-slider">
+          <article
+            className="countdown-mobile-slider countdown-swipe-area"
+            onPointerDown={handleSwipeStart}
+            onPointerUp={handleSwipeEnd}
+            onPointerCancel={handleSwipeEnd}
+            onWheel={handleTrackpadWheel}
+            style={{
+              touchAction: "pan-y",
+            }}
+          >
             <div className="countdown-mobile-slider-competition">
               {activeMatch.competition}
             </div>
@@ -1347,11 +1436,7 @@ export default function Countdown() {
               aria-label="Vorheriges Spiel"
               className="countdown-mobile-arrow"
               disabled={previousIndex === null}
-              onClick={() => {
-                if (previousIndex !== null) {
-                  setActiveIndex(previousIndex);
-                }
-              }}
+              onClick={goToPreviousMatch}
               type="button"
             >
               ←
@@ -1376,15 +1461,15 @@ export default function Countdown() {
               aria-label="Nächstes Spiel"
               className="countdown-mobile-arrow next"
               disabled={nextIndex === null}
-              onClick={() => {
-                if (nextIndex !== null) {
-                  setActiveIndex(nextIndex);
-                }
-              }}
+              onClick={goToNextMatch}
               type="button"
             >
               →
             </button>
+          </div>
+
+          <div className="countdown-swipe-hint">
+            Wische für das nächste Spiel
           </div>
         </div>
       </div>
