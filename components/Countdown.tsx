@@ -57,8 +57,8 @@ const MATCHES = [
   },
 ];
 
-const NEXT_MATCH = MATCHES[0];
-const UPCOMING_MATCHES = MATCHES;
+const NEXT_MATCH = MATCHES[1];
+const UPCOMING_MATCHES = MATCHES.slice(1);
 
 type TimeLeft = {
   days: number;
@@ -492,7 +492,7 @@ export default function Countdown() {
 
   const previousIndex = activeIndex > 0 ? activeIndex - 1 : null;
   const nextIndex =
-    activeIndex < MATCHES.length - 1 ? activeIndex + 1 : null;
+    activeIndex < UPCOMING_MATCHES.length - 1 ? activeIndex + 1 : null;
 
   const previousMobileIndex =
     mobileActiveIndex > 0 ? mobileActiveIndex - 1 : null;
@@ -512,7 +512,9 @@ export default function Countdown() {
   };
 
   const goToNextMatch = () => {
-    setActiveIndex((current) => Math.min(MATCHES.length - 1, current + 1));
+    setActiveIndex((current) =>
+      Math.min(UPCOMING_MATCHES.length - 1, current + 1),
+    );
   };
 
   const goToPreviousMobileMatch = () => {
@@ -1247,7 +1249,7 @@ export default function Countdown() {
                   willChange: "transform",
                 }}
               >
-                {MATCHES.map((match, index) => (
+                {UPCOMING_MATCHES.map((match, index) => (
                   <div
                     key={`${match.displayDate}-${match.homeTeam}`}
                     onClick={() => setActiveIndex(index)}
@@ -1280,7 +1282,7 @@ export default function Countdown() {
                 zIndex: 2,
               }}
             >
-              {MATCHES.map((match, index) => {
+              {UPCOMING_MATCHES.map((match, index) => {
                 const isActive = index === activeIndex;
 
                 return (
