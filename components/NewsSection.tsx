@@ -5,6 +5,16 @@ import Link from "next/link";
 const ARTICLES = [
   {
     id: 1,
+    tag: "Spielbericht · Vorschau",
+    date: "13. Sep 2026",
+    title: "1:5 zum Auftakt. Jetzt zählt die Reaktion.",
+    excerpt:
+      "Nach der Niederlage gegen FC Polska zieht Mello ehrliche Lehren. Gegen Peñarol wartet nun mit einem Kader von elf Spielern und Martin Drewes im Tor eine besondere Aufgabe.",
+    href: "/news/penarol",
+    readTime: "5 Min.",
+  },
+  {
+    id: 2,
     tag: "Vorbericht",
     date: "06. Sep 2026",
     title: "Der Countdown läuft: Mello vor dem ersten Spiel",
@@ -14,7 +24,7 @@ const ARTICLES = [
     readTime: "3 Min.",
   },
   {
-    id: 2,
+    id: 3,
     tag: "Aus dem Training",
     date: "Diese Woche",
     title: "Fokus, Energie, Zusammenhalt: Stimmen aus der Vorbereitung",
@@ -144,7 +154,7 @@ export default function NewsSection() {
         .news-grid {
           display: grid;
           gap: 1.25rem;
-          grid-template-columns: repeat(3, minmax(0, 1fr));
+          grid-template-columns: repeat(4, minmax(0, 1fr));
         }
 
         .news-card,
@@ -358,7 +368,7 @@ export default function NewsSection() {
           transform: translateY(-1px);
         }
 
-        @media (max-width: 1050px) {
+        @media (max-width: 1240px) {
           .news-grid {
             grid-template-columns: repeat(2, minmax(0, 1fr));
           }
