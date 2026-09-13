@@ -20,6 +20,8 @@ type Match = {
   venue: string;
   address: string;
   type: "Heimspiel" | "Auswärtsspiel";
+  result?: string;
+  status?: "finished" | "upcoming";
   next?: boolean;
 };
 
@@ -40,7 +42,8 @@ const MATCHES: Match[] = [
     venue: HOME_VENUE,
     address: HOME_ADDRESS,
     type: "Heimspiel",
-    next: true,
+    result: "1 : 5",
+    status: "finished",
   },
   {
     round: "02",
@@ -51,11 +54,13 @@ const MATCHES: Match[] = [
     homeLogo: "/penarol-wien.png",
     awayLogo: MELLO_LOGO,
     homeLogoShape: "round",
-    date: "Samstag, 12. September 2026",
-    time: "16:00 Uhr",
+    date: "Sonntag, 13. September 2026",
+    time: "14:00 Uhr",
     venue: "Wienerbergplatz",
     address: "Computerstraße 3 · 1100 Wien",
     type: "Auswärtsspiel",
+    status: "upcoming",
+    next: true,
   },
   {
     round: "03",
@@ -447,9 +452,10 @@ function SmallLogo({
 
 function FixtureRow({ match }: { match: Match }) {
   const pending = match.phase === "Rückrunde";
+  const finished = match.status === "finished";
 
   return (
-    <article className="fixture-row">
+    <article className={`fixture-row${finished ? " is-finished" : ""}`}>
       <div className="fixture-round">{match.round}</div>
 
       <div className="fixture-opponents">
@@ -486,7 +492,14 @@ function FixtureRow({ match }: { match: Match }) {
         {match.address}
       </div>
 
-      <span className="fixture-type">{match.type}</span>
+      {finished ? (
+        <div className="fixture-result" aria-label={`Endstand ${match.result}`}>
+          <span>Endstand</span>
+          <strong>{match.result}</strong>
+        </div>
+      ) : (
+        <span className="fixture-type">{match.type}</span>
+      )}
     </article>
   );
 }
@@ -911,6 +924,10 @@ export default function SpielplanPage() {
           background: rgba(13, 148, 136, .035);
         }
 
+        .fixture-row.is-finished {
+          background: rgba(247, 247, 244, .018);
+        }
+
         .fixture-round {
           color: rgba(247, 247, 244, .33);
           font-size: .72rem;
@@ -1056,24 +1073,47 @@ export default function SpielplanPage() {
           font-weight: 900;
         }
 
-        .fixture-type {
+        .fixture-type,
+        .fixture-result {
           display: inline-flex;
           align-items: center;
           justify-content: center;
           justify-self: end;
           width: 8.9rem;
           min-height: 1.9rem;
-          border: 1px solid rgba(13, 148, 136, .4);
           border-radius: 999px;
           padding: 0 .55rem;
+          text-align: center;
+          text-transform: uppercase;
+          white-space: nowrap;
+        }
+
+        .fixture-type {
+          border: 1px solid rgba(13, 148, 136, .4);
           color: var(--teal);
           background: rgba(13, 148, 136, .08);
           font-size: .55rem;
           font-weight: 900;
           letter-spacing: .11em;
-          text-align: center;
-          text-transform: uppercase;
-          white-space: nowrap;
+        }
+
+        .fixture-result {
+          flex-direction: column;
+          gap: .07rem;
+          border: 1px solid rgba(247, 247, 244, .18);
+          color: rgba(247, 247, 244, .52);
+          background: rgba(247, 247, 244, .035);
+          font-size: .48rem;
+          font-weight: 900;
+          letter-spacing: .1em;
+          line-height: 1;
+        }
+
+        .fixture-result strong {
+          color: var(--paper);
+          font-size: .88rem;
+          font-weight: 900;
+          letter-spacing: -.03em;
         }
 
         .schedule-note {
@@ -1142,10 +1182,14 @@ export default function SpielplanPage() {
             display: none;
           }
 
-          .fixture-type {
+          .fixture-type,
+          .fixture-result {
             width: 7.6rem;
             min-height: 1.7rem;
             padding: 0 .4rem;
+          }
+
+          .fixture-type {
             font-size: .47rem;
           }
         }
@@ -1205,7 +1249,7 @@ export default function SpielplanPage() {
           <p className="section-kicker">Als Nächstes</p>
 
           <h2 className="section-title">
-            Der erste <span>Test.</span>
+            Der nächste <span>Test.</span>
           </h2>
 
           <article className="next-fixture">
