@@ -3,6 +3,18 @@ import Link from "next/link";
 
 const STORIES = [
   {
+    id: "penarol",
+    category: "Spielbericht · Vorschau",
+    date: "13. September 2026",
+    readTime: "5 Min. Lesezeit",
+    title: "1:5 zum Auftakt. Jetzt zählt die Reaktion.",
+    excerpt:
+      "Nach der Niederlage gegen FC Polska zieht Mello ehrliche Lehren. Gegen Peñarol wartet nun mit einem Kader von elf Spielern und Martin Drewes im Tor eine besondere Aufgabe.",
+    href: "/news/penarol",
+    featured: true,
+    image: null,
+  },
+  {
     id: "auftakt",
     category: "Vorbericht",
     date: "06. September 2026",
@@ -11,7 +23,7 @@ const STORIES = [
     excerpt:
       "Am Sonntag startet FC Mello Wien in die neue Saison. Gegen FC Polska wartet zum Auftakt in der 1. Klasse A die erste echte Standortbestimmung.",
     href: "/news/auftakt",
-    featured: true,
+    featured: false,
     image: null,
   },
   {
@@ -247,6 +259,19 @@ export default function NewsPage() {
             box-shadow .25s ease;
         }
 
+        .featured-story::after {
+          content: "01";
+          position: absolute;
+          right: clamp(1.4rem, 4vw, 3.2rem);
+          bottom: clamp(1.1rem, 3vw, 2.5rem);
+          color: rgba(13, 148, 136, .08);
+          font-size: clamp(7rem, 18vw, 15rem);
+          font-weight: 900;
+          letter-spacing: -.12em;
+          line-height: .7;
+          pointer-events: none;
+        }
+
         .featured-story:hover {
           border-color: var(--teal-bright);
           box-shadow:
@@ -293,7 +318,7 @@ export default function NewsPage() {
         }
 
         .featured-title {
-          max-width: 10ch;
+          max-width: 11ch;
           margin: 3.5rem 0 1.15rem;
           color: var(--paper);
           font-size: clamp(2.25rem, 4.5vw, 5.1rem);
@@ -310,7 +335,7 @@ export default function NewsPage() {
         }
 
         .featured-excerpt {
-          max-width: 47ch;
+          max-width: 52ch;
           margin: 0;
           color: var(--muted);
           font-size: .95rem;
@@ -626,8 +651,8 @@ export default function NewsPage() {
 
               <div>
                 <h3 className="featured-title">
-                  Der Countdown
-                  <span>läuft: Auftakt.</span>
+                  1:5 zum Auftakt.
+                  <span>Jetzt zählt die Reaktion.</span>
                 </h3>
 
                 <p className="featured-excerpt">{featuredStory.excerpt}</p>
@@ -667,7 +692,10 @@ export default function NewsPage() {
                 <p className="story-card-excerpt">{story.excerpt}</p>
 
                 <div className="story-read">
-                  Interview lesen <span aria-hidden="true">→</span>
+                  {story.category.includes("Interview")
+                    ? "Interview lesen"
+                    : "Bericht lesen"}{" "}
+                  <span aria-hidden="true">→</span>
                 </div>
               </div>
             </Link>
