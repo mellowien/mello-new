@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 const MELLO_LOGO = "/mello-wien.png";
+const DEFAULT_MATCH_DURATION_MINUTES = 120;
 
 const MATCHES = [
   {
@@ -16,6 +17,7 @@ const MATCHES = [
     displayTime: "11:30 Uhr",
     result: "1 : 5",
     status: "finished",
+    durationMinutes: DEFAULT_MATCH_DURATION_MINUTES,
   },
   {
     competition: "1. Klasse A",
@@ -28,7 +30,8 @@ const MATCHES = [
     displayTime: "14:00 Uhr",
     venue: "Wienerbergplatz",
     address: "Computerstraße 3 · 1100 Wien",
-    status: "upcoming",
+    status: "finished",
+    durationMinutes: DEFAULT_MATCH_DURATION_MINUTES,
   },
   {
     competition: "1. Klasse A",
@@ -39,7 +42,10 @@ const MATCHES = [
     date: new Date("2026-09-20T11:30:00+02:00"),
     displayDate: "So | 20.09.2026",
     displayTime: "11:30 Uhr",
+    venue: "Polizeisportanlage",
+    address: "Dampfschiffhaufen 2 · 1220 Wien",
     status: "upcoming",
+    durationMinutes: DEFAULT_MATCH_DURATION_MINUTES,
   },
   {
     competition: "1. Klasse A",
@@ -51,6 +57,7 @@ const MATCHES = [
     displayDate: "Sa | 26.09.2026",
     displayTime: "18:00 Uhr",
     status: "upcoming",
+    durationMinutes: DEFAULT_MATCH_DURATION_MINUTES,
   },
   {
     competition: "1. Klasse A",
@@ -62,11 +69,12 @@ const MATCHES = [
     displayDate: "So | 04.10.2026",
     displayTime: "11:30 Uhr",
     status: "upcoming",
+    durationMinutes: DEFAULT_MATCH_DURATION_MINUTES,
   },
 ];
 
-const NEXT_MATCH = MATCHES[1];
-const UPCOMING_MATCHES = MATCHES.slice(1);
+type Match = (typeof MATCHES)[number];
+type MatchPhase = "upcoming" | "live" | "finished";
 
 type TimeLeft = {
   days: number;
@@ -75,39 +83,57 @@ type TimeLeft = {
   seconds: number;
 };
 
-function useCountdown(target: Date): TimeLeft {
-  const [timeLeft, setTimeLeft] = useState<TimeLeft>({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
+function getMatchPhase(match: Match, now = Date.now()): MatchPhase {
+  const startTime = match.date.getTime();
+  const endTime =
+    startTime + match.durationMinutes * 60 * 1000;
+
+  if (now < startTime) {
+    return "upcoming";
+  }
+
+  if (now < endTime) {
+    return "live";
+  }
+
+  return "finished";
+}
+
+function getDisplayMatches() {
+  const now = Date.now();
+
+  return MATCHES.filter(
+    (match) => getMatchPhase(match, now) !== "finished",
+  );
+}
+
+function getNextMatch() {
+  return getDisplayMatches()[0] ?? MATCHES[MATCHES.length - 1];
+}
+
+function useClock() {
+  const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
-    const update = () => {
-      const difference = target.getTime() - Date.now();
-
-      if (difference <= 0) {
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-        return;
-      }
-
-      setTimeLeft({
-        days: Math.floor(difference / 86400000),
-        hours: Math.floor((difference % 86400000) / 3600000),
-        minutes: Math.floor((difference % 3600000) / 60000),
-        seconds: Math.floor((difference % 60000) / 1000),
-      });
-    };
-
-    update();
-
-    const interval = window.setInterval(update, 1000);
+    const interval = window.setInterval(() => {
+      setNow(Date.now());
+    }, 1000);
 
     return () => window.clearInterval(interval);
-  }, [target]);
+  }, []);
 
-  return timeLeft;
+  return now;
+}
+
+function getTimeLeft(target: Date, now: number): TimeLeft {
+  const difference = Math.max(0, target.getTime() - now);
+
+  return {
+    days: Math.floor(difference / 86400000),
+    hours: Math.floor((difference % 86400000) / 3600000),
+    minutes: Math.floor((difference % 3600000) / 60000),
+    seconds: Math.floor((difference % 60000) / 1000),
+  };
 }
 
 function removeOuterWhiteBackground(
@@ -270,7 +296,7 @@ function MatchCard({
   isNextMatch = false,
   logos,
 }: {
-  match: (typeof MATCHES)[number];
+  match: Match;
   active: boolean;
   isNextMatch?: boolean;
   logos: Record<string, string>;
@@ -473,6 +499,7 @@ function getWatermarkTeam(teamName: string) {
 }
 
 export default function Countdown() {
+  const now = useClock();
   const [activeIndex, setActiveIndex] = useState(0);
   const [mobileActiveIndex, setMobileActiveIndex] = useState(0);
 
@@ -480,7 +507,21 @@ export default function Countdown() {
   const swipeStartY = useRef<number | null>(null);
   const wheelLock = useRef(false);
 
-  const { days, hours, minutes, seconds } = useCountdown(NEXT_MATCH.date);
+  const DISPLAY_MATCHES = getDisplayMatches();
+  const NEXT_MATCH = DISPLAY_MATCHES[0] ?? getNextMatch();
+  const matchPhase = getMatchPhase(NEXT_MATCH, now);
+  const isLive = matchPhase === "live";
+  const upcomingMatches = DISPLAY_MATCHES;
+
+  const { days, hours, minutes, seconds } = getTimeLeft(
+    NEXT_MATCH.date,
+    now,
+  );
+
+  useEffect(() => {
+    setActiveIndex(0);
+    setMobileActiveIndex(0);
+  }, [NEXT_MATCH.date.getTime()]);
 
   const polskaLogo = useTransparentLogo("/polska-wien.png");
   const penarolLogo = useTransparentLogo("/penarol-wien.png");
@@ -496,17 +537,18 @@ export default function Countdown() {
     "/erlaa-torpedo.png": erlaaTorpedoLogo,
   };
 
-  const mobileActiveMatch = UPCOMING_MATCHES[mobileActiveIndex];
+  const mobileActiveMatch =
+    upcomingMatches[mobileActiveIndex] ?? NEXT_MATCH;
 
   const previousIndex = activeIndex > 0 ? activeIndex - 1 : null;
   const nextIndex =
-    activeIndex < UPCOMING_MATCHES.length - 1 ? activeIndex + 1 : null;
+    activeIndex < upcomingMatches.length - 1 ? activeIndex + 1 : null;
 
   const previousMobileIndex =
     mobileActiveIndex > 0 ? mobileActiveIndex - 1 : null;
 
   const nextMobileIndex =
-    mobileActiveIndex < UPCOMING_MATCHES.length - 1
+    mobileActiveIndex < upcomingMatches.length - 1
       ? mobileActiveIndex + 1
       : null;
 
@@ -521,7 +563,7 @@ export default function Countdown() {
 
   const goToNextMatch = () => {
     setActiveIndex((current) =>
-      Math.min(UPCOMING_MATCHES.length - 1, current + 1),
+      Math.min(upcomingMatches.length - 1, current + 1),
     );
   };
 
@@ -531,7 +573,7 @@ export default function Countdown() {
 
   const goToNextMobileMatch = () => {
     setMobileActiveIndex((current) =>
-      Math.min(UPCOMING_MATCHES.length - 1, current + 1),
+      Math.min(upcomingMatches.length - 1, current + 1),
     );
   };
 
@@ -695,6 +737,41 @@ export default function Countdown() {
           padding-bottom: .86rem;
         }
 
+        .countdown-live-status {
+          align-items: center;
+          color: rgba(13,148,136,.95);
+          display: flex;
+          font-family: "Helvetica Neue", Arial, sans-serif;
+          font-size: clamp(1.65rem,3.5vw,3rem);
+          font-weight: 800;
+          gap: .78rem;
+          letter-spacing: -.04em;
+          line-height: 1;
+          text-transform: uppercase;
+        }
+
+        .countdown-live-status::before {
+          animation: countdown-live-pulse 1.5s ease-in-out infinite;
+          background: #0d9488;
+          border-radius: 50%;
+          box-shadow: 0 0 0 .22rem rgba(13,148,136,.16);
+          content: "";
+          height: .62rem;
+          width: .62rem;
+        }
+
+        @keyframes countdown-live-pulse {
+          0%, 100% {
+            box-shadow: 0 0 0 .22rem rgba(13,148,136,.16);
+            opacity: 1;
+          }
+
+          50% {
+            box-shadow: 0 0 0 .5rem rgba(13,148,136,0);
+            opacity: .58;
+          }
+        }
+
         @media (max-width: 768px) {
           .countdown-section {
             padding: 2.1rem 0 2.8rem;
@@ -778,6 +855,30 @@ export default function Countdown() {
             color: rgba(13,148,136,.45);
             font-size: 1.35rem;
             padding-bottom: .72rem;
+          }
+
+          .countdown-mobile-live-status {
+            align-items: center;
+            color: rgba(13,148,136,.95);
+            display: flex;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            font-size: clamp(1.45rem,8vw,2.2rem);
+            font-weight: 800;
+            gap: .65rem;
+            justify-content: center;
+            letter-spacing: -.045em;
+            margin-top: 1.45rem;
+            text-transform: uppercase;
+          }
+
+          .countdown-mobile-live-status::before {
+            animation: countdown-live-pulse 1.5s ease-in-out infinite;
+            background: #0d9488;
+            border-radius: 50%;
+            box-shadow: 0 0 0 .2rem rgba(13,148,136,.16);
+            content: "";
+            height: .56rem;
+            width: .56rem;
           }
 
           .countdown-mobile-match-meta {
@@ -1063,7 +1164,7 @@ export default function Countdown() {
                 textTransform: "uppercase",
               }}
             >
-              Nächstes Spiel
+              {isLive ? "Live" : "Nächstes Spiel"}
             </span>
             <span
               style={{
@@ -1096,24 +1197,28 @@ export default function Countdown() {
               {nextMatchHomeWatermark.label}
             </div>
 
-            <div
-              style={{
-                alignItems: "flex-end",
-                display: "flex",
-                gap: ".28rem",
-                justifyContent: "center",
-                position: "relative",
-                zIndex: 1,
-              }}
-            >
-              <Unit value={days} label="Tage" />
-              <Separator />
-              <Unit value={hours} label="Std." />
-              <Separator />
-              <Unit value={minutes} label="Min." />
-              <Separator />
-              <Unit value={seconds} label="Sek." />
-            </div>
+            {isLive ? (
+              <div className="countdown-live-status">Spiel läuft</div>
+            ) : (
+              <div
+                style={{
+                  alignItems: "flex-end",
+                  display: "flex",
+                  gap: ".28rem",
+                  justifyContent: "center",
+                  position: "relative",
+                  zIndex: 1,
+                }}
+              >
+                <Unit value={days} label="Tage" />
+                <Separator />
+                <Unit value={hours} label="Std." />
+                <Separator />
+                <Unit value={minutes} label="Min." />
+                <Separator />
+                <Unit value={seconds} label="Sek." />
+              </div>
+            )}
 
             <div
               aria-hidden="true"
@@ -1148,7 +1253,7 @@ export default function Countdown() {
                   textTransform: "uppercase",
                 }}
               >
-                Die nächsten Spiele
+                {isLive ? "Kommende Spiele" : "Die nächsten Spiele"}
               </div>
 
               <div
@@ -1257,7 +1362,7 @@ export default function Countdown() {
                   willChange: "transform",
                 }}
               >
-                {UPCOMING_MATCHES.map((match, index) => (
+                {upcomingMatches.map((match, index) => (
                   <div
                     key={`${match.displayDate}-${match.homeTeam}`}
                     onClick={() => setActiveIndex(index)}
@@ -1269,7 +1374,7 @@ export default function Countdown() {
                   >
                     <MatchCard
                       active={index === activeIndex}
-                      isNextMatch={index === 0}
+                      isNextMatch={index === 0 && !isLive}
                       logos={logos}
                       match={match}
                     />
@@ -1290,7 +1395,7 @@ export default function Countdown() {
                 zIndex: 2,
               }}
             >
-              {UPCOMING_MATCHES.map((match, index) => {
+              {upcomingMatches.map((match, index) => {
                 const isActive = index === activeIndex;
 
                 return (
@@ -1324,17 +1429,25 @@ export default function Countdown() {
       <div className="countdown-mobile">
         <div className="countdown-mobile-wrap">
           <div className="countdown-mobile-top">
-            <div className="countdown-mobile-kicker">Nächstes Spiel</div>
-
-            <div className="countdown-mobile-clock">
-              <Unit value={days} label="Tage" />
-              <Separator />
-              <Unit value={hours} label="Std." />
-              <Separator />
-              <Unit value={minutes} label="Min." />
-              <Separator />
-              <Unit value={seconds} label="Sek." />
+            <div className="countdown-mobile-kicker">
+              {isLive ? "Live" : "Nächstes Spiel"}
             </div>
+
+            {isLive ? (
+              <div className="countdown-mobile-live-status">
+                Spiel läuft
+              </div>
+            ) : (
+              <div className="countdown-mobile-clock">
+                <Unit value={days} label="Tage" />
+                <Separator />
+                <Unit value={hours} label="Std." />
+                <Separator />
+                <Unit value={minutes} label="Min." />
+                <Separator />
+                <Unit value={seconds} label="Sek." />
+              </div>
+            )}
 
             <div className="countdown-mobile-match-meta">
               {NEXT_MATCH.competition}
@@ -1348,7 +1461,7 @@ export default function Countdown() {
           <div className="countdown-mobile-divider" />
 
           <div className="countdown-mobile-upcoming-title">
-            <span>Die nächsten Spiele</span>
+            <span>{isLive ? "Kommende Spiele" : "Die nächsten Spiele"}</span>
             <a className="countdown-mobile-schedule-link" href="/spielplan">
               Spielplan →
             </a>
@@ -1421,7 +1534,7 @@ export default function Countdown() {
               </button>
 
               <div className="countdown-mobile-dots">
-                {UPCOMING_MATCHES.map((match, index) => (
+                {upcomingMatches.map((match, index) => (
                   <button
                     aria-current={
                       index === mobileActiveIndex ? "true" : undefined
