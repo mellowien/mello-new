@@ -116,7 +116,7 @@ const MATCHES: Match[] = [
     homeLogo: "/Vienna2016.png",
     awayLogo: MELLO_LOGO,
     homeLogoShape: "diamond",
-    date: "Sonntag, 11. Oktober 2026",
+    date: "Sonntag, 10. Oktober 2026",
     time: "17:00 Uhr",
     venue: "Donaustadt – Gemeinde Wien 22",
     address: "Am Langen Felde 60 · 1220 Wien",

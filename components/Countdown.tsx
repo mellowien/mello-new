@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 const MELLO_LOGO = "/mello-wien.png";
 const DEFAULT_MATCH_DURATION_MINUTES = 120;
+const MAX_VISIBLE_MATCHES = 5;
 
 const MATCHES = [
   {
@@ -30,6 +31,7 @@ const MATCHES = [
     displayTime: "14:00 Uhr",
     venue: "Wienerbergplatz",
     address: "Computerstraße 3 · 1100 Wien",
+    result: "4 : 1",
     status: "finished",
     durationMinutes: DEFAULT_MATCH_DURATION_MINUTES,
   },
@@ -56,6 +58,8 @@ const MATCHES = [
     date: new Date("2026-09-26T18:00:00+02:00"),
     displayDate: "Sa | 26.09.2026",
     displayTime: "18:00 Uhr",
+    venue: "Kinkplatz – Austria 13",
+    address: "Kinkplatz · 1140 Wien",
     status: "upcoming",
     durationMinutes: DEFAULT_MATCH_DURATION_MINUTES,
   },
@@ -68,6 +72,106 @@ const MATCHES = [
     date: new Date("2026-10-04T11:30:00+02:00"),
     displayDate: "So | 04.10.2026",
     displayTime: "11:30 Uhr",
+    venue: "Polizeisportanlage",
+    address: "Dampfschiffhaufen 2 · 1220 Wien",
+    status: "upcoming",
+    durationMinutes: DEFAULT_MATCH_DURATION_MINUTES,
+  },
+  {
+    competition: "1. Klasse A",
+    homeTeam: "Vienna 2016",
+    awayTeam: "FC Mello Wien",
+    homeLogo: "/Vienna2016.png",
+    awayLogo: MELLO_LOGO,
+    date: new Date("2026-10-10T17:00:00+02:00"),
+    displayDate: "Sa | 10.10.2026",
+    displayTime: "17:00 Uhr",
+    venue: "Donaustadt – Gemeinde Wien 22",
+    address: "Am Langen Felde 60 · 1220 Wien",
+    status: "upcoming",
+    durationMinutes: DEFAULT_MATCH_DURATION_MINUTES,
+  },
+  {
+    competition: "1. Klasse A",
+    homeTeam: "FC Mello Wien",
+    awayTeam: "ESV Ottakring",
+    homeLogo: MELLO_LOGO,
+    awayLogo: "/Ottakring.png",
+    date: new Date("2026-10-25T11:30:00+01:00"),
+    displayDate: "So | 25.10.2026",
+    displayTime: "11:30 Uhr",
+    venue: "Polizeisportanlage",
+    address: "Dampfschiffhaufen 2 · 1220 Wien",
+    status: "upcoming",
+    durationMinutes: DEFAULT_MATCH_DURATION_MINUTES,
+  },
+  {
+    competition: "1. Klasse A",
+    homeTeam: "Mariahilf",
+    awayTeam: "FC Mello Wien",
+    homeLogo: "/Mariahilf.jpeg",
+    awayLogo: MELLO_LOGO,
+    date: new Date("2026-11-01T14:15:00+01:00"),
+    displayDate: "So | 01.11.2026",
+    displayTime: "14:15 Uhr",
+    venue: "SGP Simmering",
+    address: "Leberstraße 84 · 1110 Wien",
+    status: "upcoming",
+    durationMinutes: DEFAULT_MATCH_DURATION_MINUTES,
+  },
+  {
+    competition: "1. Klasse A",
+    homeTeam: "FC Mello Wien",
+    awayTeam: "Srbija Wien",
+    homeLogo: MELLO_LOGO,
+    awayLogo: "/Srbija.png",
+    date: new Date("2026-11-08T11:30:00+01:00"),
+    displayDate: "So | 08.11.2026",
+    displayTime: "11:30 Uhr",
+    venue: "Polizeisportanlage",
+    address: "Dampfschiffhaufen 2 · 1220 Wien",
+    status: "upcoming",
+    durationMinutes: DEFAULT_MATCH_DURATION_MINUTES,
+  },
+  {
+    competition: "1. Klasse A",
+    homeTeam: "Margaretner AC",
+    awayTeam: "FC Mello Wien",
+    homeLogo: "/Margareten.jpeg",
+    awayLogo: MELLO_LOGO,
+    date: new Date("2026-11-15T12:00:00+01:00"),
+    displayDate: "So | 15.11.2026",
+    displayTime: "12:00 Uhr",
+    venue: "Gem. Wien 10, Eibesbrunnerg.",
+    address: "Eibesbrunnergasse 13 · 1100 Wien",
+    status: "upcoming",
+    durationMinutes: DEFAULT_MATCH_DURATION_MINUTES,
+  },
+  {
+    competition: "1. Klasse A",
+    homeTeam: "FC Mello Wien",
+    awayTeam: "Besa Wien",
+    homeLogo: MELLO_LOGO,
+    awayLogo: "/Besa.jpeg",
+    date: new Date("2026-11-22T11:30:00+01:00"),
+    displayDate: "So | 22.11.2026",
+    displayTime: "11:30 Uhr",
+    venue: "Polizeisportanlage",
+    address: "Dampfschiffhaufen 2 · 1220 Wien",
+    status: "upcoming",
+    durationMinutes: DEFAULT_MATCH_DURATION_MINUTES,
+  },
+  {
+    competition: "1. Klasse A",
+    homeTeam: "Gipsy Kings Vienna",
+    awayTeam: "FC Mello Wien",
+    homeLogo: "/Gipsy.png",
+    awayLogo: MELLO_LOGO,
+    date: new Date("2026-11-29T14:00:00+01:00"),
+    displayDate: "So | 29.11.2026",
+    displayTime: "14:00 Uhr",
+    venue: "FavAC",
+    address: "Kennergasse 3 · 1100 Wien",
     status: "upcoming",
     durationMinutes: DEFAULT_MATCH_DURATION_MINUTES,
   },
@@ -75,6 +179,15 @@ const MATCHES = [
 
 type Match = (typeof MATCHES)[number];
 type MatchPhase = "upcoming" | "live" | "finished";
+
+type SliderItem =
+  | {
+      kind: "match";
+      match: Match;
+    }
+  | {
+      kind: "schedule";
+    };
 
 type TimeLeft = {
   days: number;
@@ -85,8 +198,7 @@ type TimeLeft = {
 
 function getMatchPhase(match: Match, now = Date.now()): MatchPhase {
   const startTime = match.date.getTime();
-  const endTime =
-    startTime + match.durationMinutes * 60 * 1000;
+  const endTime = startTime + match.durationMinutes * 60 * 1000;
 
   if (now < startTime) {
     return "upcoming";
@@ -99,16 +211,14 @@ function getMatchPhase(match: Match, now = Date.now()): MatchPhase {
   return "finished";
 }
 
-function getDisplayMatches() {
-  const now = Date.now();
-
+function getDisplayMatches(now = Date.now()) {
   return MATCHES.filter(
     (match) => getMatchPhase(match, now) !== "finished",
   );
 }
 
-function getNextMatch() {
-  return getDisplayMatches()[0] ?? MATCHES[MATCHES.length - 1];
+function getNextMatch(now = Date.now()) {
+  return getDisplayMatches(now)[0] ?? MATCHES[MATCHES.length - 1];
 }
 
 function useClock() {
@@ -482,6 +592,84 @@ function MatchCard({
   );
 }
 
+function ScheduleCard({ active }: { active: boolean }) {
+  return (
+    <a
+      href="/spielplan"
+      style={{
+        alignItems: "center",
+        background: active
+          ? "linear-gradient(135deg, rgba(13,148,136,.14), rgba(15,17,17,.98) 62%)"
+          : "rgba(247,247,244,.055)",
+        border: active
+          ? "1px solid rgba(13,148,136,.78)"
+          : "1px solid rgba(247,247,244,.13)",
+        borderRadius: "1rem",
+        boxShadow: active ? "0 0 25px rgba(13,148,136,.08)" : "none",
+        boxSizing: "border-box",
+        color: "#f7f7f4",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        minHeight: "10.2rem",
+        opacity: active ? 1 : 0.65,
+        padding: "1.2rem 1rem .85rem",
+        position: "relative",
+        textAlign: "center",
+        textDecoration: "none",
+        transform: active ? "scale(1)" : "scale(.88)",
+        transformOrigin: "center center",
+        transition:
+          "transform .5s cubic-bezier(.25,1,.5,1), opacity .5s cubic-bezier(.25,1,.5,1), background .5s ease, border-color .5s ease",
+      }}
+    >
+      <span
+        style={{
+          color: "#0d9488",
+          fontFamily: "Arial, Helvetica, sans-serif",
+          fontSize: ".56rem",
+          fontWeight: 900,
+          letterSpacing: ".15em",
+          textTransform: "uppercase",
+        }}
+      >
+        Saison 2026 / 27
+      </span>
+
+      <strong
+        style={{
+          fontFamily: "Arial, Helvetica, sans-serif",
+          fontSize: "clamp(1.35rem, 2.2vw, 1.9rem)",
+          fontWeight: 900,
+          letterSpacing: "-.055em",
+          lineHeight: 0.95,
+          margin: "1rem 0",
+          maxWidth: "11ch",
+          textTransform: "uppercase",
+        }}
+      >
+        Alle Spiele im Spielplan.
+      </strong>
+
+      <span
+        style={{
+          alignItems: "center",
+          color: "#0d9488",
+          display: "inline-flex",
+          fontFamily: "Arial, Helvetica, sans-serif",
+          fontSize: ".62rem",
+          fontWeight: 900,
+          gap: ".5rem",
+          letterSpacing: ".13em",
+          textTransform: "uppercase",
+        }}
+      >
+        Zum Spielplan <span aria-hidden="true">→</span>
+      </span>
+    </a>
+  );
+}
+
 function getWatermarkTeam(teamName: string) {
   if (teamName.includes("Mello")) {
     return { fontScale: 0.8, label: "Mello", widthScale: 0.94 };
@@ -507,11 +695,20 @@ export default function Countdown() {
   const swipeStartY = useRef<number | null>(null);
   const wheelLock = useRef(false);
 
-  const DISPLAY_MATCHES = getDisplayMatches();
-  const NEXT_MATCH = DISPLAY_MATCHES[0] ?? getNextMatch();
+  const displayMatches = getDisplayMatches(now);
+  const NEXT_MATCH = displayMatches[0] ?? getNextMatch(now);
   const matchPhase = getMatchPhase(NEXT_MATCH, now);
   const isLive = matchPhase === "live";
-  const upcomingMatches = DISPLAY_MATCHES;
+
+  const upcomingMatches = displayMatches.slice(0, MAX_VISIBLE_MATCHES);
+
+  const sliderItems: SliderItem[] = [
+    ...upcomingMatches.map((match) => ({
+      kind: "match" as const,
+      match,
+    })),
+    { kind: "schedule" as const },
+  ];
 
   const { days, hours, minutes, seconds } = getTimeLeft(
     NEXT_MATCH.date,
@@ -528,6 +725,13 @@ export default function Countdown() {
   const yellowStarLogo = useTransparentLogo("/yellow-star.png");
   const penzingLogo = useTransparentLogo("/penzing.png");
   const erlaaTorpedoLogo = useTransparentLogo("/erlaa-torpedo.png");
+  const vienna2016Logo = useTransparentLogo("/Vienna2016.png");
+  const ottakringLogo = useTransparentLogo("/Ottakring.png");
+  const mariahilfLogo = useTransparentLogo("/Mariahilf.jpeg");
+  const srbijaLogo = useTransparentLogo("/Srbija.png");
+  const margaretenLogo = useTransparentLogo("/Margareten.jpeg");
+  const besaLogo = useTransparentLogo("/Besa.jpeg");
+  const gipsyLogo = useTransparentLogo("/Gipsy.png");
 
   const logos: Record<string, string> = {
     "/polska-wien.png": polskaLogo,
@@ -535,20 +739,27 @@ export default function Countdown() {
     "/yellow-star.png": yellowStarLogo,
     "/penzing.png": penzingLogo,
     "/erlaa-torpedo.png": erlaaTorpedoLogo,
+    "/Vienna2016.png": vienna2016Logo,
+    "/Ottakring.png": ottakringLogo,
+    "/Mariahilf.jpeg": mariahilfLogo,
+    "/Srbija.png": srbijaLogo,
+    "/Margareten.jpeg": margaretenLogo,
+    "/Besa.jpeg": besaLogo,
+    "/Gipsy.png": gipsyLogo,
   };
 
-  const mobileActiveMatch =
-    upcomingMatches[mobileActiveIndex] ?? NEXT_MATCH;
+  const mobileActiveItem =
+    sliderItems[mobileActiveIndex] ?? sliderItems[0];
 
   const previousIndex = activeIndex > 0 ? activeIndex - 1 : null;
   const nextIndex =
-    activeIndex < upcomingMatches.length - 1 ? activeIndex + 1 : null;
+    activeIndex < sliderItems.length - 1 ? activeIndex + 1 : null;
 
   const previousMobileIndex =
     mobileActiveIndex > 0 ? mobileActiveIndex - 1 : null;
 
   const nextMobileIndex =
-    mobileActiveIndex < upcomingMatches.length - 1
+    mobileActiveIndex < sliderItems.length - 1
       ? mobileActiveIndex + 1
       : null;
 
@@ -563,7 +774,7 @@ export default function Countdown() {
 
   const goToNextMatch = () => {
     setActiveIndex((current) =>
-      Math.min(upcomingMatches.length - 1, current + 1),
+      Math.min(sliderItems.length - 1, current + 1),
     );
   };
 
@@ -573,7 +784,7 @@ export default function Countdown() {
 
   const goToNextMobileMatch = () => {
     setMobileActiveIndex((current) =>
-      Math.min(upcomingMatches.length - 1, current + 1),
+      Math.min(sliderItems.length - 1, current + 1),
     );
   };
 
@@ -1288,7 +1499,7 @@ export default function Countdown() {
 
                 <div style={{ display: "flex", gap: ".4rem" }}>
                   <button
-                    aria-label="Vorheriges Spiel"
+                    aria-label="Vorheriges Element"
                     disabled={previousIndex === null}
                     onClick={goToPreviousMatch}
                     type="button"
@@ -1311,7 +1522,7 @@ export default function Countdown() {
                   </button>
 
                   <button
-                    aria-label="Nächstes Spiel"
+                    aria-label="Nächstes Element"
                     disabled={nextIndex === null}
                     onClick={goToNextMatch}
                     type="button"
@@ -1362,9 +1573,13 @@ export default function Countdown() {
                   willChange: "transform",
                 }}
               >
-                {upcomingMatches.map((match, index) => (
+                {sliderItems.map((item, index) => (
                   <div
-                    key={`${match.displayDate}-${match.homeTeam}`}
+                    key={
+                      item.kind === "match"
+                        ? `${item.match.displayDate}-${item.match.homeTeam}`
+                        : "schedule-card"
+                    }
                     onClick={() => setActiveIndex(index)}
                     style={{
                       cursor: index === activeIndex ? "default" : "pointer",
@@ -1372,12 +1587,16 @@ export default function Countdown() {
                       marginRight: "1.2rem",
                     }}
                   >
-                    <MatchCard
-                      active={index === activeIndex}
-                      isNextMatch={index === 0 && !isLive}
-                      logos={logos}
-                      match={match}
-                    />
+                    {item.kind === "match" ? (
+                      <MatchCard
+                        active={index === activeIndex}
+                        isNextMatch={index === 0 && !isLive}
+                        logos={logos}
+                        match={item.match}
+                      />
+                    ) : (
+                      <ScheduleCard active={index === activeIndex} />
+                    )}
                   </div>
                 ))}
               </div>
@@ -1395,14 +1614,22 @@ export default function Countdown() {
                 zIndex: 2,
               }}
             >
-              {upcomingMatches.map((match, index) => {
+              {sliderItems.map((item, index) => {
                 const isActive = index === activeIndex;
+                const label =
+                  item.kind === "match"
+                    ? `${index + 1}. Spiel: ${item.match.homeTeam} gegen ${item.match.awayTeam}`
+                    : "Zum vollständigen Spielplan";
 
                 return (
                   <button
                     aria-current={isActive ? "true" : undefined}
-                    aria-label={`${index + 1}. Spiel: ${match.homeTeam} gegen ${match.awayTeam}`}
-                    key={`${match.displayDate}-${match.homeTeam}`}
+                    aria-label={label}
+                    key={
+                      item.kind === "match"
+                        ? `${item.match.displayDate}-${item.match.homeTeam}`
+                        : "schedule-dot"
+                    }
                     onClick={() => setActiveIndex(index)}
                     type="button"
                     style={{
@@ -1474,57 +1701,115 @@ export default function Countdown() {
             onPointerCancel={handleMobileSwipeEnd}
             onWheel={handleMobileTrackpadWheel}
           >
-            <article className="countdown-mobile-slider">
-              <div className="countdown-mobile-slider-competition">
-                {mobileActiveMatch.competition}
-              </div>
+            {mobileActiveItem.kind === "match" ? (
+              <article className="countdown-mobile-slider">
+                <div className="countdown-mobile-slider-competition">
+                  {mobileActiveItem.match.competition}
+                </div>
 
-              <div className="countdown-mobile-slider-teams">
-                <div className="countdown-mobile-team">
-                  <ClubLogo
-                    alt={mobileActiveMatch.homeTeam}
-                    mobile
-                    src={mobileActiveMatch.homeLogo}
-                    transparentSrc={transparentLogo(
-                      mobileActiveMatch.homeLogo,
-                    )}
-                  />
+                <div className="countdown-mobile-slider-teams">
+                  <div className="countdown-mobile-team">
+                    <ClubLogo
+                      alt={mobileActiveItem.match.homeTeam}
+                      mobile
+                      src={mobileActiveItem.match.homeLogo}
+                      transparentSrc={transparentLogo(
+                        mobileActiveItem.match.homeLogo,
+                      )}
+                    />
 
-                  <div className="countdown-mobile-team-name">
-                    {mobileActiveMatch.homeTeam}
+                    <div className="countdown-mobile-team-name">
+                      {mobileActiveItem.match.homeTeam}
+                    </div>
+                  </div>
+
+                  <div className="countdown-mobile-vs">VS</div>
+
+                  <div className="countdown-mobile-team">
+                    <ClubLogo
+                      alt={mobileActiveItem.match.awayTeam}
+                      mobile
+                      src={mobileActiveItem.match.awayLogo}
+                      transparentSrc={transparentLogo(
+                        mobileActiveItem.match.awayLogo,
+                      )}
+                    />
+
+                    <div className="countdown-mobile-team-name">
+                      {mobileActiveItem.match.awayTeam}
+                    </div>
                   </div>
                 </div>
 
-                <div className="countdown-mobile-vs">VS</div>
-
-                <div className="countdown-mobile-team">
-                  <ClubLogo
-                    alt={mobileActiveMatch.awayTeam}
-                    mobile
-                    src={mobileActiveMatch.awayLogo}
-                    transparentSrc={transparentLogo(
-                      mobileActiveMatch.awayLogo,
-                    )}
-                  />
-
-                  <div className="countdown-mobile-team-name">
-                    {mobileActiveMatch.awayTeam}
-                  </div>
+                <div className="countdown-mobile-slider-date">
+                  {mobileActiveItem.match.displayDate}
+                  <span style={{ color: "#0d9488", padding: "0 .28rem" }}>
+                    ·
+                  </span>
+                  {mobileActiveItem.match.displayTime}
                 </div>
-              </div>
-
-              <div className="countdown-mobile-slider-date">
-                {mobileActiveMatch.displayDate}
-                <span style={{ color: "#0d9488", padding: "0 .28rem" }}>
-                  ·
+              </article>
+            ) : (
+              <a
+                className="countdown-mobile-slider"
+                href="/spielplan"
+                style={{
+                  alignItems: "center",
+                  color: "#f7f7f4",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  minHeight: "11rem",
+                  textAlign: "center",
+                  textDecoration: "none",
+                }}
+              >
+                <span
+                  style={{
+                    color: "#0d9488",
+                    fontFamily: "Arial, Helvetica, sans-serif",
+                    fontSize: ".54rem",
+                    fontWeight: 900,
+                    letterSpacing: ".15em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Saison 2026 / 27
                 </span>
-                {mobileActiveMatch.displayTime}
-              </div>
-            </article>
+
+                <strong
+                  style={{
+                    fontFamily: "Arial, Helvetica, sans-serif",
+                    fontSize: "1.65rem",
+                    fontWeight: 900,
+                    letterSpacing: "-.055em",
+                    lineHeight: .95,
+                    margin: ".9rem 0",
+                    maxWidth: "12ch",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Alle Spiele im Spielplan.
+                </strong>
+
+                <span
+                  style={{
+                    color: "#0d9488",
+                    fontFamily: "Arial, Helvetica, sans-serif",
+                    fontSize: ".6rem",
+                    fontWeight: 900,
+                    letterSpacing: ".13em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Zum Spielplan →
+                </span>
+              </a>
+            )}
 
             <div className="countdown-mobile-navigation">
               <button
-                aria-label="Vorheriges Spiel"
+                aria-label="Vorheriges Element"
                 className="countdown-mobile-arrow"
                 disabled={previousMobileIndex === null}
                 onClick={goToPreviousMobileMatch}
@@ -1534,16 +1819,24 @@ export default function Countdown() {
               </button>
 
               <div className="countdown-mobile-dots">
-                {upcomingMatches.map((match, index) => (
+                {sliderItems.map((item, index) => (
                   <button
                     aria-current={
                       index === mobileActiveIndex ? "true" : undefined
                     }
-                    aria-label={`${index + 1}. Spiel: ${match.homeTeam} gegen ${match.awayTeam}`}
+                    aria-label={
+                      item.kind === "match"
+                        ? `${index + 1}. Spiel: ${item.match.homeTeam} gegen ${item.match.awayTeam}`
+                        : "Zum vollständigen Spielplan"
+                    }
                     className={`countdown-mobile-dot ${
                       index === mobileActiveIndex ? "active" : ""
                     }`}
-                    key={`${match.displayDate}-${match.homeTeam}`}
+                    key={
+                      item.kind === "match"
+                        ? `${item.match.displayDate}-${item.match.homeTeam}`
+                        : "schedule-mobile-dot"
+                    }
                     onClick={() => setMobileActiveIndex(index)}
                     type="button"
                   />
@@ -1551,7 +1844,7 @@ export default function Countdown() {
               </div>
 
               <button
-                aria-label="Nächstes Spiel"
+                aria-label="Nächstes Element"
                 className="countdown-mobile-arrow next"
                 disabled={nextMobileIndex === null}
                 onClick={goToNextMobileMatch}
