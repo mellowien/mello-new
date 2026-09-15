@@ -59,8 +59,8 @@ const MATCHES: Match[] = [
     venue: "Wienerbergplatz",
     address: "Computerstraße 3 · 1100 Wien",
     type: "Auswärtsspiel",
-    status: "upcoming",
-    next: true,
+    result: "4 : 1",
+    status: "finished",
   },
   {
     round: "03",
@@ -76,6 +76,8 @@ const MATCHES: Match[] = [
     venue: HOME_VENUE,
     address: HOME_ADDRESS,
     type: "Heimspiel",
+    status: "upcoming",
+    next: true,
   },
   {
     round: "04",
@@ -389,117 +391,109 @@ function TeamLogo({
   src,
   alt,
   shape,
+  compact = false,
 }: {
   src?: string;
   alt: string;
   shape?: LogoShape;
-}) {
-  if (!src) {
-    return (
-      <div className="fixture-logo-fallback" aria-label={`${alt} Logo folgt`}>
-        Logo
-      </div>
-    );
-  }
-
-  const shapeClass = shape ? ` is-${shape}-logo` : "";
-
-  return (
-    <div className={`fixture-logo-wrap${shapeClass}`}>
-      <Image
-        className="fixture-logo"
-        src={src}
-        alt={`${alt} Logo`}
-        width={96}
-        height={96}
-      />
-    </div>
-  );
-}
-
-function SmallLogo({
-  src,
-  alt,
-  shape,
-}: {
-  src?: string;
-  alt: string;
-  shape?: LogoShape;
+  compact?: boolean;
 }) {
   if (!src) {
     return (
       <span
-        className="fixture-row-logo-fallback"
+        className={`team-logo-fallback${compact ? " is-compact" : ""}`}
         aria-label={`${alt} Logo folgt`}
-      />
+      >
+        Logo
+      </span>
     );
   }
 
   const shapeClass = shape ? ` is-${shape}-logo` : "";
 
   return (
-    <span className={`fixture-row-logo-wrap${shapeClass}`}>
+    <span
+      className={`team-logo-wrap${shapeClass}${
+        compact ? " is-compact" : ""
+      }`}
+    >
       <Image
-        className="fixture-row-logo"
+        className="team-logo"
         src={src}
-        alt=""
-        width={40}
-        height={40}
+        alt={`${alt} Logo`}
+        width={compact ? 48 : 112}
+        height={compact ? 48 : 112}
       />
     </span>
   );
 }
 
+function FixtureStatus({ match }: { match: Match }) {
+  if (match.status === "finished") {
+    return (
+      <div className="fixture-result" aria-label={`Endstand ${match.result}`}>
+        <span>Endstand</span>
+        <strong>{match.result}</strong>
+      </div>
+    );
+  }
+
+  if (match.next) {
+    return <span className="fixture-status is-next">Nächstes Spiel</span>;
+  }
+
+  return <span className="fixture-status">{match.type}</span>;
+}
+
 function FixtureRow({ match }: { match: Match }) {
-  const pending = match.phase === "Rückrunde";
-  const finished = match.status === "finished";
+  const isFinished = match.status === "finished";
+  const isNext = match.next;
 
   return (
-    <article className={`fixture-row${finished ? " is-finished" : ""}`}>
+    <article
+      className={`fixture-row${isFinished ? " is-finished" : ""}${
+        isNext ? " is-next" : ""
+      }`}
+    >
       <div className="fixture-round">{match.round}</div>
 
-      <div className="fixture-opponents">
-        <div className="fixture-row-logos" aria-hidden="true">
-          <SmallLogo
+      <div className="fixture-clubs">
+        <div className="fixture-club">
+          <TeamLogo
             src={match.homeLogo}
             alt={match.homeTeam}
             shape={match.homeLogoShape}
+            compact
           />
-          <span className="fixture-row-vs">VS</span>
-          <SmallLogo
+          <span>{match.homeTeam}</span>
+        </div>
+
+        <span className="fixture-vs">VS</span>
+
+        <div className="fixture-club">
+          <TeamLogo
             src={match.awayLogo}
             alt={match.awayTeam}
             shape={match.awayLogoShape}
+            compact
           />
-        </div>
-
-        <div className="fixture-row-teams">
-          <p>
-            {match.homeTeam} <span>vs.</span> {match.awayTeam}
-          </p>
+          <span>{match.awayTeam}</span>
         </div>
       </div>
 
-      <div className={`fixture-row-date${pending ? " is-pending" : ""}`}>
-        <strong>{match.date}</strong>
-        <br />
-        <span>{match.time}</span>
-      </div>
-
-      <div className="fixture-row-venue">
-        <strong>{match.venue}</strong>
-        <br />
-        {match.address}
-      </div>
-
-      {finished ? (
-        <div className="fixture-result" aria-label={`Endstand ${match.result}`}>
-          <span>Endstand</span>
-          <strong>{match.result}</strong>
+      <div className="fixture-details">
+        <div className="fixture-date">
+          <strong>{match.date}</strong>
+          <span>{match.time}</span>
         </div>
-      ) : (
-        <span className="fixture-type">{match.type}</span>
-      )}
+
+        <div className="fixture-venue">
+          <strong>{match.venue}</strong>
+          <span>{match.address}</span>
+        </div>
+      </div>
+
+      <FixtureStatus match={match} />
     </article>
   );
 }
@@ -523,8 +517,8 @@ export default function SpielplanPage() {
           --paper: #f7f7f4;
           --teal: #0d9488;
           --teal-bright: #14b8a6;
-          --line: rgba(247, 247, 244, .12);
-          --muted: rgba(247, 247, 244, .64);
+          --line: rgba(247,247,244,.12);
+          --muted: rgba(247,247,244,.62);
           min-height: 100vh;
           overflow: hidden;
           background: var(--ink);
@@ -546,14 +540,14 @@ export default function SpielplanPage() {
           position: relative;
           overflow: hidden;
           border-bottom: 1px solid var(--line);
-          padding: 4.8rem 0 5.1rem;
+          padding: 4.7rem 0 4.9rem;
           background:
             radial-gradient(
               ellipse 50% 128% at 96% 42%,
-              rgba(13, 148, 136, .17),
+              rgba(13,148,136,.17),
               transparent 74%
             ),
-            linear-gradient(116deg, #080808 0%, #080808 55%, #091311 100%);
+            linear-gradient(116deg,#080808 0%,#080808 55%,#091311 100%);
         }
 
         .schedule-hero::after {
@@ -563,11 +557,11 @@ export default function SpielplanPage() {
           bottom: -18rem;
           width: 44rem;
           height: 44rem;
-          border: 1px solid rgba(13, 148, 136, .14);
+          border: 1px solid rgba(13,148,136,.14);
           border-radius: 50%;
           box-shadow:
-            0 0 0 3.5rem rgba(13, 148, 136, .025),
-            0 0 0 7rem rgba(13, 148, 136, .015);
+            0 0 0 3.5rem rgba(13,148,136,.025),
+            0 0 0 7rem rgba(13,148,136,.015);
           pointer-events: none;
         }
 
@@ -582,24 +576,21 @@ export default function SpielplanPage() {
           align-items: center;
           min-height: 2.6rem;
           gap: .55rem;
-          border: 1px solid rgba(247, 247, 244, .16);
+          border: 1px solid rgba(247,247,244,.16);
           border-radius: 999px;
           padding: 0 1rem;
-          color: rgba(247, 247, 244, .70);
+          color: rgba(247,247,244,.70);
           font-size: .63rem;
           font-weight: 800;
           letter-spacing: .12em;
           text-decoration: none;
           text-transform: uppercase;
-          transition:
-            color .2s ease,
-            border-color .2s ease,
-            background .2s ease;
+          transition: color .2s ease, border-color .2s ease, background .2s ease;
         }
 
         .schedule-back:hover {
-          border-color: rgba(13, 148, 136, .7);
-          background: rgba(13, 148, 136, .08);
+          border-color: rgba(13,148,136,.7);
+          background: rgba(13,148,136,.08);
           color: var(--teal);
         }
 
@@ -621,13 +612,13 @@ export default function SpielplanPage() {
           height: .42rem;
           border-radius: 50%;
           background: var(--teal);
-          box-shadow: 0 0 11px rgba(13, 148, 136, .78);
+          box-shadow: 0 0 11px rgba(13,148,136,.78);
         }
 
         .schedule-title {
           margin: 0;
           color: var(--paper);
-          font-size: clamp(3.65rem, 8vw, 8.6rem);
+          font-size: clamp(3.65rem,8vw,8.6rem);
           font-weight: 900;
           letter-spacing: -.09em;
           line-height: .82;
@@ -638,14 +629,14 @@ export default function SpielplanPage() {
         .schedule-lead {
           max-width: 59ch;
           margin: 2.3rem 0 0;
-          color: rgba(247, 247, 244, .74);
-          font-size: clamp(1rem, 1.35vw, 1.16rem);
+          color: rgba(247,247,244,.74);
+          font-size: clamp(1rem,1.35vw,1.16rem);
           line-height: 1.78;
         }
 
         .next-section {
           border-bottom: 1px solid var(--line);
-          padding: 4.8rem 0;
+          padding: 4.35rem 0;
           background: #090a0a;
         }
 
@@ -661,7 +652,7 @@ export default function SpielplanPage() {
         .section-title {
           margin: 0;
           color: var(--paper);
-          font-size: clamp(1.9rem, 3.5vw, 3.65rem);
+          font-size: clamp(1.9rem,3.5vw,3.65rem);
           font-weight: 900;
           letter-spacing: -.07em;
           line-height: .88;
@@ -675,25 +666,17 @@ export default function SpielplanPage() {
         .next-fixture {
           position: relative;
           display: grid;
-          grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-          gap: clamp(1rem, 4vw, 4.6rem);
+          grid-template-columns: minmax(0,1fr) auto minmax(0,1fr);
+          gap: clamp(1rem,4vw,4.6rem);
           align-items: center;
           overflow: hidden;
-          margin-top: 2.1rem;
-          border: 1px solid rgba(13, 148, 136, .62);
+          margin-top: 2rem;
+          border: 1px solid rgba(13,148,136,.62);
           border-radius: 1.15rem;
-          padding: clamp(1.7rem, 4vw, 3.35rem);
+          padding: clamp(1.6rem,4vw,3rem);
           background:
-            radial-gradient(
-              circle at 90% 12%,
-              rgba(13, 148, 136, .20),
-              transparent 37%
-            ),
-            linear-gradient(
-              145deg,
-              rgba(13, 148, 136, .09),
-              rgba(8, 8, 8, .96) 72%
-            );
+            radial-gradient(circle at 90% 12%,rgba(13,148,136,.20),transparent 37%),
+            linear-gradient(145deg,rgba(13,148,136,.09),rgba(8,8,8,.96) 72%);
         }
 
         .next-fixture::before {
@@ -703,124 +686,110 @@ export default function SpielplanPage() {
           bottom: -8rem;
           width: 23rem;
           height: 23rem;
-          border: 1px solid rgba(13, 148, 136, .18);
+          border: 1px solid rgba(13,148,136,.18);
           border-radius: 50%;
           pointer-events: none;
         }
 
-        .fixture-team {
+        .next-team {
           position: relative;
           z-index: 1;
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: .95rem;
+          gap: .8rem;
           min-width: 0;
         }
 
-        .fixture-logo-wrap,
-        .fixture-logo-fallback {
-          display: flex;
+        .team-logo-wrap,
+        .team-logo-fallback {
+          display: inline-flex;
           align-items: center;
           justify-content: center;
-          width: clamp(5rem, 10vw, 7.4rem);
-          height: clamp(5rem, 10vw, 7.4rem);
+          width: clamp(4.7rem,9vw,6.9rem);
+          height: clamp(4.7rem,9vw,6.9rem);
+          flex: 0 0 auto;
         }
 
-        .fixture-logo-wrap.is-round-logo {
+        .team-logo-wrap {
           overflow: hidden;
-          border: 1px solid rgba(247, 247, 244, .16);
+        }
+
+        .team-logo-wrap.is-round-logo {
+          border: 1px solid rgba(247,247,244,.16);
           border-radius: 50%;
           background: var(--paper);
           box-shadow:
-            0 0 0 .18rem rgba(8, 8, 8, .96),
-            0 0 1rem rgba(13, 148, 136, .12);
+            0 0 0 .16rem rgba(8,8,8,.96),
+            0 0 1rem rgba(13,148,136,.12);
         }
 
-        .fixture-logo-wrap.is-diamond-logo {
-          overflow: hidden;
+        .team-logo-wrap.is-diamond-logo {
           background: var(--paper);
           clip-path: polygon(
-            50% 2.5%,
-            54% 3.5%,
-            96.5% 46%,
-            97.5% 50%,
-            96.5% 54%,
-            54% 96.5%,
-            50% 97.5%,
-            46% 96.5%,
-            3.5% 54%,
-            2.5% 50%,
-            3.5% 46%,
-            46% 3.5%
+            50% 2.5%,54% 3.5%,96.5% 46%,97.5% 50%,96.5% 54%,
+            54% 96.5%,50% 97.5%,46% 96.5%,3.5% 54%,2.5% 50%,
+            3.5% 46%,46% 3.5%
           );
-          filter: drop-shadow(0 0 .65rem rgba(13, 148, 136, .15));
+          filter: drop-shadow(0 0 .65rem rgba(13,148,136,.15));
         }
 
-        .fixture-logo-wrap.is-balloon-logo {
-          overflow: hidden;
-          border: 1px solid rgba(247, 247, 244, .16);
+        .team-logo-wrap.is-balloon-logo {
+          border: 1px solid rgba(247,247,244,.16);
           border-radius: 58% 58% 44% 44% / 31% 31% 74% 74%;
           background: var(--paper);
-          box-shadow:
-            0 0 0 .18rem rgba(8, 8, 8, .96),
-            0 0 1rem rgba(13, 148, 136, .12);
           transform: scaleX(.78) scaleY(1.06);
         }
 
-        .fixture-logo {
+        .team-logo {
           display: block;
-          max-width: 100%;
-          max-height: 100%;
-          object-fit: contain;
-          filter: drop-shadow(0 0 1rem rgba(13, 148, 136, .14));
-        }
-
-        .fixture-logo-wrap.is-round-logo .fixture-logo,
-        .fixture-logo-wrap.is-diamond-logo .fixture-logo,
-        .fixture-logo-wrap.is-balloon-logo .fixture-logo {
           width: 100%;
           height: 100%;
-          max-width: none;
-          max-height: none;
+          object-fit: contain;
+          filter: drop-shadow(0 0 .8rem rgba(13,148,136,.12));
+        }
+
+        .team-logo-wrap.is-round-logo .team-logo,
+        .team-logo-wrap.is-diamond-logo .team-logo,
+        .team-logo-wrap.is-balloon-logo .team-logo {
           object-fit: cover;
           filter: none;
           transform: scale(1.08);
         }
 
-        .fixture-logo-wrap.is-balloon-logo .fixture-logo {
+        .team-logo-wrap.is-balloon-logo .team-logo {
           transform: scale(1.29) translateY(2%);
           transform-origin: center 45%;
         }
 
-        .fixture-logo-fallback {
-          border: 1px solid rgba(247, 247, 244, .16);
+        .team-logo-fallback {
+          border: 1px solid rgba(247,247,244,.16);
           border-radius: 50%;
-          color: rgba(247, 247, 244, .28);
-          font-size: .55rem;
+          color: rgba(247,247,244,.28);
+          font-size: .5rem;
           font-weight: 900;
           letter-spacing: .1em;
           text-transform: uppercase;
         }
 
-        .fixture-team-name {
+        .next-team-name {
           margin: 0;
           color: var(--paper);
-          font-size: clamp(1rem, 1.9vw, 1.6rem);
+          font-size: clamp(.95rem,1.7vw,1.45rem);
           font-weight: 900;
           letter-spacing: -.045em;
-          line-height: .98;
+          line-height: 1;
           text-align: center;
           text-transform: uppercase;
         }
 
-        .fixture-center {
+        .next-center {
           position: relative;
           z-index: 1;
           text-align: center;
         }
 
-        .fixture-competition {
+        .next-competition {
           color: var(--teal);
           font-size: .64rem;
           font-weight: 900;
@@ -828,17 +797,17 @@ export default function SpielplanPage() {
           text-transform: uppercase;
         }
 
-        .fixture-vs {
-          margin: .85rem 0;
+        .next-vs {
+          margin: .75rem 0;
           color: var(--paper);
-          font-size: clamp(2.15rem, 4.2vw, 3.95rem);
+          font-size: clamp(2.15rem,4.2vw,3.95rem);
           font-weight: 900;
           letter-spacing: -.085em;
           line-height: .78;
         }
 
-        .fixture-date {
-          color: rgba(247, 247, 244, .72);
+        .next-date {
+          color: rgba(247,247,244,.72);
           font-size: .71rem;
           font-weight: 800;
           letter-spacing: .1em;
@@ -850,8 +819,8 @@ export default function SpielplanPage() {
         .next-venue {
           position: relative;
           z-index: 1;
-          margin: 1.8rem 0 0;
-          color: rgba(247, 247, 244, .52);
+          margin: 1.4rem 0 0;
+          color: rgba(247,247,244,.52);
           font-size: .74rem;
           font-weight: 700;
           letter-spacing: .05em;
@@ -860,7 +829,7 @@ export default function SpielplanPage() {
         }
 
         .schedule-list-section {
-          padding: 5.8rem 0 6.4rem;
+          padding: 5rem 0 6rem;
         }
 
         .schedule-list-head {
@@ -868,11 +837,11 @@ export default function SpielplanPage() {
           align-items: end;
           justify-content: space-between;
           gap: 2rem;
-          margin-bottom: 2.1rem;
+          margin-bottom: 2rem;
         }
 
         .schedule-description {
-          max-width: 45ch;
+          max-width: 46ch;
           margin: 0;
           color: var(--muted);
           font-size: .92rem;
@@ -880,20 +849,20 @@ export default function SpielplanPage() {
         }
 
         .phase-section + .phase-section {
-          margin-top: 5.4rem;
+          margin-top: 4.7rem;
         }
 
         .phase-heading {
           display: flex;
           align-items: center;
           gap: 1rem;
-          margin-bottom: 1.2rem;
+          margin-bottom: .9rem;
         }
 
         .phase-heading h3 {
           margin: 0;
           color: var(--paper);
-          font-size: clamp(1.35rem, 2.3vw, 2rem);
+          font-size: clamp(1.35rem,2.3vw,2rem);
           font-weight: 900;
           letter-spacing: -.055em;
           line-height: .95;
@@ -912,175 +881,118 @@ export default function SpielplanPage() {
 
         .fixture-row {
           display: grid;
-          grid-template-columns: 3.3rem minmax(0, 1.15fr) minmax(170px, .6fr) minmax(205px, .78fr) 8.9rem;
+          grid-template-columns: 2.7rem minmax(17rem,1.3fr) minmax(16rem,.95fr) 8.6rem;
           align-items: center;
-          gap: clamp(1rem, 2.4vw, 2.5rem);
+          gap: clamp(.9rem,2vw,2rem);
           border-bottom: 1px solid var(--line);
-          padding: 1.35rem 0;
-          transition: background .2s ease;
+          min-height: 5.35rem;
+          padding: .75rem 0;
+          transition: background .2s ease, border-color .2s ease;
         }
 
         .fixture-row:hover {
-          background: rgba(13, 148, 136, .035);
+          background: rgba(13,148,136,.035);
         }
 
         .fixture-row.is-finished {
-          background: rgba(247, 247, 244, .018);
+          background: rgba(247,247,244,.018);
+        }
+
+        .fixture-row.is-next {
+          background:
+            linear-gradient(90deg,rgba(13,148,136,.075),rgba(13,148,136,.018) 58%,transparent);
+          border-bottom-color: rgba(13,148,136,.3);
         }
 
         .fixture-round {
-          color: rgba(247, 247, 244, .33);
-          font-size: .72rem;
+          color: rgba(247,247,244,.33);
+          font-size: .68rem;
           font-weight: 900;
           letter-spacing: .08em;
         }
 
-        .fixture-opponents {
+        .fixture-clubs {
           display: flex;
           align-items: center;
-          gap: .85rem;
+          gap: .45rem;
           min-width: 0;
         }
 
-        .fixture-row-logos {
+        .fixture-club {
           display: flex;
           align-items: center;
-          gap: .3rem;
-          flex: 0 0 auto;
-        }
-
-        .fixture-row-logo-wrap,
-        .fixture-row-logo,
-        .fixture-row-logo-fallback {
-          width: 2rem;
-          height: 2rem;
-        }
-
-        .fixture-row-logo-wrap {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          flex: 0 0 auto;
-        }
-
-        .fixture-row-logo {
-          object-fit: contain;
-        }
-
-        .fixture-row-logo-wrap.is-round-logo {
-          overflow: hidden;
-          border: 1px solid rgba(247, 247, 244, .16);
-          border-radius: 50%;
-          background: var(--paper);
-        }
-
-        .fixture-row-logo-wrap.is-diamond-logo {
-          overflow: hidden;
-          background: var(--paper);
-          clip-path: polygon(
-            50% 3%,
-            54% 4%,
-            96% 46%,
-            97% 50%,
-            96% 54%,
-            54% 96%,
-            50% 97%,
-            46% 96%,
-            4% 54%,
-            3% 50%,
-            4% 46%,
-            46% 4%
-          );
-        }
-
-        .fixture-row-logo-wrap.is-balloon-logo {
-          overflow: hidden;
-          border: 1px solid rgba(247, 247, 244, .16);
-          border-radius: 58% 58% 44% 44% / 31% 31% 74% 74%;
-          background: var(--paper);
-          transform: scaleX(.78) scaleY(1.06);
-        }
-
-        .fixture-row-logo-wrap.is-round-logo .fixture-row-logo,
-        .fixture-row-logo-wrap.is-diamond-logo .fixture-row-logo,
-        .fixture-row-logo-wrap.is-balloon-logo .fixture-row-logo {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transform: scale(1.08);
-        }
-
-        .fixture-row-logo-wrap.is-balloon-logo .fixture-row-logo {
-          transform: scale(1.29) translateY(2%);
-          transform-origin: center 45%;
-        }
-
-        .fixture-row-logo-fallback {
-          display: block;
-          border: 1px solid rgba(247, 247, 244, .14);
-          border-radius: 50%;
-        }
-
-        .fixture-row-vs {
-          color: rgba(247, 247, 244, .35);
-          font-size: .6rem;
-          font-weight: 900;
-        }
-
-        .fixture-row-teams {
+          gap: .55rem;
           min-width: 0;
+          flex: 1 1 0;
         }
 
-        .fixture-row-teams p {
-          margin: 0;
+        .fixture-club:last-child {
+          flex-direction: row-reverse;
+          text-align: right;
+        }
+
+        .team-logo-wrap.is-compact,
+        .team-logo-fallback.is-compact {
+          width: 2.15rem;
+          height: 2.15rem;
+        }
+
+        .fixture-club span {
           color: var(--paper);
-          font-size: .88rem;
+          font-size: .76rem;
           font-weight: 800;
-          letter-spacing: -.015em;
-          line-height: 1.36;
+          letter-spacing: -.02em;
+          line-height: 1.18;
+          overflow-wrap: anywhere;
           text-transform: uppercase;
         }
 
-        .fixture-row-teams span {
+        .fixture-vs {
           color: var(--teal);
+          font-size: .52rem;
+          font-weight: 900;
+          flex: 0 0 auto;
+          letter-spacing: .08em;
         }
 
-        .fixture-row-date,
-        .fixture-row-venue {
-          color: rgba(247, 247, 244, .58);
-          font-size: .75rem;
+        .fixture-details {
+          display: grid;
+          grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+          gap: 1.1rem;
+          min-width: 0;
+        }
+
+        .fixture-date,
+        .fixture-venue {
+          display: flex;
+          flex-direction: column;
+          gap: .18rem;
+          min-width: 0;
+        }
+
+        .fixture-date strong,
+        .fixture-venue strong {
+          color: rgba(247,247,244,.84);
+          font-size: .68rem;
+          font-weight: 800;
+          line-height: 1.3;
+        }
+
+        .fixture-date span,
+        .fixture-venue span {
+          color: rgba(247,247,244,.49);
+          font-size: .62rem;
           font-weight: 700;
-          line-height: 1.58;
+          line-height: 1.35;
         }
 
-        .fixture-row-date strong,
-        .fixture-row-venue strong {
-          color: rgba(247, 247, 244, .83);
-          font-weight: 800;
-        }
-
-        .fixture-row-date.is-pending {
-          color: var(--teal);
-          font-size: .73rem;
-          font-weight: 900;
-          letter-spacing: .09em;
-          line-height: 1.7;
-          text-transform: uppercase;
-        }
-
-        .fixture-row-date.is-pending strong {
-          color: var(--teal);
-          font-weight: 900;
-        }
-
-        .fixture-type,
+        .fixture-status,
         .fixture-result {
-          display: inline-flex;
+          justify-self: end;
           align-items: center;
           justify-content: center;
-          justify-self: end;
-          width: 8.9rem;
-          min-height: 1.9rem;
+          width: 8.6rem;
+          min-height: 1.85rem;
           border-radius: 999px;
           padding: 0 .55rem;
           text-align: center;
@@ -1088,22 +1000,30 @@ export default function SpielplanPage() {
           white-space: nowrap;
         }
 
-        .fixture-type {
-          border: 1px solid rgba(13, 148, 136, .4);
+        .fixture-status {
+          display: inline-flex;
+          border: 1px solid rgba(13,148,136,.4);
+          background: rgba(13,148,136,.08);
           color: var(--teal);
-          background: rgba(13, 148, 136, .08);
-          font-size: .55rem;
+          font-size: .52rem;
           font-weight: 900;
           letter-spacing: .11em;
         }
 
+        .fixture-status.is-next {
+          border-color: var(--teal);
+          background: var(--teal);
+          color: var(--ink);
+        }
+
         .fixture-result {
+          display: flex;
           flex-direction: column;
-          gap: .07rem;
-          border: 1px solid rgba(247, 247, 244, .18);
-          color: rgba(247, 247, 244, .52);
-          background: rgba(247, 247, 244, .035);
-          font-size: .48rem;
+          gap: .06rem;
+          border: 1px solid rgba(247,247,244,.18);
+          background: rgba(247,247,244,.035);
+          color: rgba(247,247,244,.5);
+          font-size: .45rem;
           font-weight: 900;
           letter-spacing: .1em;
           line-height: 1;
@@ -1111,7 +1031,7 @@ export default function SpielplanPage() {
 
         .fixture-result strong {
           color: var(--paper);
-          font-size: .88rem;
+          font-size: .82rem;
           font-weight: 900;
           letter-spacing: -.03em;
         }
@@ -1120,24 +1040,34 @@ export default function SpielplanPage() {
           margin-top: 2.4rem;
           border-left: 2px solid var(--teal);
           padding: .25rem 0 .25rem 1.2rem;
-          color: rgba(247, 247, 244, .56);
+          color: rgba(247,247,244,.56);
           font-size: .84rem;
           line-height: 1.65;
         }
 
         @media (max-width: 1120px) {
           .fixture-row {
-            grid-template-columns: 3rem minmax(0, 1.2fr) minmax(165px, .65fr) 8.9rem;
+            grid-template-columns: 2.5rem minmax(15rem,1.2fr) minmax(10rem,.7fr) 7.7rem;
           }
 
-          .fixture-row-venue {
+          .fixture-details {
+            grid-template-columns: 1fr;
+            gap: .35rem;
+          }
+
+          .fixture-venue {
             display: none;
+          }
+
+          .fixture-status,
+          .fixture-result {
+            width: 7.7rem;
           }
         }
 
         @media (max-width: 900px) {
           .schedule-shell {
-            width: min(100% - 2.5rem, 1440px);
+            width: min(100% - 2.5rem,1440px);
           }
 
           .schedule-hero {
@@ -1146,18 +1076,18 @@ export default function SpielplanPage() {
 
           .next-fixture {
             grid-template-columns: 1fr;
-            gap: 1.35rem;
+            gap: 1.15rem;
           }
 
-          .fixture-center {
+          .next-center {
             order: 2;
           }
 
-          .fixture-team:first-child {
+          .next-team:first-child {
             order: 1;
           }
 
-          .fixture-team:last-child {
+          .next-team:last-child {
             order: 3;
           }
 
@@ -1168,60 +1098,220 @@ export default function SpielplanPage() {
         }
 
         @media (max-width: 680px) {
-          .fixture-row {
-            grid-template-columns: 2.3rem minmax(0, 1fr) 7.6rem;
-            gap: .8rem;
-            padding: 1.15rem 0;
-          }
-
-          .fixture-row-date {
-            display: none;
-          }
-
-          .fixture-row-logos {
-            display: none;
-          }
-
-          .fixture-type,
-          .fixture-result {
-            width: 7.6rem;
-            min-height: 1.7rem;
-            padding: 0 .4rem;
-          }
-
-          .fixture-type {
-            font-size: .47rem;
-          }
-        }
-
-        @media (max-width: 620px) {
           .schedule-page {
             padding-top: 72px;
           }
 
           .schedule-shell {
-            width: min(100% - 2rem, 1440px);
+            width: min(100% - 2rem,40rem);
           }
 
           .schedule-title {
-            font-size: clamp(3rem, 14vw, 4.65rem);
+            font-size: clamp(3rem,14vw,4.65rem);
             letter-spacing: -.08em;
           }
 
+          .schedule-hero {
+            padding: 2.9rem 0 3.2rem;
+          }
+
+          .schedule-lead {
+            font-size: .96rem;
+            line-height: 1.7;
+            margin-top: 1.65rem;
+          }
+
           .next-section {
-            padding: 4.1rem 0;
+            padding: 3.65rem 0;
+          }
+
+          .next-fixture {
+            margin-top: 1.65rem;
+            padding: 1.4rem 1rem;
+          }
+
+          .next-team {
+            gap: .6rem;
+          }
+
+          .next-team .team-logo-wrap,
+          .next-team .team-logo-fallback {
+            width: 4.3rem;
+            height: 4.3rem;
+          }
+
+          .next-team-name {
+            font-size: .9rem;
+          }
+
+          .next-competition {
+            font-size: .54rem;
+          }
+
+          .next-vs {
+            font-size: 2rem;
+            margin: .55rem 0;
+          }
+
+          .next-date {
+            font-size: .61rem;
+            line-height: 1.5;
+            white-space: normal;
+          }
+
+          .next-venue {
+            font-size: .68rem;
+            margin-top: 1rem;
           }
 
           .schedule-list-section {
-            padding: 4.5rem 0 5rem;
+            padding: 4rem 0 4.7rem;
           }
 
-          .fixture-row-teams p {
-            font-size: .78rem;
+          .schedule-list-head {
+            margin-bottom: 1.45rem;
+          }
+
+          .schedule-description {
+            font-size: .86rem;
+            line-height: 1.6;
           }
 
           .phase-section + .phase-section {
-            margin-top: 4rem;
+            margin-top: 3.7rem;
+          }
+
+          .phase-heading {
+            gap: .75rem;
+            margin-bottom: .75rem;
+          }
+
+          .phase-heading h3 {
+            font-size: 1.55rem;
+          }
+
+          .fixture-row {
+            display: grid;
+            grid-template-columns: 2.25rem minmax(0,1fr);
+            gap: .7rem .85rem;
+            min-height: 0;
+            padding: 1.05rem 0;
+          }
+
+          .fixture-row.is-next {
+            margin: 0 -.55rem;
+            padding: 1.05rem .55rem;
+          }
+
+          .fixture-round {
+            align-self: start;
+            padding-top: .4rem;
+          }
+
+          .fixture-clubs {
+            gap: .35rem;
+            width: 100%;
+          }
+
+          .fixture-club {
+            gap: .42rem;
+          }
+
+          .team-logo-wrap.is-compact,
+          .team-logo-fallback.is-compact {
+            width: 2rem;
+            height: 2rem;
+          }
+
+          .fixture-club span {
+            font-size: .71rem;
+            line-height: 1.16;
+          }
+
+          .fixture-vs {
+            font-size: .46rem;
+          }
+
+          .fixture-details {
+            grid-column: 2;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .6rem .85rem;
+            margin-top: .1rem;
+          }
+
+          .fixture-date,
+          .fixture-venue {
+            display: flex;
+            gap: .12rem;
+          }
+
+          .fixture-date strong,
+          .fixture-venue strong {
+            font-size: .61rem;
+          }
+
+          .fixture-date span,
+          .fixture-venue span {
+            font-size: .56rem;
+            line-height: 1.3;
+          }
+
+          .fixture-status,
+          .fixture-result {
+            grid-column: 2;
+            justify-self: start;
+            margin-top: .15rem;
+            width: 100%;
+            max-width: 12rem;
+            min-height: 1.8rem;
+          }
+
+          .fixture-status {
+            font-size: .49rem;
+          }
+
+          .fixture-result {
+            flex-direction: row;
+            gap: .45rem;
+            justify-content: flex-start;
+            padding-left: .8rem;
+          }
+
+          .fixture-result strong {
+            font-size: .78rem;
+          }
+
+          .schedule-note {
+            font-size: .79rem;
+            margin-top: 2rem;
+            padding-left: 1rem;
+          }
+        }
+
+        @media (max-width: 380px) {
+          .schedule-shell {
+            width: min(100% - 1.5rem,40rem);
+          }
+
+          .fixture-row {
+            grid-template-columns: 1.8rem minmax(0,1fr);
+            gap: .65rem;
+          }
+
+          .fixture-details {
+            grid-template-columns: 1fr;
+            gap: .35rem;
+          }
+
+          .fixture-club span {
+            font-size: .67rem;
+          }
+
+          .team-logo-wrap.is-compact,
+          .team-logo-fallback.is-compact {
+            width: 1.82rem;
+            height: 1.82rem;
           }
         }
       `}</style>
@@ -1253,32 +1343,32 @@ export default function SpielplanPage() {
           </h2>
 
           <article className="next-fixture">
-            <div className="fixture-team">
+            <div className="next-team">
               <TeamLogo
                 src={nextMatch.homeLogo}
                 alt={nextMatch.homeTeam}
                 shape={nextMatch.homeLogoShape}
               />
-              <p className="fixture-team-name">{nextMatch.homeTeam}</p>
+              <p className="next-team-name">{nextMatch.homeTeam}</p>
             </div>
 
-            <div className="fixture-center">
-              <div className="fixture-competition">{nextMatch.competition}</div>
-              <div className="fixture-vs">VS</div>
-              <div className="fixture-date">
+            <div className="next-center">
+              <div className="next-competition">{nextMatch.competition}</div>
+              <div className="next-vs">VS</div>
+              <div className="next-date">
                 {nextMatch.date}
                 <br />
                 {nextMatch.time}
               </div>
             </div>
 
-            <div className="fixture-team">
+            <div className="next-team">
               <TeamLogo
                 src={nextMatch.awayLogo}
                 alt={nextMatch.awayTeam}
                 shape={nextMatch.awayLogoShape}
               />
-              <p className="fixture-team-name">{nextMatch.awayTeam}</p>
+              <p className="next-team-name">{nextMatch.awayTeam}</p>
             </div>
           </article>
 
