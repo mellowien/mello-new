@@ -406,6 +406,11 @@ export default function AdminDashboardClient() {
       return;
     }
 
+    if (viewId === "responses") {
+      router.push("/admin/abwesenheiten");
+      return;
+    }
+
     setView(viewId);
   }
 
@@ -467,6 +472,7 @@ export default function AdminDashboardClient() {
           --red: #ef6b73;
           --green: #5bc58a;
           --radius: 16px;
+
           background:
             radial-gradient(circle at 88% 0%, rgba(23, 187, 179, .11), transparent 25%),
             var(--bg);
@@ -1275,7 +1281,7 @@ export default function AdminDashboardClient() {
 
                     <button
                       className="sport-link"
-                      onClick={() => setView("responses")}
+                      onClick={() => router.push("/admin/abwesenheiten")}
                       type="button"
                     >
                       Öffnen
