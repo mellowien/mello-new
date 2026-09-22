@@ -396,6 +396,11 @@ export default function AdminDashboardClient() {
   }
 
   function handleNavigation(viewId: View) {
+    if (viewId === "calendar") {
+      router.push("/admin/termine");
+      return;
+    }
+
     if (viewId === "runs") {
       router.push("/admin/laeufe");
       return;
@@ -462,7 +467,6 @@ export default function AdminDashboardClient() {
           --red: #ef6b73;
           --green: #5bc58a;
           --radius: 16px;
-
           background:
             radial-gradient(circle at 88% 0%, rgba(23, 187, 179, .11), transparent 25%),
             var(--bg);
@@ -1222,12 +1226,12 @@ export default function AdminDashboardClient() {
                     <div className="sport-card-title">Termine</div>
 
                     <button
-  className="sport-link"
-  onClick={() => router.push("/admin/termine")}
-  type="button"
->
-  Kalender →
-</button>
+                      className="sport-link"
+                      onClick={() => router.push("/admin/termine")}
+                      type="button"
+                    >
+                      Kalender →
+                    </button>
                   </div>
 
                   {renderEventRows(sortedEvents.slice(0, 6))}
