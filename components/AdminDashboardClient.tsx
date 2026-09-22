@@ -1222,12 +1222,12 @@ export default function AdminDashboardClient() {
                     <div className="sport-card-title">Termine</div>
 
                     <button
-                      className="sport-link"
-                      onClick={() => setView("calendar")}
-                      type="button"
-                    >
-                      Kalender →
-                    </button>
+  className="sport-link"
+  onClick={() => router.push("/admin/termine")}
+  type="button"
+>
+  Kalender →
+</button>
                   </div>
 
                   {renderEventRows(sortedEvents.slice(0, 6))}
