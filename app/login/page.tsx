@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
@@ -15,7 +15,7 @@ function normalizeLastName(value: string) {
     .replace(/\s+/g, "-");
 }
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -50,14 +50,11 @@ export default function LoginPage() {
     const timeout = new Promise<never>((_, reject) => {
       window.setTimeout(() => {
         reject(new Error("Die Anmeldung hat zu lange gedauert."));
-      }, 10000);
+      }, 10_000);
     });
 
     try {
-      const { data, error } = await Promise.race([
-        loginRequest,
-        timeout,
-      ]);
+      const { data, error } = await Promise.race([loginRequest, timeout]);
 
       if (error || !data.user) {
         setMessage(
@@ -130,6 +127,12 @@ export default function LoginPage() {
           justify-content: center;
           min-height: 100vh;
           padding: 7.5rem 1.25rem 3rem;
+        }
+
+        .login-page *,
+        .login-page *::before,
+        .login-page *::after {
+          box-sizing: border-box;
         }
 
         .login-box {
@@ -275,14 +278,14 @@ export default function LoginPage() {
             </label>
 
             <input
+              autoCapitalize="none"
+              autoComplete="username"
               className="login-input"
               id="login-identifier"
-              type="text"
-              autoComplete="username"
-              autoCapitalize="none"
-              value={loginIdentifier}
               onChange={(event) => setLoginIdentifier(event.target.value)}
               required
+              type="text"
+              value={loginIdentifier}
             />
           </div>
 
@@ -292,17 +295,17 @@ export default function LoginPage() {
             </label>
 
             <input
+              autoComplete="current-password"
               className="login-input"
               id="password"
-              type="password"
-              autoComplete="current-password"
-              value={password}
               onChange={(event) => setPassword(event.target.value)}
               required
+              type="password"
+              value={password}
             />
           </div>
 
-          <button className="login-button" type="submit" disabled={loading}>
+          <button className="login-button" disabled={loading} type="submit">
             {loading ? "Anmeldung läuft ..." : "Einloggen"}
           </button>
 
@@ -315,5 +318,21 @@ export default function LoginPage() {
         </form>
       </section>
     </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen flex items-center justify-center bg-[#080808]">
+          <p className="text-sm font-bold uppercase tracking-[0.18em] text-teal-500">
+            Login wird geladen …
+          </p>
+        </main>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }
