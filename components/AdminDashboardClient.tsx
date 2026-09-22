@@ -53,7 +53,8 @@ type View =
   | "matches"
   | "runs"
   | "responses"
-  | "replacement";
+  | "replacement"
+  | "fines";
 
 const weekdayShort = new Intl.DateTimeFormat("de-AT", {
   weekday: "short",
@@ -387,6 +388,7 @@ export default function AdminDashboardClient() {
     { id: "runs", icon: "⌁", label: "Läufe" },
     { id: "responses", icon: "✓", label: "Rückmeldungen" },
     { id: "replacement", icon: "↻", label: "Ersatzläufe" },
+    { id: "fines", icon: "€", label: "Strafen" },
   ];
 
   async function handleLogout() {
@@ -408,6 +410,11 @@ export default function AdminDashboardClient() {
 
     if (viewId === "responses") {
       router.push("/admin/abwesenheiten");
+      return;
+    }
+
+    if (viewId === "fines") {
+      router.push("/admin/strafen");
       return;
     }
 
