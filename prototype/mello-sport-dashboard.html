@@ -1,0 +1,1108 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MELLO · Sportbetrieb</title>
+
+  <style>
+    :root {
+      --bg: #07090a;
+      --panel: #0d1112;
+      --panel-2: #111718;
+      --line: #263033;
+      --text: #f4f7f6;
+      --muted: #93a09f;
+      --teal: #17bbb3;
+      --yellow: #f2b51d;
+      --purple: #a77ad5;
+      --red: #ef6b73;
+      --green: #5bc58a;
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 88% 0%, rgba(23, 187, 179, 0.11), transparent 25%),
+        var(--bg);
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .shell {
+      min-height: 100vh;
+      display: flex;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      width: 260px;
+      padding: 28px 18px;
+      border-right: 1px solid var(--line);
+      background: rgba(7, 9, 10, 0.94);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 10px 30px;
+    }
+
+    .crest {
+      width: 38px;
+      height: 38px;
+      border: 2px solid #e9f0ef;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+
+    .brand strong {
+      font-size: 26px;
+      letter-spacing: 0.08em;
+    }
+
+    .brand small {
+      display: block;
+      color: var(--teal);
+      font-size: 10px;
+      letter-spacing: 0.17em;
+      margin-top: 2px;
+    }
+
+    .nav-label {
+      color: #687575;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      padding: 0 10px 10px;
+    }
+
+    .nav {
+      display: grid;
+      gap: 5px;
+    }
+
+    .nav button {
+      width: 100%;
+      border: 0;
+      color: #a9b3b2;
+      background: transparent;
+      padding: 12px;
+      border-radius: 10px;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-weight: 700;
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      color: #fff;
+      background: #172021;
+    }
+
+    .nav .icon {
+      width: 18px;
+      text-align: center;
+      color: var(--teal);
+    }
+
+    .profile {
+      margin-top: auto;
+      padding: 15px 10px 0;
+      border-top: 1px solid var(--line);
+      color: #c8d0cf;
+      font-size: 13px;
+    }
+
+    .role {
+      color: var(--teal);
+      font-size: 11px;
+      margin-top: 3px;
+    }
+
+    main {
+      flex: 1;
+      padding: 38px clamp(22px, 4vw, 64px) 70px;
+      max-width: 1500px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 22px;
+      margin-bottom: 32px;
+    }
+
+    .eyebrow {
+      color: var(--teal);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+    }
+
+    h1 {
+      font-size: clamp(30px, 4vw, 48px);
+      margin: 5px 0 7px;
+      letter-spacing: -0.055em;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .date {
+      color: #bfcbca;
+      font-weight: 700;
+      font-size: 14px;
+      padding-top: 10px;
+      text-align: right;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+
+    .button {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: #dce4e3;
+      background: #111718;
+      font-weight: 800;
+    }
+
+    .button:hover {
+      border-color: var(--teal);
+      color: #fff;
+    }
+
+    .button.primary {
+      color: #03100f;
+      background: var(--teal);
+      border-color: var(--teal);
+    }
+
+    .grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .stats {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-bottom: 18px;
+    }
+
+    .dashboard {
+      grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.85fr);
+      align-items: start;
+    }
+
+    .card {
+      background: linear-gradient(
+        145deg,
+        rgba(17, 23, 24, 0.95),
+        rgba(10, 14, 15, 0.95)
+      );
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px;
+    }
+
+    .metric {
+      min-height: 128px;
+    }
+
+    .metric .label,
+    .card-title {
+      color: #aeb9b8;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 15px;
+      font-size: 36px;
+      letter-spacing: -0.06em;
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 5px;
+    }
+
+    .accent-teal strong {
+      color: var(--teal);
+    }
+
+    .accent-yellow strong {
+      color: var(--yellow);
+    }
+
+    .accent-purple strong {
+      color: var(--purple);
+    }
+
+    .next {
+      border-left: 4px solid var(--teal);
+    }
+
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .link {
+      background: none;
+      border: 0;
+      color: var(--teal);
+      font-weight: 800;
+      padding: 0;
+    }
+
+    .event-name {
+      font-size: 27px;
+      letter-spacing: -0.04em;
+      margin: 0 0 8px;
+    }
+
+    .event-meta {
+      color: #9facab;
+      font-size: 14px;
+    }
+
+    .progress {
+      margin: 22px 0 9px;
+      height: 9px;
+      overflow: hidden;
+      border-radius: 100px;
+      background: #243032;
+    }
+
+    .progress > i {
+      display: block;
+      height: 100%;
+      width: 75%;
+      background: linear-gradient(90deg, var(--teal), #53d1c9);
+      border-radius: inherit;
+    }
+
+    .attendance {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      color: #aab5b4;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+
+    .week-list,
+    .task-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .week-item {
+      display: grid;
+      grid-template-columns: 88px 1fr auto;
+      gap: 14px;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid #20292a;
+    }
+
+    .week-item:last-child {
+      border-bottom: 0;
+    }
+
+    .when {
+      color: #bdc7c6;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .type {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .week-item strong {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 3px;
+    }
+
+    .tag {
+      border: 1px solid #314143;
+      color: #c0cdcc;
+      padding: 5px 8px;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .tag.match {
+      color: #f2c95b;
+      border-color: #634f1e;
+    }
+
+    .tag.run {
+      color: #bf9ae4;
+      border-color: #513d68;
+    }
+
+    .task {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid #20292a;
+    }
+
+    .task:last-child {
+      border-bottom: 0;
+    }
+
+    .task-left {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      color: #dbe3e2;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .badge {
+      min-width: 25px;
+      height: 25px;
+      display: grid;
+      place-items: center;
+      padding: 0 7px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 900;
+      color: #07100f;
+      background: var(--yellow);
+    }
+
+    .badge.red {
+      background: var(--red);
+    }
+
+    .badge.purple {
+      background: var(--purple);
+    }
+
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    .empty {
+      color: var(--muted);
+      padding: 32px 0;
+      text-align: center;
+    }
+
+    @media (max-width: 980px) {
+      .sidebar {
+        width: 76px;
+        padding: 20px 10px;
+      }
+
+      .brand {
+        justify-content: center;
+        padding: 0 0 28px;
+      }
+
+      .brand strong,
+      .brand small,
+      .nav-label,
+      .nav button span,
+      .profile {
+        display: none;
+      }
+
+      .nav button {
+        justify-content: center;
+        padding: 13px;
+      }
+
+      main {
+        padding: 28px 20px 50px;
+      }
+
+      .stats,
+      .dashboard {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .dashboard .card:first-child {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .shell {
+        display: block;
+      }
+
+      .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+        padding: 12px;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        flex-direction: row;
+        align-items: center;
+      }
+
+      .brand {
+        padding: 0;
+        margin-right: auto;
+      }
+
+      .nav {
+        display: flex;
+        overflow: auto;
+      }
+
+      .nav button {
+        width: auto;
+        flex: none;
+      }
+
+      .profile {
+        display: none;
+      }
+
+      .stats,
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard .card:first-child {
+        grid-column: auto;
+      }
+
+      .topbar {
+        display: block;
+      }
+
+      .date {
+        text-align: left;
+        padding-top: 12px;
+      }
+
+      .week-item {
+        grid-template-columns: 72px 1fr;
+      }
+
+      .week-item .tag {
+        grid-column: 2;
+        width: max-content;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="crest">M</div>
+        <div>
+          <strong>MELLO</strong>
+          <small>SPORTBETRIEB</small>
+        </div>
+      </div>
+
+      <div class="nav-label">BEREICH</div>
+
+      <nav class="nav" id="nav">
+        <button class="active" data-view="overview">
+          <b class="icon">◈</b>
+          <span>Übersicht</span>
+        </button>
+
+        <button data-view="calendar">
+          <b class="icon">□</b>
+          <span>Kalender</span>
+        </button>
+
+        <button data-view="training">
+          <b class="icon">↗</b>
+          <span>Trainings</span>
+        </button>
+
+        <button data-view="matches">
+          <b class="icon">★</b>
+          <span>Matches</span>
+        </button>
+
+        <button data-view="runs">
+          <b class="icon">⌁</b>
+          <span>Läufe</span>
+        </button>
+
+        <button data-view="responses">
+          <b class="icon">✓</b>
+          <span>Rückmeldungen</span>
+        </button>
+
+        <button data-view="replacement">
+          <b class="icon">↻</b>
+          <span>Ersatzläufe</span>
+        </button>
+      </nav>
+
+      <div class="profile">
+        <strong>Daniel</strong>
+        <div class="role">ADMIN · TRAINER</div>
+      </div>
+    </aside>
+
+    <main>
+      <section id="overview" class="view active">
+        <div class="topbar">
+          <div>
+            <div class="eyebrow">FC MELLO WIEN</div>
+            <h1>Sportbetrieb</h1>
+            <p class="subtitle">
+              Trainings, Matches und Läufe im Blick.
+            </p>
+          </div>
+
+          <div class="date">Dienstag, 22. September 2026</div>
+        </div>
+
+        <div class="actions">
+          <button
+            class="button primary"
+            onclick="alert('Formular für ein neues Training folgt als nächster Schritt.')"
+          >
+            + Training
+          </button>
+
+          <button
+            class="button"
+            onclick="alert('Formular für ein neues Match folgt als nächster Schritt.')"
+          >
+            + Match
+          </button>
+
+          <button
+            class="button"
+            onclick="alert('Formular für einen neuen Lauf folgt als nächster Schritt.')"
+          >
+            + Lauf
+          </button>
+        </div>
+
+        <div class="grid stats">
+          <article class="card metric accent-teal">
+            <div class="label">Nächstes Training</div>
+            <strong>Do. 24.</strong>
+            <span>18:00–19:30 Uhr</span>
+          </article>
+
+          <article class="card metric">
+            <div class="label">Zugesagt</div>
+            <strong>18</strong>
+            <span>von 24 Spielern</span>
+          </article>
+
+          <article class="card metric accent-yellow">
+            <div class="label">Offene Antworten</div>
+            <strong>4</strong>
+            <span>vor dem nächsten Termin</span>
+          </article>
+
+          <article class="card metric accent-purple">
+            <div class="label">Diese Woche</div>
+            <strong>3</strong>
+            <span>sportliche Termine</span>
+          </article>
+        </div>
+
+        <div class="grid dashboard">
+          <div class="grid" style="gap: 18px">
+            <article class="card next">
+              <div class="card-head">
+                <div class="card-title">Nächster Termin</div>
+                <button class="link">Termin verwalten →</button>
+              </div>
+
+              <h2 class="event-name">Donnerstagtraining</h2>
+
+              <div class="event-meta">
+                Donnerstag, 24. September · 18:00–19:30 Uhr · WAF Gruam
+              </div>
+
+              <div class="progress">
+                <i></i>
+              </div>
+
+              <div class="attendance">
+                <span>
+                  <i class="dot" style="background: var(--green)"></i>
+                  18 zugesagt
+                </span>
+
+                <span>
+                  <i class="dot" style="background: var(--yellow)"></i>
+                  4 offen
+                </span>
+
+                <span>
+                  <i class="dot" style="background: var(--red)"></i>
+                  2 abgesagt
+                </span>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="card-head">
+                <div class="card-title">Diese Woche</div>
+                <button class="link" data-target="calendar">
+                  Kalender →
+                </button>
+              </div>
+
+              <div class="week-list">
+                <div class="week-item">
+                  <div class="when">DO · 24. SEP</div>
+
+                  <div>
+                    <strong>Donnerstagtraining</strong>
+                    <div class="type">
+                      18:00–19:30 · WAF Gruam
+                    </div>
+                  </div>
+
+                  <span class="tag">18 / 24</span>
+                </div>
+
+                <div class="week-item">
+                  <div class="when">SA · 26. SEP</div>
+
+                  <div>
+                    <strong>FC Mello Wien vs. Vienna</strong>
+                    <div class="type">
+                      11:30 · Heimspiel
+                    </div>
+                  </div>
+
+                  <span class="tag match">MATCH</span>
+                </div>
+
+                <div class="week-item">
+                  <div class="when">SO · 27. SEP</div>
+
+                  <div>
+                    <strong>Gemeinsamer Lauf</strong>
+                    <div class="type">
+                      10:00 · Prater Hauptallee
+                    </div>
+                  </div>
+
+                  <span class="tag run">9 / 16</span>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <article class="card">
+            <div class="card-head">
+              <div class="card-title">Offene Aufgaben</div>
+              <button class="link" data-target="responses">
+                Alle →
+              </button>
+            </div>
+
+            <div class="task-list">
+              <div class="task">
+                <div class="task-left">
+                  <span class="badge">4</span>
+                  Rückmeldungen fehlen
+                </div>
+
+                <button class="link">Prüfen</button>
+              </div>
+
+              <div class="task">
+                <div class="task-left">
+                  <span class="badge red">2</span>
+                  Abwesenheiten prüfen
+                </div>
+
+                <button class="link">Öffnen</button>
+              </div>
+
+              <div class="task">
+                <div class="task-left">
+                  <span class="badge purple">1</span>
+                  Ersatzlauf freigeben
+                </div>
+
+                <button class="link">Prüfen</button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="calendar" class="view">
+        <div class="topbar">
+          <div>
+            <div class="eyebrow">KALENDER</div>
+            <h1>Termine</h1>
+            <p class="subtitle">
+              Alle Trainings, Matches und Läufe.
+            </p>
+          </div>
+        </div>
+
+        <article class="card">
+          <div class="week-list">
+            <div class="week-item">
+              <div class="when">DO · 24. SEP</div>
+
+              <div>
+                <strong>Donnerstagtraining</strong>
+                <div class="type">
+                  18:00–19:30 · WAF Gruam
+                </div>
+              </div>
+
+              <span class="tag">Training</span>
+            </div>
+
+            <div class="week-item">
+              <div class="when">SA · 26. SEP</div>
+
+              <div>
+                <strong>FC Mello Wien vs. Vienna</strong>
+                <div class="type">
+                  11:30 · Heimspiel
+                </div>
+              </div>
+
+              <span class="tag match">Match</span>
+            </div>
+
+            <div class="week-item">
+              <div class="when">SO · 27. SEP</div>
+
+              <div>
+                <strong>Gemeinsamer Lauf</strong>
+                <div class="type">
+                  10:00 · Prater Hauptallee
+                </div>
+              </div>
+
+              <span class="tag run">Lauf</span>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section id="training" class="view">
+        <div class="topbar">
+          <div>
+            <div class="eyebrow">TRAININGS</div>
+            <h1>Trainings verwalten</h1>
+            <p class="subtitle">
+              Regelmäßige Einheiten planen und Rückmeldungen kontrollieren.
+            </p>
+          </div>
+        </div>
+
+        <article class="card">
+          <div class="card-head">
+            <div class="card-title">Kommende Trainings</div>
+            <button class="button primary">+ Training</button>
+          </div>
+
+          <div class="week-list">
+            <div class="week-item">
+              <div class="when">DO · 24. SEP</div>
+
+              <div>
+                <strong>Donnerstagtraining</strong>
+                <div class="type">
+                  18:00–19:30 · WAF Gruam · 18 zugesagt
+                </div>
+              </div>
+
+              <button class="link">Bearbeiten</button>
+            </div>
+
+            <div class="week-item">
+              <div class="when">DO · 01. OKT</div>
+
+              <div>
+                <strong>Donnerstagtraining</strong>
+                <div class="type">
+                  18:00–19:30 · WAF Gruam
+                </div>
+              </div>
+
+              <button class="link">Bearbeiten</button>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section id="matches" class="view">
+        <div class="topbar">
+          <div>
+            <div class="eyebrow">MATCHES</div>
+            <h1>Matches verwalten</h1>
+            <p class="subtitle">
+              Spiele, Kaderstatus und Aufstellung vorbereiten.
+            </p>
+          </div>
+        </div>
+
+        <article class="card">
+          <div class="card-head">
+            <div class="card-title">Nächstes Match</div>
+            <button class="button primary">+ Match</button>
+          </div>
+
+          <h2 class="event-name">FC Mello Wien vs. Vienna</h2>
+
+          <p class="event-meta">
+            Samstag, 26. September · 11:30 Uhr · Heimspiel
+          </p>
+
+          <div class="progress">
+            <i
+              style="
+                width: 63%;
+                background: linear-gradient(
+                  90deg,
+                  var(--yellow),
+                  #f6d76f
+                );
+              "
+            ></i>
+          </div>
+
+          <div class="attendance">
+            <span>
+              <i class="dot" style="background: var(--green)"></i>
+              15 verfügbar
+            </span>
+
+            <span>
+              <i class="dot" style="background: var(--yellow)"></i>
+              5 offen
+            </span>
+
+            <span>
+              <i class="dot" style="background: var(--red)"></i>
+              4 nicht verfügbar
+            </span>
+          </div>
+        </article>
+      </section>
+
+      <section id="runs" class="view">
+        <div class="topbar">
+          <div>
+            <div class="eyebrow">LÄUFE</div>
+            <h1>Läufe</h1>
+            <p class="subtitle">
+              Gemeinsame Läufe und Laufplan-Vorlagen.
+            </p>
+          </div>
+        </div>
+
+        <article class="card">
+          <div class="card-head">
+            <div class="card-title">Gemeinsame Läufe</div>
+            <button class="button primary">+ Lauf</button>
+          </div>
+
+          <div class="week-item">
+            <div class="when">SO · 27. SEP</div>
+
+            <div>
+              <strong>Gemeinsamer Lauf</strong>
+              <div class="type">
+                10:00 · Prater Hauptallee · 9 zugesagt
+              </div>
+            </div>
+
+            <button class="link">Bearbeiten</button>
+          </div>
+        </article>
+
+        <div style="height: 18px"></div>
+
+        <article class="card">
+          <div class="card-title">Aktiver Laufplan</div>
+
+          <h2
+            class="event-name"
+            style="font-size: 22px; margin-top: 14px"
+          >
+            Grundlagenausdauer · Woche 3
+          </h2>
+
+          <p class="event-meta">
+            3 Einheiten · ca. 18 km · bis Sonntag abschließen
+          </p>
+        </article>
+      </section>
+
+      <section id="responses" class="view">
+        <div class="topbar">
+          <div>
+            <div class="eyebrow">RÜCKMELDUNGEN</div>
+            <h1>Offene Rückmeldungen</h1>
+            <p class="subtitle">
+              Erinnern, prüfen und Status nachverfolgen.
+            </p>
+          </div>
+        </div>
+
+        <article class="card">
+          <div class="task">
+            <div class="task-left">
+              <span class="badge">4</span>
+              Spieler haben auf Donnerstagtraining noch nicht reagiert.
+            </div>
+
+            <button class="link">Liste öffnen</button>
+          </div>
+
+          <div class="task">
+            <div class="task-left">
+              <span class="badge red">2</span>
+              Abwesenheiten warten auf eine Entscheidung.
+            </div>
+
+            <button class="link">Prüfen</button>
+          </div>
+        </article>
+      </section>
+
+      <section id="replacement" class="view">
+        <div class="topbar">
+          <div>
+            <div class="eyebrow">ERSATZLÄUFE</div>
+            <h1>Ersatzläufe</h1>
+            <p class="subtitle">
+              Eingereichte Laufleistungen kontrollieren und freigeben.
+            </p>
+          </div>
+        </div>
+
+        <article class="card">
+          <div class="task">
+            <div class="task-left">
+              <span class="badge purple">1</span>
+              Max Mustermann · 7,2 km · 42 Minuten
+            </div>
+
+            <button class="link">Prüfen</button>
+          </div>
+
+          <p class="empty">
+            Weitere eingereichte Ersatzläufe erscheinen hier.
+          </p>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const buttons = document.querySelectorAll("#nav button");
+    const views = document.querySelectorAll(".view");
+
+    function showView(id) {
+      buttons.forEach((button) => {
+        button.classList.toggle("active", button.dataset.view === id);
+      });
+
+      views.forEach((view) => {
+        view.classList.toggle("active", view.id === id);
+      });
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        showView(button.dataset.view);
+      });
+    });
+
+    document.querySelectorAll("[data-target]").forEach((button) => {
+      button.addEventListener("click", () => {
+        showView(button.dataset.target);
+      });
+    });
+  </script>
+</body>
+</html>
