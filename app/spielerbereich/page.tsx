@@ -221,6 +221,7 @@ function formatTime(dateValue: string) {
   return new Intl.DateTimeFormat("de-AT", {
     hour: "2-digit",
     minute: "2-digit",
+    timeZone: "Europe/Vienna",
   }).format(new Date(dateValue));
 }
 
@@ -229,6 +230,7 @@ function formatDate(dateValue: string) {
     weekday: "long",
     day: "2-digit",
     month: "long",
+    timeZone: "Europe/Vienna",
   }).format(new Date(dateValue));
 }
 
@@ -239,6 +241,7 @@ function formatDeadline(dateValue: string) {
     month: "long",
     hour: "2-digit",
     minute: "2-digit",
+    timeZone: "Europe/Vienna",
   }).format(new Date(dateValue));
 }
 
@@ -246,6 +249,7 @@ function formatMonth(date: Date) {
   return new Intl.DateTimeFormat("de-AT", {
     month: "long",
     year: "numeric",
+    timeZone: "Europe/Vienna",
   }).format(date);
 }
 
@@ -316,7 +320,6 @@ function getCurrentOrNextEvent(events: TeamEvent[], now: Date) {
   return (
     events.find((event) => {
       const eventEnd = getEventEndDate(event);
-
       return eventEnd >= now;
     }) ?? null
   );
@@ -400,7 +403,6 @@ export default function SpielerbereichPage() {
   const weekEvents = useMemo(() => {
     return events.filter((event) => {
       const eventDate = new Date(event.starts_at);
-
       return eventDate >= weekStart && eventDate < weekEnd;
     });
   }, [events, weekEnd, weekStart]);
@@ -435,6 +437,12 @@ export default function SpielerbereichPage() {
 
   const highlightedEventType = selectedEvent?.event_type ?? null;
 
+  const mobileEvents = useMemo(() => {
+    return [...events]
+      .filter((event) => getEventEndDate(event) >= getStartOfDay(currentTime))
+      .slice(0, 14);
+  }, [currentTime, events]);
+
   useEffect(() => {
     const intervalId = window.setInterval(() => {
       setCurrentTime(new Date());
@@ -453,7 +461,9 @@ export default function SpielerbereichPage() {
         data: { session },
       } = await supabase.auth.getSession();
 
-      if (!isMounted) return;
+      if (!isMounted) {
+        return;
+      }
 
       if (!session) {
         router.replace("/login?next=/spielerbereich");
@@ -491,7 +501,9 @@ export default function SpielerbereichPage() {
         .lt("starts_at", calendarEnd.toISOString())
         .order("starts_at", { ascending: true });
 
-      if (!isMounted) return;
+      if (!isMounted) {
+        return;
+      }
 
       if (error) {
         setEventsError(
@@ -541,7 +553,9 @@ export default function SpielerbereichPage() {
         .eq("player_id", playerId)
         .in("event_id", attendanceEventIds);
 
-      if (!isMounted) return;
+      if (!isMounted) {
+        return;
+      }
 
       if (error) {
         setAttendanceError(
@@ -614,6 +628,12 @@ export default function SpielerbereichPage() {
     setSelectedEvent(event);
     setAttendanceError("");
     setAttendanceSuccess("");
+
+    window.setTimeout(() => {
+      document
+        .getElementById("event-detail")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 0);
   }
 
   function isDeadlinePassed(event: TeamEvent) {
@@ -794,7 +814,6 @@ export default function SpielerbereichPage() {
           <div className="attendance-card-heading">
             <div>
               <p className="attendance-kicker">Dein Laufnachweis</p>
-
               <p
                 className={`attendance-status ${
                   isApproved
@@ -838,9 +857,9 @@ export default function SpielerbereichPage() {
                   ? ` Hinweis vom Trainer: ${attendance.admin_note}`
                   : ""}
               </p>
-
               <p className="attendance-hint">
-                Prüfe deinen Strava-Post und melde dich bei Bedarf beim Trainer.
+                Prüfe deinen Strava-Post und melde dich bei Bedarf beim
+                Trainer.
               </p>
             </>
           ) : isSubmitted ? (
@@ -849,7 +868,6 @@ export default function SpielerbereichPage() {
                 ✓ Als erledigt gemeldet. Poste deinen Lauf jetzt in der
                 FC-Mello-Strava-Gruppe. Anschließend prüft ihn der Trainer.
               </p>
-
               {attendance.responded_at ? (
                 <p className="attendance-hint">
                   Gemeldet am {formatDeadline(attendance.responded_at)} Uhr.
@@ -873,7 +891,6 @@ export default function SpielerbereichPage() {
                 maxLength={300}
                 onChange={(changeEvent) => {
                   const value = changeEvent.target.value;
-
                   setAttendanceNotes((currentNotes) => ({
                     ...currentNotes,
                     [event.id]: value,
@@ -886,8 +903,8 @@ export default function SpielerbereichPage() {
               <button
                 className="attendance-action attendance-action-run-submit"
                 disabled={!canSubmit}
-                type="button"
                 onClick={() => submitRun(event)}
+                type="button"
               >
                 {isSaving ? "Wird gemeldet …" : "✓ Lauf erledigt melden"}
               </button>
@@ -921,7 +938,6 @@ export default function SpielerbereichPage() {
         <div className="attendance-card-heading">
           <div>
             <p className="attendance-kicker">Deine Teilnahme</p>
-
             <p className={`attendance-status ${statusDetails.className}`}>
               {statusDetails.label}
               {attendance?.response_is_late ? " · verspätet" : ""}
@@ -959,8 +975,8 @@ export default function SpielerbereichPage() {
                   status === "attending" ? "attendance-action-active" : ""
                 }`}
                 disabled={!canRespond}
-                type="button"
                 onClick={() => saveAttendance(event, "attending")}
+                type="button"
               >
                 {isSaving ? "Wird gespeichert …" : "✓ Ich komme"}
               </button>
@@ -970,8 +986,8 @@ export default function SpielerbereichPage() {
                   status === "absent" ? "attendance-action-active" : ""
                 }`}
                 disabled={!canRespond}
-                type="button"
                 onClick={() => saveAttendance(event, "absent")}
+                type="button"
               >
                 Ich komme nicht
               </button>
@@ -981,14 +997,17 @@ export default function SpielerbereichPage() {
                   status === "injured" ? "attendance-action-active" : ""
                 }`}
                 disabled={!canRespond}
-                type="button"
                 onClick={() => saveAttendance(event, "injured")}
+                type="button"
               >
                 Verletzt
               </button>
             </div>
 
-            <label className="attendance-note-label" htmlFor={`note-${event.id}`}>
+            <label
+              className="attendance-note-label"
+              htmlFor={`note-${event.id}`}
+            >
               Kurze Nachricht oder Absagegrund
               <span> optional</span>
             </label>
@@ -1000,7 +1019,6 @@ export default function SpielerbereichPage() {
               maxLength={300}
               onChange={(changeEvent) => {
                 const value = changeEvent.target.value;
-
                 setAttendanceNotes((currentNotes) => ({
                   ...currentNotes,
                   [event.id]: value,
@@ -1090,11 +1108,11 @@ export default function SpielerbereichPage() {
                           isSelectedEvent ? "calendar-event-selected" : ""
                         }`}
                         key={event.id}
-                        type="button"
                         onClick={(clickEvent) => {
                           clickEvent.stopPropagation();
                           handleEventClick(event);
                         }}
+                        type="button"
                       >
                         {!event.all_day ? (
                           <span className="calendar-event-time">
@@ -1125,7 +1143,7 @@ export default function SpielerbereichPage() {
 
   if (isCheckingSession) {
     return (
-      <main className="min-h-screen bg-[#080808] flex items-center justify-center">
+      <main className="min-h-screen flex items-center justify-center bg-[#080808]">
         <p className="text-sm font-bold uppercase tracking-[0.18em] text-teal-500">
           Spielerbereich wird geladen …
         </p>
@@ -1138,16 +1156,21 @@ export default function SpielerbereichPage() {
       <style>{`
         .player-page {
           --mello-black: #080808;
+          --mello-surface: #0d1111;
           --mello-white: #f7f7f4;
           --mello-teal: #0d9488;
-          --mello-line: #222222;
+          --mello-teal-light: #2dd4bf;
+          --mello-line: rgba(247, 247, 244, .14);
           --mello-muted: rgba(247, 247, 244, .62);
 
-          background: var(--mello-black);
+          background:
+            radial-gradient(ellipse 80% 44rem at 100% 0%, rgba(13, 148, 136, .11) 0%, transparent 68%),
+            var(--mello-black);
           color: var(--mello-white);
           font-family: Arial, Helvetica, sans-serif;
           min-height: 100vh;
-          padding-top: 88px;
+          overflow-x: hidden;
+          padding-top: 68px;
         }
 
         .player-page *,
@@ -1158,23 +1181,18 @@ export default function SpielerbereichPage() {
 
         .player-container {
           margin: 0 auto;
-          width: min(100% - 6rem, 1440px);
+          width: min(100% - 2rem, 1440px);
         }
 
         .player-hero {
           border-bottom: 1px solid var(--mello-line);
           overflow: hidden;
-          padding: 4.5rem 0 3.8rem;
+          padding: 2.1rem 0 2.2rem;
           position: relative;
         }
 
         .player-hero-glow {
-          background:
-            radial-gradient(
-              ellipse 55% 85% at 88% 42%,
-              rgba(13, 148, 136, .12) 0%,
-              transparent 70%
-            );
+          background: radial-gradient(ellipse 70% 85% at 92% 25%, rgba(13, 148, 136, .15) 0%, transparent 71%);
           inset: 0;
           pointer-events: none;
           position: absolute;
@@ -1186,62 +1204,61 @@ export default function SpielerbereichPage() {
         }
 
         .player-hero-top {
-          align-items: flex-start;
-          display: flex;
-          gap: 2rem;
-          justify-content: space-between;
+          display: grid;
+          gap: 1.2rem;
         }
 
         .player-kicker,
         .section-kicker {
-          color: var(--mello-teal);
-          font-size: .68rem;
-          font-weight: 800;
-          letter-spacing: .18em;
-          margin: 0 0 .9rem;
+          color: var(--mello-teal-light);
+          font-size: .62rem;
+          font-weight: 900;
+          letter-spacing: .16em;
+          line-height: 1.3;
+          margin: 0 0 .65rem;
           text-transform: uppercase;
         }
 
         .player-title {
           color: var(--mello-white);
           font-family: "Helvetica Neue", Arial, sans-serif;
-          font-size: clamp(2.7rem, 5vw, 4.8rem);
+          font-size: clamp(2.15rem, 12vw, 4.8rem);
           font-weight: 900;
-          letter-spacing: -.055em;
-          line-height: .91;
-          margin: 0 0 1.45rem;
+          letter-spacing: -.07em;
+          line-height: .87;
+          margin: 0 0 .95rem;
+          overflow-wrap: anywhere;
           text-transform: uppercase;
         }
 
         .player-title-accent {
           color: transparent;
           display: block;
-          -webkit-text-stroke: 1.4px rgba(13, 148, 136, .95);
+          -webkit-text-stroke: 1px rgba(13, 148, 136, .98);
           paint-order: stroke fill;
         }
 
         .player-intro {
-          color: rgba(247, 247, 244, .7);
-          font-size: clamp(1rem, 1.25vw, 1.13rem);
-          line-height: 1.65;
+          color: rgba(247, 247, 244, .68);
+          font-size: .91rem;
+          line-height: 1.58;
           margin: 0;
-          max-width: 58ch;
+          max-width: 38rem;
         }
 
         .player-logout {
-          background: transparent;
-          border: 1px solid rgba(13, 148, 136, .5);
-          color: var(--mello-teal);
+          background: rgba(13, 148, 136, .08);
+          border: 1px solid rgba(13, 148, 136, .55);
+          color: var(--mello-teal-light);
           cursor: pointer;
-          flex: 0 0 auto;
-          font-family: Arial, Helvetica, sans-serif;
-          font-size: .68rem;
-          font-weight: 800;
-          letter-spacing: .11em;
-          min-height: 42px;
+          font-family: inherit;
+          font-size: .67rem;
+          font-weight: 900;
+          letter-spacing: .1em;
+          min-height: 46px;
           padding: .75rem 1rem;
           text-transform: uppercase;
-          transition: background .2s ease, color .2s ease;
+          width: 100%;
         }
 
         .player-logout:hover {
@@ -1253,177 +1270,156 @@ export default function SpielerbereichPage() {
         .calendar-section,
         .fines-section {
           border-bottom: 1px solid var(--mello-line);
-          padding: 4.8rem 0;
+          padding: 2.5rem 0;
         }
 
         .section-heading {
-          align-items: end;
-          border-bottom: 1px solid rgba(247, 247, 244, .12);
-          display: flex;
-          gap: 2rem;
-          justify-content: space-between;
-          margin-bottom: 2.25rem;
-          padding-bottom: 1.35rem;
-        }
-
-        .section-kicker {
-          margin-bottom: .65rem;
+          border-bottom: 1px solid var(--mello-line);
+          margin-bottom: 1.35rem;
+          padding-bottom: 1rem;
         }
 
         .section-title {
           color: var(--mello-white);
           font-family: "Helvetica Neue", Arial, sans-serif;
-          font-size: clamp(1.9rem, 3vw, 2.8rem);
+          font-size: clamp(1.75rem, 9vw, 2.8rem);
           font-weight: 900;
-          letter-spacing: -.04em;
-          line-height: 1;
+          letter-spacing: -.05em;
+          line-height: .9;
           margin: 0;
+          overflow-wrap: anywhere;
           text-transform: uppercase;
         }
 
         .section-note {
-          color: rgba(247, 247, 244, .42);
-          font-size: .76rem;
-          line-height: 1.55;
-          margin: 0;
-          max-width: 30ch;
-          text-align: right;
+          display: none;
         }
 
         .week-layout {
           display: grid;
-          gap: 1.5rem;
-          grid-template-columns: minmax(0, 1.55fr) minmax(17rem, .7fr);
+          gap: 1rem;
         }
 
         .next-unit-card {
           background:
-            radial-gradient(
-              ellipse 62% 150% at 100% 50%,
-              rgba(13, 148, 136, .13) 0%,
-              transparent 67%
-            ),
-            rgba(247, 247, 244, .015);
-          border: 1px solid rgba(247, 247, 244, .14);
-          display: grid;
-          grid-template-columns: minmax(10.5rem, .48fr) minmax(0, 1.7fr);
-          min-height: 248px;
+            radial-gradient(ellipse 90% 100% at 100% 25%, rgba(13, 148, 136, .12) 0%, transparent 68%),
+            var(--mello-surface);
+          border: 1px solid rgba(247, 247, 244, .16);
           overflow: hidden;
         }
 
         .next-unit-date-panel {
-          align-items: flex-start;
-          background: rgba(13, 148, 136, .055);
-          border-right: 1px solid rgba(247, 247, 244, .14);
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          padding: 2rem;
+          align-items: flex-end;
+          background: rgba(13, 148, 136, .07);
+          border-bottom: 1px solid rgba(247, 247, 244, .13);
+          display: grid;
+          gap: .1rem .8rem;
+          grid-template-columns: auto 1fr;
+          padding: 1.2rem;
           position: relative;
         }
 
         .next-unit-date-panel::after {
           background: var(--mello-teal);
           content: "";
-          height: 1px;
-          left: 2rem;
-          opacity: .8;
+          height: 2px;
+          left: 1.2rem;
           position: absolute;
-          top: 1.35rem;
-          width: 3.2rem;
+          top: .72rem;
+          width: 2.6rem;
         }
 
         .next-unit-date-day {
           color: var(--mello-white);
           font-family: "Helvetica Neue", Arial, sans-serif;
-          font-size: clamp(4.7rem, 7vw, 7rem);
+          font-size: clamp(3.5rem, 20vw, 5.5rem);
           font-weight: 900;
+          grid-row: span 2;
           letter-spacing: -.09em;
-          line-height: .75;
-          margin-top: 1rem;
+          line-height: .72;
+          margin-top: .5rem;
         }
 
         .next-unit-date-month {
-          color: var(--mello-teal);
-          font-size: .78rem;
+          color: var(--mello-teal-light);
+          font-size: .8rem;
           font-weight: 900;
-          letter-spacing: .17em;
-          margin-top: .9rem;
+          letter-spacing: .16em;
+          text-transform: uppercase;
         }
 
         .next-unit-date-weekday {
-          color: rgba(247, 247, 244, .48);
-          font-size: .72rem;
-          font-weight: 800;
+          color: rgba(247, 247, 244, .55);
+          font-size: .67rem;
+          font-weight: 900;
           letter-spacing: .08em;
-          margin-top: .38rem;
           text-transform: uppercase;
         }
 
         .next-unit-content {
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
+          display: grid;
+          gap: 1rem;
           min-width: 0;
-          padding: 2rem 2.2rem 1.5rem;
+          padding: 1.2rem;
         }
 
         .next-unit-content-top {
           align-items: flex-start;
           display: flex;
-          gap: 1rem;
+          gap: .75rem;
           justify-content: space-between;
         }
 
         .next-unit-badge {
-          color: var(--mello-teal);
-          font-size: .66rem;
+          color: var(--mello-teal-light);
+          font-size: .61rem;
           font-weight: 900;
-          letter-spacing: .13em;
+          letter-spacing: .1em;
+          line-height: 1.4;
           margin: 0;
+          max-width: 67%;
           text-transform: uppercase;
         }
 
         .next-unit-time {
           color: var(--mello-white);
           flex: 0 0 auto;
-          font-size: .78rem;
+          font-size: .72rem;
           font-weight: 800;
-          letter-spacing: .04em;
           margin: 0;
+          text-align: right;
         }
 
         .next-unit-title {
           color: var(--mello-white);
           font-family: "Helvetica Neue", Arial, sans-serif;
-          font-size: clamp(2.2rem, 4vw, 4.2rem);
+          font-size: clamp(2rem, 11vw, 3.5rem);
           font-weight: 900;
           letter-spacing: -.065em;
-          line-height: .85;
-          margin: 1.8rem 0 .9rem;
+          line-height: .87;
+          margin: 0;
+          overflow-wrap: anywhere;
           text-transform: uppercase;
         }
 
         .next-unit-description {
           color: var(--mello-muted);
-          font-size: .96rem;
-          line-height: 1.6;
+          font-size: .91rem;
+          line-height: 1.58;
           margin: 0;
-          max-width: 60ch;
+          overflow-wrap: anywhere;
         }
 
         .next-unit-footer {
-          align-items: end;
           border-top: 1px solid rgba(247, 247, 244, .12);
-          display: flex;
-          gap: 1.5rem;
-          justify-content: space-between;
-          margin-top: 1.7rem;
+          display: grid;
+          gap: .85rem;
+          margin-top: .2rem;
           padding-top: 1rem;
         }
 
         .next-unit-location {
-          color: rgba(247, 247, 244, .57);
+          color: rgba(247, 247, 244, .62);
           font-size: .78rem;
           line-height: 1.45;
           margin: 0;
@@ -1431,41 +1427,38 @@ export default function SpielerbereichPage() {
 
         .next-unit-required {
           align-items: center;
-          color: var(--mello-teal);
+          color: var(--mello-teal-light);
           display: flex;
-          flex: 0 0 auto;
-          font-size: .64rem;
+          font-size: .63rem;
           font-weight: 900;
-          gap: .6rem;
+          gap: .55rem;
           letter-spacing: .09em;
           margin: 0;
           text-transform: uppercase;
-          white-space: nowrap;
         }
 
         .next-unit-dot {
           background: var(--mello-teal);
           border-radius: 999px;
           box-shadow: 0 0 0 4px rgba(13, 148, 136, .12);
+          flex: 0 0 auto;
           height: 7px;
           width: 7px;
         }
 
         .week-following {
-          border: 1px solid rgba(247, 247, 244, .14);
-          display: flex;
-          flex-direction: column;
-          min-height: 248px;
+          background: var(--mello-surface);
+          border: 1px solid rgba(247, 247, 244, .15);
         }
 
         .week-following-heading {
-          border-bottom: 1px solid rgba(247, 247, 244, .12);
+          border-bottom: 1px solid rgba(247, 247, 244, .11);
           color: rgba(247, 247, 244, .55);
-          font-size: .66rem;
+          font-size: .64rem;
           font-weight: 900;
-          letter-spacing: .13em;
+          letter-spacing: .12em;
           margin: 0;
-          padding: 1.2rem 1.25rem;
+          padding: 1rem 1.1rem;
           text-transform: uppercase;
         }
 
@@ -1481,9 +1474,8 @@ export default function SpielerbereichPage() {
           cursor: pointer;
           display: grid;
           gap: .35rem;
-          padding: 1rem 1.25rem;
+          padding: 1rem 1.1rem;
           text-align: left;
-          transition: background .2s ease;
           width: 100%;
         }
 
@@ -1492,350 +1484,256 @@ export default function SpielerbereichPage() {
         }
 
         .week-following-event:hover {
-          background: rgba(247, 247, 244, .035);
+          background: rgba(247, 247, 244, .045);
         }
 
         .week-following-date {
-          color: var(--mello-teal);
+          color: var(--mello-teal-light);
           font-size: .62rem;
           font-weight: 900;
-          letter-spacing: .1em;
+          letter-spacing: .08em;
+          line-height: 1.35;
           text-transform: uppercase;
         }
 
         .week-following-title {
           color: var(--mello-white);
-          font-size: .9rem;
+          font-size: .94rem;
           font-weight: 800;
-          line-height: 1.3;
+          line-height: 1.32;
         }
 
         .week-following-meta {
-          color: rgba(247, 247, 244, .46);
-          font-size: .71rem;
+          color: rgba(247, 247, 244, .48);
+          font-size: .7rem;
           line-height: 1.35;
         }
 
         .week-following-empty,
         .empty-unit {
           color: var(--mello-muted);
-          font-size: .9rem;
+          font-size: .88rem;
           line-height: 1.6;
           margin: 0;
-          padding: 1.25rem;
+          padding: 1.1rem;
         }
 
         .empty-unit {
-          border: 1px solid rgba(247, 247, 244, .14);
-          font-size: 1rem;
-          padding: 2rem;
+          background: var(--mello-surface);
+          border: 1px solid rgba(247, 247, 244, .15);
+          padding: 1.4rem;
         }
 
         .calendar-legend {
           align-items: center;
           display: flex;
           flex-wrap: wrap;
-          gap: .65rem 1.2rem;
-          margin: -1rem 0 2rem;
+          gap: .4rem .55rem;
+          margin: 0 0 1.2rem;
         }
 
         .calendar-legend-item {
           align-items: center;
-          background: transparent;
-          border: 0;
+          background: rgba(247, 247, 244, .035);
+          border: 1px solid rgba(247, 247, 244, .08);
           border-radius: 999px;
-          color: rgba(247, 247, 244, .56);
-          cursor: default;
+          color: rgba(247, 247, 244, .7);
           display: inline-flex;
           font-family: inherit;
-          font-size: .68rem;
-          font-weight: 800;
-          gap: .45rem;
-          letter-spacing: .08em;
-          padding: .32rem .45rem;
+          font-size: .56rem;
+          font-weight: 900;
+          gap: .38rem;
+          letter-spacing: .05em;
+          padding: .34rem .45rem;
           text-transform: uppercase;
-          transition: background .2s ease, color .2s ease;
         }
 
         .calendar-legend-item-active {
-          background: rgba(247, 247, 244, .08);
+          background: rgba(13, 148, 136, .12);
+          border-color: rgba(13, 148, 136, .45);
           color: var(--mello-white);
         }
 
         .calendar-legend-dot {
           border-radius: 999px;
-          height: 8px;
-          width: 8px;
+          height: 7px;
+          width: 7px;
         }
 
         .calendar-months {
-          display: grid;
-          gap: 2rem;
-          grid-template-columns: repeat(2, minmax(0, 1fr));
+          display: none;
         }
 
-        .calendar-month {
+        .mobile-event-list {
+          display: grid;
+          gap: .7rem;
+        }
+
+        .mobile-event-card {
+          background: var(--mello-surface);
           border: 1px solid rgba(247, 247, 244, .14);
-          overflow: hidden;
-        }
-
-        .calendar-month-title {
-          border-bottom: 1px solid rgba(247, 247, 244, .14);
           color: var(--mello-white);
-          font-family: "Helvetica Neue", Arial, sans-serif;
-          font-size: 1.35rem;
-          font-weight: 900;
-          letter-spacing: -.025em;
-          margin: 0;
-          padding: 1.15rem 1.25rem;
-          text-transform: uppercase;
-        }
-
-        .calendar-weekdays,
-        .calendar-grid {
-          display: grid;
-          grid-template-columns: repeat(7, minmax(0, 1fr));
-        }
-
-        .calendar-weekdays {
-          border-bottom: 1px solid rgba(247, 247, 244, .1);
-        }
-
-        .calendar-weekdays span {
-          color: rgba(247, 247, 244, .38);
-          font-size: .58rem;
-          font-weight: 800;
-          letter-spacing: .07em;
-          padding: .75rem .45rem;
-          text-align: right;
-          text-transform: uppercase;
-        }
-
-        .calendar-day {
-          background: transparent;
-          border-bottom: 1px solid rgba(247, 247, 244, .09);
-          border-right: 1px solid rgba(247, 247, 244, .09);
-          color: inherit;
           cursor: pointer;
-          min-height: 112px;
-          padding: .5rem;
-          position: relative;
-          text-align: left;
-          transition: background .2s ease;
-        }
-
-        .calendar-day:nth-child(7n) {
-          border-right: 0;
-        }
-
-        .calendar-day:hover,
-        .calendar-day:focus-visible {
-          background: rgba(247, 247, 244, .035);
-          outline: none;
-        }
-
-        .calendar-day-empty {
-          background: rgba(247, 247, 244, .012);
-          cursor: default;
-        }
-
-        .calendar-day-number {
-          color: rgba(247, 247, 244, .5);
-          display: block;
-          font-size: .66rem;
-          font-weight: 800;
-          margin-bottom: .45rem;
-          text-align: right;
-        }
-
-        .calendar-day-today {
-          background: rgba(13, 148, 136, .07);
-          box-shadow: inset 0 0 0 1px rgba(13, 148, 136, .55);
-        }
-
-        .calendar-day-today .calendar-day-number {
-          color: var(--mello-teal);
-        }
-
-        .calendar-day-selected {
-          background: rgba(247, 247, 244, .065);
-          box-shadow: inset 0 0 0 1px rgba(247, 247, 244, .28);
-        }
-
-        .calendar-events {
           display: grid;
-          gap: .28rem;
-        }
-
-        .calendar-event {
-          appearance: none;
-          background: transparent;
-          border: 0;
-          border-left: 3px solid;
-          color: inherit;
-          cursor: pointer;
-          font-family: inherit;
-          font-size: .58rem;
-          line-height: 1.25;
-          overflow: hidden;
-          padding: .24rem .28rem;
+          gap: .5rem;
+          grid-template-columns: 3.8rem minmax(0, 1fr);
+          padding: .9rem;
           text-align: left;
-          text-overflow: ellipsis;
-          transition: filter .2s ease, transform .2s ease;
-          white-space: nowrap;
           width: 100%;
         }
 
-        .calendar-event:hover,
-        .calendar-event-selected {
-          filter: brightness(1.3);
-          transform: translateX(2px);
+        .mobile-event-card:hover,
+        .mobile-event-card-active {
+          background: rgba(13, 148, 136, .1);
+          border-color: rgba(13, 148, 136, .6);
         }
 
-        .calendar-event-time {
-          font-weight: 800;
-          margin-right: .22rem;
+        .mobile-event-date {
+          border-right: 1px solid rgba(247, 247, 244, .11);
+          display: grid;
+          gap: .1rem;
+          padding-right: .7rem;
         }
 
-        .calendar-event-title {
-          color: rgba(247, 247, 244, .88);
+        .mobile-event-day {
+          color: var(--mello-white);
+          font-family: "Helvetica Neue", Arial, sans-serif;
+          font-size: 1.75rem;
+          font-weight: 900;
+          letter-spacing: -.07em;
+          line-height: .85;
         }
 
-        .event-training {
-          background: rgba(13, 148, 136, .14);
-          border-color: #0d9488;
-          color: #5eead4;
+        .mobile-event-month {
+          color: var(--mello-teal-light);
+          font-size: .6rem;
+          font-weight: 900;
+          letter-spacing: .1em;
+          text-transform: uppercase;
         }
 
-        .event-group-run {
-          background: rgba(56, 189, 248, .13);
-          border-color: #38bdf8;
-          color: #7dd3fc;
+        .mobile-event-body {
+          display: grid;
+          gap: .28rem;
+          min-width: 0;
         }
 
-        .event-individual-run {
-          background: rgba(167, 139, 250, .13);
-          border-color: #a78bfa;
-          color: #c4b5fd;
+        .mobile-event-type {
+          font-size: .6rem;
+          font-weight: 900;
+          letter-spacing: .09em;
+          text-transform: uppercase;
         }
 
-        .event-match {
-          background: rgba(245, 158, 11, .13);
-          border-color: #f59e0b;
-          color: #fcd34d;
+        .mobile-event-title {
+          color: var(--mello-white);
+          font-size: .95rem;
+          font-weight: 900;
+          line-height: 1.28;
+          overflow-wrap: anywhere;
         }
 
-        .event-team-event {
-          background: rgba(244, 114, 182, .13);
-          border-color: #f472b6;
-          color: #f9a8d4;
-        }
-
-        .calendar-more {
-          color: rgba(247, 247, 244, .48);
-          font-size: .57rem;
-          font-weight: 800;
-          letter-spacing: .03em;
+        .mobile-event-meta {
+          color: rgba(247, 247, 244, .58);
+          font-size: .72rem;
+          line-height: 1.4;
         }
 
         .calendar-detail {
           background:
-            radial-gradient(
-              ellipse 60% 130% at 100% 50%,
-              rgba(13, 148, 136, .1) 0%,
-              transparent 68%
-            ),
-            rgba(247, 247, 244, .015);
-          border: 1px solid rgba(247, 247, 244, .14);
-          margin-top: 2rem;
-          min-height: 245px;
-          padding: 1.8rem;
+            radial-gradient(ellipse 90% 100% at 100% 0%, rgba(13, 148, 136, .11) 0%, transparent 68%),
+            var(--mello-surface);
+          border: 1px solid rgba(247, 247, 244, .15);
+          margin-top: 1rem;
+          padding: 1.15rem;
         }
 
         .calendar-detail-kicker {
-          color: var(--mello-teal);
-          font-size: .66rem;
+          color: var(--mello-teal-light);
+          font-size: .62rem;
           font-weight: 900;
-          letter-spacing: .14em;
-          margin: 0 0 .75rem;
+          letter-spacing: .11em;
+          line-height: 1.4;
+          margin: 0 0 .6rem;
           text-transform: uppercase;
         }
 
         .calendar-detail-title {
           color: var(--mello-white);
           font-family: "Helvetica Neue", Arial, sans-serif;
-          font-size: clamp(2rem, 3vw, 3.4rem);
+          font-size: clamp(1.75rem, 9vw, 3.4rem);
           font-weight: 900;
-          letter-spacing: -.055em;
-          line-height: .9;
-          margin: 0 0 1rem;
+          letter-spacing: -.06em;
+          line-height: .89;
+          margin: 0 0 .85rem;
+          overflow-wrap: anywhere;
           text-transform: uppercase;
         }
 
         .calendar-detail-meta {
           align-items: center;
-          color: rgba(247, 247, 244, .58);
+          color: rgba(247, 247, 244, .65);
           display: flex;
           flex-wrap: wrap;
-          font-size: .82rem;
+          font-size: .75rem;
           font-weight: 700;
-          gap: .65rem;
+          gap: .35rem .55rem;
           line-height: 1.45;
-          margin: 0 0 1rem;
+          margin: 0 0 .9rem;
         }
 
         .calendar-detail-separator {
-          color: var(--mello-teal);
+          color: var(--mello-teal-light);
         }
 
         .calendar-detail-description {
           color: var(--mello-muted);
-          font-size: .98rem;
-          line-height: 1.65;
+          font-size: .9rem;
+          line-height: 1.6;
           margin: 0;
-          max-width: 78ch;
+          overflow-wrap: anywhere;
         }
 
         .attendance-card {
-          background: rgba(13, 148, 136, .055);
-          border: 1px solid rgba(13, 148, 136, .35);
-          margin-top: 1.6rem;
-          padding: 1.2rem;
+          background: rgba(13, 148, 136, .07);
+          border: 1px solid rgba(13, 148, 136, .42);
+          margin-top: 1.1rem;
+          padding: 1rem;
         }
 
         .run-attendance-card {
-          background: rgba(167, 139, 250, .07);
-          border-color: rgba(167, 139, 250, .48);
+          background: rgba(167, 139, 250, .08);
+          border-color: rgba(167, 139, 250, .5);
         }
 
         .attendance-card-heading {
-          align-items: flex-start;
-          display: flex;
-          gap: 1rem;
-          justify-content: space-between;
+          display: grid;
+          gap: .65rem;
           margin-bottom: 1rem;
         }
 
         .attendance-kicker {
-          color: var(--mello-teal);
-          font-size: .64rem;
+          color: var(--mello-teal-light);
+          font-size: .62rem;
           font-weight: 900;
-          letter-spacing: .13em;
-          margin: 0 0 .35rem;
+          letter-spacing: .11em;
+          margin: 0 0 .3rem;
           text-transform: uppercase;
         }
 
         .attendance-status {
-          font-size: .95rem;
+          font-size: .92rem;
           font-weight: 900;
+          line-height: 1.35;
           margin: 0;
         }
 
         .attendance-status-open {
-          color: rgba(247, 247, 244, .72);
+          color: rgba(247, 247, 244, .78);
         }
 
-        .attendance-status-attending {
+        .attendance-status-attending,
+        .attendance-status-approved {
           color: #5eead4;
         }
 
@@ -1851,120 +1749,114 @@ export default function SpielerbereichPage() {
           color: #c4b5fd;
         }
 
-        .attendance-status-approved {
-          color: #5eead4;
-        }
-
         .attendance-status-rejected {
           color: #f5a5a5;
         }
 
         .attendance-deadline {
-          color: rgba(247, 247, 244, .58);
-          font-size: .72rem;
+          color: rgba(247, 247, 244, .61);
+          font-size: .71rem;
           font-weight: 700;
           line-height: 1.45;
           margin: 0;
-          max-width: 27ch;
-          text-align: right;
         }
 
         .attendance-actions {
           display: grid;
-          gap: .65rem;
-          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: .6rem;
+          grid-template-columns: 1fr;
         }
 
         .attendance-action {
           appearance: none;
-          background: transparent;
+          background: rgba(0, 0, 0, .18);
           border: 1px solid rgba(247, 247, 244, .22);
           color: var(--mello-white);
           cursor: pointer;
           font-family: inherit;
-          font-size: .72rem;
+          font-size: .71rem;
           font-weight: 900;
           letter-spacing: .04em;
-          min-height: 44px;
-          padding: .7rem .75rem;
+          min-height: 52px;
+          padding: .7rem .8rem;
           text-transform: uppercase;
-          transition: background .2s ease, border-color .2s ease, color .2s ease;
+          width: 100%;
         }
 
         .attendance-action:hover:not(:disabled),
         .attendance-action-active {
-          background: rgba(247, 247, 244, .09);
+          background: rgba(247, 247, 244, .1);
           border-color: var(--mello-white);
         }
 
         .attendance-action-attending:hover:not(:disabled),
         .attendance-action-attending.attendance-action-active {
-          background: rgba(13, 148, 136, .22);
+          background: rgba(13, 148, 136, .24);
           border-color: #0d9488;
           color: #5eead4;
         }
 
         .attendance-action-absent:hover:not(:disabled),
         .attendance-action-absent.attendance-action-active {
-          background: rgba(245, 158, 11, .18);
+          background: rgba(245, 158, 11, .19);
           border-color: #f59e0b;
           color: #fcd34d;
         }
 
         .attendance-action-injured:hover:not(:disabled),
         .attendance-action-injured.attendance-action-active {
-          background: rgba(244, 114, 182, .16);
+          background: rgba(244, 114, 182, .17);
           border-color: #f472b6;
           color: #f9a8d4;
         }
 
         .attendance-action-run-submit {
-          background: rgba(167, 139, 250, .16);
+          background: rgba(167, 139, 250, .18);
           border-color: #a78bfa;
-          color: #ddd6fe;
-          margin-top: 1.1rem;
-          width: 100%;
+          color: #ede9fe;
+          margin-top: 1rem;
         }
 
         .attendance-action-run-submit:hover:not(:disabled) {
-          background: rgba(167, 139, 250, .28);
+          background: rgba(167, 139, 250, .3);
           border-color: #c4b5fd;
           color: #ffffff;
         }
 
         .attendance-action:disabled {
           cursor: not-allowed;
-          opacity: .45;
+          opacity: .48;
         }
 
         .attendance-note-label {
-          color: rgba(247, 247, 244, .72);
+          color: rgba(247, 247, 244, .76);
           display: block;
-          font-size: .74rem;
+          font-size: .72rem;
           font-weight: 800;
-          margin: 1.1rem 0 .45rem;
+          line-height: 1.4;
+          margin: 1rem 0 .45rem;
         }
 
         .attendance-note-label span {
-          color: rgba(247, 247, 244, .4);
+          color: rgba(247, 247, 244, .44);
           font-weight: 700;
         }
 
         .attendance-note {
-          background: rgba(0, 0, 0, .2);
-          border: 1px solid rgba(247, 247, 244, .16);
+          background: rgba(0, 0, 0, .25);
+          border: 1px solid rgba(247, 247, 244, .17);
           color: var(--mello-white);
           font-family: inherit;
-          font-size: .84rem;
+          font-size: .9rem;
           line-height: 1.5;
-          min-height: 76px;
-          padding: .7rem .8rem;
+          min-height: 90px;
+          padding: .75rem .8rem;
           resize: vertical;
           width: 100%;
         }
 
         .attendance-note:focus {
-          border-color: var(--mello-teal);
+          border-color: var(--mello-teal-light);
           outline: none;
         }
 
@@ -1975,13 +1867,13 @@ export default function SpielerbereichPage() {
 
         .attendance-hint,
         .attendance-feedback {
-          font-size: .75rem;
+          font-size: .76rem;
           line-height: 1.5;
           margin: .85rem 0 0;
         }
 
         .attendance-hint {
-          color: rgba(247, 247, 244, .55);
+          color: rgba(247, 247, 244, .61);
         }
 
         .attendance-hint-closed {
@@ -1993,9 +1885,10 @@ export default function SpielerbereichPage() {
           font-weight: 700;
         }
 
-        .attendance-hint-approved {
+        .attendance-hint-approved,
+        .attendance-feedback-success {
           color: #5eead4;
-          font-weight: 700;
+          font-weight: 800;
         }
 
         .attendance-hint-error,
@@ -2003,63 +1896,59 @@ export default function SpielerbereichPage() {
           color: #f5a5a5;
         }
 
-        .attendance-feedback-success {
-          color: #5eead4;
-          font-weight: 800;
-        }
-
         .calendar-detail-day-list {
           display: grid;
-          gap: .75rem;
+          gap: .65rem;
         }
 
         .calendar-detail-day-button {
-          align-items: center;
-          background: rgba(247, 247, 244, .03);
-          border: 1px solid rgba(247, 247, 244, .12);
+          align-items: flex-start;
+          background: rgba(247, 247, 244, .035);
+          border: 1px solid rgba(247, 247, 244, .14);
           color: var(--mello-white);
           cursor: pointer;
-          display: flex;
+          display: grid;
           font-family: inherit;
-          gap: .8rem;
-          justify-content: space-between;
-          padding: .85rem 1rem;
+          gap: .35rem;
+          padding: .9rem;
           text-align: left;
           width: 100%;
         }
 
         .calendar-detail-day-button:hover {
-          background: rgba(247, 247, 244, .065);
+          background: rgba(247, 247, 244, .07);
         }
 
         .calendar-detail-day-button-type {
-          color: var(--mello-teal);
-          font-size: .64rem;
+          color: var(--mello-teal-light);
+          font-size: .61rem;
           font-weight: 900;
-          letter-spacing: .1em;
+          letter-spacing: .09em;
           text-transform: uppercase;
         }
 
         .calendar-detail-day-button-title {
-          font-size: .9rem;
+          font-size: .93rem;
           font-weight: 800;
+          line-height: 1.3;
         }
 
         .calendar-detail-empty {
           color: var(--mello-muted);
-          font-size: .95rem;
+          font-size: .9rem;
           line-height: 1.6;
           margin: 0;
         }
 
         .calendar-loading,
         .calendar-error {
-          border: 1px solid rgba(247, 247, 244, .14);
+          background: var(--mello-surface);
+          border: 1px solid rgba(247, 247, 244, .15);
           color: var(--mello-muted);
-          font-size: .95rem;
+          font-size: .9rem;
           line-height: 1.6;
           margin: 0;
-          padding: 1.25rem;
+          padding: 1.1rem;
         }
 
         .calendar-error {
@@ -2068,46 +1957,43 @@ export default function SpielerbereichPage() {
 
         .fines-table-wrap {
           border: 1px solid rgba(247, 247, 244, .16);
+          margin: 0;
           overflow-x: auto;
           -webkit-overflow-scrolling: touch;
         }
 
         .fines-table {
           border-collapse: collapse;
-          min-width: 660px;
+          min-width: 560px;
           table-layout: fixed;
           width: 100%;
         }
 
         .fines-table th {
-          background: rgba(247, 247, 244, .035);
+          background: rgba(247, 247, 244, .04);
           border-bottom: 1px solid rgba(247, 247, 244, .16);
-          color: rgba(247, 247, 244, .5);
-          font-size: .64rem;
+          color: rgba(247, 247, 244, .52);
+          font-size: .57rem;
           font-weight: 900;
-          letter-spacing: .13em;
-          padding: .95rem 1.15rem;
+          letter-spacing: .09em;
+          padding: .8rem;
           text-align: left;
           text-transform: uppercase;
         }
 
         .fines-table th + th,
         .fines-table td + td {
-          border-left: 1px solid rgba(247, 247, 244, .12);
+          border-left: 1px solid rgba(247, 247, 244, .1);
         }
 
         .fines-table th:first-child,
         .fines-table td:first-child {
-          width: 7rem;
+          width: 3.8rem;
         }
 
         .fines-table th:last-child,
         .fines-table td:last-child {
-          width: 11rem;
-        }
-
-        .fines-table tbody tr {
-          transition: background .2s ease;
+          width: 8.6rem;
         }
 
         .fines-table tbody tr:hover {
@@ -2116,8 +2002,8 @@ export default function SpielerbereichPage() {
 
         .fines-table td {
           border-bottom: 1px solid rgba(247, 247, 244, .1);
-          padding: 1rem 1.15rem;
-          vertical-align: middle;
+          padding: .85rem .8rem;
+          vertical-align: top;
         }
 
         .fines-table tbody tr:last-child td {
@@ -2126,32 +2012,31 @@ export default function SpielerbereichPage() {
 
         .fines-number-heading,
         .fines-number-cell {
-          color: var(--mello-teal);
+          color: var(--mello-teal-light);
         }
 
         .fines-number-cell {
-          font-size: .68rem;
+          font-size: .63rem;
           font-weight: 900;
-          letter-spacing: .1em;
-          vertical-align: top !important;
+          letter-spacing: .08em;
         }
 
         .fines-rule-cell {
           display: grid;
-          gap: .35rem;
+          gap: .32rem;
         }
 
         .fines-rule-name {
           color: var(--mello-white);
-          font-size: .94rem;
+          font-size: .83rem;
           font-weight: 800;
           line-height: 1.35;
         }
 
         .fines-rule-note {
-          color: rgba(247, 247, 244, .48);
-          font-size: .78rem;
-          line-height: 1.45;
+          color: rgba(247, 247, 244, .5);
+          font-size: .7rem;
+          line-height: 1.42;
         }
 
         .fines-amount-heading {
@@ -2159,311 +2044,483 @@ export default function SpielerbereichPage() {
         }
 
         .fines-amount-cell {
-          color: var(--mello-teal);
-          font-size: .95rem;
+          color: var(--mello-teal-light);
+          font-size: .78rem;
           font-weight: 900;
           text-align: right;
           white-space: nowrap;
         }
 
         .fines-footer-note {
-          color: rgba(247, 247, 244, .4);
-          font-size: .72rem;
+          color: rgba(247, 247, 244, .45);
+          font-size: .7rem;
           line-height: 1.55;
-          margin: 1rem 0 0;
+          margin: .9rem 0 0;
         }
 
-        @media (max-width: 1050px) {
-          .week-layout {
-            grid-template-columns: 1fr;
-          }
-
-          .week-following {
-            min-height: 0;
-          }
-
-          .week-following-list {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-          }
-
-          .week-following-event {
-            border-bottom: 0;
-            border-right: 1px solid rgba(247, 247, 244, .1);
-          }
-
-          .week-following-event:last-child {
-            border-right: 0;
-          }
-        }
-
-        @media (max-width: 900px) {
+        @media (min-width: 640px) {
           .player-container {
             width: min(100% - 3rem, 960px);
           }
 
-          .calendar-months {
-            grid-template-columns: 1fr;
+          .player-logout {
+            width: auto;
+          }
+
+          .attendance-actions {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
           }
         }
 
-        @media (max-width: 768px) {
+        @media (min-width: 769px) {
           .player-page {
-            padding-top: 68px;
+            padding-top: 88px;
           }
 
           .player-container {
-            width: min(100% - 2.25rem, 40rem);
+            width: min(100% - 5rem, 1440px);
           }
 
           .player-hero {
-            padding: 2.7rem 0 2.8rem;
+            padding: 4.2rem 0 3.6rem;
           }
 
           .player-hero-top {
-            display: block;
-          }
-
-          .player-logout {
-            margin-top: 1.6rem;
-            width: 100%;
+            align-items: flex-start;
+            display: flex;
+            gap: 2rem;
+            justify-content: space-between;
           }
 
           .player-kicker,
           .section-kicker {
-            font-size: .61rem;
-            letter-spacing: .16em;
+            font-size: .68rem;
+            letter-spacing: .18em;
+            margin-bottom: .9rem;
           }
 
           .player-title {
-            font-size: clamp(2.7rem, 14vw, 4.15rem);
-            letter-spacing: -.07em;
-            line-height: .86;
-            margin-bottom: 1.3rem;
+            font-size: clamp(2.7rem, 5vw, 4.8rem);
+            line-height: .91;
+            margin-bottom: 1.45rem;
           }
 
           .player-title-accent {
-            -webkit-text-stroke-width: 1px;
+            -webkit-text-stroke-width: 1.4px;
           }
 
           .player-intro {
-            color: rgba(247, 247, 244, .67);
-            font-size: .96rem;
+            font-size: clamp(1rem, 1.25vw, 1.13rem);
             line-height: 1.65;
+            max-width: 58ch;
           }
 
           .next-unit-section,
           .calendar-section,
           .fines-section {
-            padding: 3.6rem 0;
+            padding: 4.8rem 0;
           }
 
           .section-heading {
-            align-items: start;
-            display: block;
-            margin-bottom: 1.25rem;
-            padding-bottom: 1.2rem;
+            align-items: end;
+            display: flex;
+            gap: 2rem;
+            justify-content: space-between;
+            margin-bottom: 2.25rem;
+            padding-bottom: 1.35rem;
+          }
+
+          .section-kicker {
+            margin-bottom: .65rem;
           }
 
           .section-title {
-            font-size: clamp(1.9rem, 9vw, 2.6rem);
+            font-size: clamp(1.9rem, 3vw, 2.8rem);
+            line-height: 1;
           }
 
           .section-note {
-            display: none;
+            color: rgba(247, 247, 244, .42);
+            display: block;
+            font-size: .76rem;
+            line-height: 1.55;
+            margin: 0;
+            max-width: 30ch;
+            text-align: right;
+          }
+
+          .week-layout {
+            gap: 1.5rem;
+            grid-template-columns: minmax(0, 1.55fr) minmax(17rem, .7fr);
           }
 
           .next-unit-card {
-            display: block;
-            min-height: 0;
+            display: grid;
+            grid-template-columns: minmax(10.5rem, .48fr) minmax(0, 1.7fr);
+            min-height: 248px;
           }
 
           .next-unit-date-panel {
-            border-bottom: 1px solid rgba(247, 247, 244, .14);
-            border-right: 0;
-            min-height: 152px;
-            padding: 1.5rem;
+            align-items: flex-start;
+            border-bottom: 0;
+            border-right: 1px solid rgba(247, 247, 244, .14);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem;
           }
 
           .next-unit-date-panel::after {
-            left: 1.5rem;
-            top: 1rem;
+            height: 1px;
+            left: 2rem;
+            top: 1.35rem;
+            width: 3.2rem;
           }
 
           .next-unit-date-day {
-            font-size: 5rem;
-            margin-top: .65rem;
+            display: block;
+            font-size: clamp(4.7rem, 7vw, 7rem);
+            line-height: .75;
+            margin-top: 1rem;
+          }
+
+          .next-unit-date-month {
+            font-size: .78rem;
+            margin-top: .9rem;
+          }
+
+          .next-unit-date-weekday {
+            font-size: .72rem;
+            margin-top: .38rem;
           }
 
           .next-unit-content {
-            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 2rem 2.2rem 1.5rem;
           }
 
-          .next-unit-content-top {
-            align-items: flex-start;
+          .next-unit-badge {
+            font-size: .66rem;
+            letter-spacing: .13em;
+            max-width: none;
           }
 
           .next-unit-time {
-            font-size: .7rem;
+            font-size: .78rem;
           }
 
           .next-unit-title {
-            font-size: clamp(2.2rem, 12vw, 3.6rem);
-            margin: 1.45rem 0 .85rem;
+            font-size: clamp(2.2rem, 4vw, 4.2rem);
+            line-height: .85;
+            margin: 1.8rem 0 .9rem;
+          }
+
+          .next-unit-description {
+            font-size: .96rem;
+            line-height: 1.6;
           }
 
           .next-unit-footer {
-            align-items: flex-start;
-            display: block;
-            margin-top: 1.4rem;
+            align-items: end;
+            display: flex;
+            gap: 1.5rem;
+            justify-content: space-between;
+            margin-top: 1.7rem;
+            padding-top: 1rem;
+          }
+
+          .next-unit-location {
+            font-size: .78rem;
           }
 
           .next-unit-required {
-            margin-top: 1rem;
-            white-space: normal;
+            flex: 0 0 auto;
+            font-size: .64rem;
+            white-space: nowrap;
           }
 
-          .week-following-list {
-            grid-template-columns: 1fr;
+          .week-following {
+            min-height: 248px;
+          }
+
+          .week-following-heading {
+            padding: 1.2rem 1.25rem;
           }
 
           .week-following-event {
-            border-bottom: 1px solid rgba(247, 247, 244, .1);
-            border-right: 0;
+            padding: 1rem 1.25rem;
           }
 
           .calendar-legend {
-            gap: .35rem .55rem;
-            margin: 0 0 1.5rem;
+            gap: .65rem 1.2rem;
+            margin: -1rem 0 2rem;
           }
 
           .calendar-legend-item {
-            font-size: .58rem;
-            padding: .25rem .3rem;
+            background: transparent;
+            border: 0;
+            font-size: .68rem;
+            gap: .45rem;
+            letter-spacing: .08em;
+            padding: .32rem .45rem;
           }
 
-          .calendar-month-title {
-            font-size: 1.15rem;
-            padding: 1rem;
+          .calendar-legend-dot {
+            height: 8px;
+            width: 8px;
           }
 
-          .calendar-day {
-            min-height: 86px;
-            padding: .35rem;
+          .calendar-months {
+            display: grid;
+            gap: 2rem;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
           }
 
-          .calendar-weekdays span {
-            font-size: .53rem;
-            padding: .58rem .25rem;
-          }
-
-          .calendar-event {
-            border-left-width: 2px;
-            font-size: .49rem;
-            padding: .18rem .2rem;
-          }
-
-          .calendar-event-time {
+          .mobile-event-list {
             display: none;
           }
 
-          .calendar-more {
-            font-size: .5rem;
+          .calendar-month {
+            border: 1px solid rgba(247, 247, 244, .14);
+            overflow: hidden;
           }
 
-          .calendar-detail {
-            margin-top: 1.25rem;
-            min-height: 0;
-            padding: 1.35rem;
+          .calendar-month-title {
+            border-bottom: 1px solid rgba(247, 247, 244, .14);
+            color: var(--mello-white);
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            font-size: 1.35rem;
+            font-weight: 900;
+            letter-spacing: -.025em;
+            margin: 0;
+            padding: 1.15rem 1.25rem;
+            text-transform: uppercase;
           }
 
-          .calendar-detail-title {
-            font-size: clamp(1.8rem, 10vw, 2.7rem);
+          .calendar-weekdays,
+          .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
           }
 
-          .attendance-card {
-            margin-top: 1.2rem;
-            padding: 1rem;
+          .calendar-weekdays {
+            border-bottom: 1px solid rgba(247, 247, 244, .1);
           }
 
-          .attendance-card-heading {
-            display: block;
+          .calendar-weekdays span {
+            color: rgba(247, 247, 244, .38);
+            font-size: .58rem;
+            font-weight: 800;
+            letter-spacing: .07em;
+            padding: .75rem .45rem;
+            text-align: right;
+            text-transform: uppercase;
           }
 
-          .attendance-deadline {
-            margin-top: .55rem;
-            max-width: none;
+          .calendar-day {
+            background: transparent;
+            border-bottom: 1px solid rgba(247, 247, 244, .09);
+            border-right: 1px solid rgba(247, 247, 244, .09);
+            color: inherit;
+            cursor: pointer;
+            min-height: 112px;
+            overflow: visible;
+            padding: .5rem;
+            position: relative;
             text-align: left;
           }
 
-          .attendance-actions {
-            grid-template-columns: 1fr;
+          .calendar-day:nth-child(7n) {
+            border-right: 0;
+          }
+
+          .calendar-day:hover,
+          .calendar-day:focus-visible {
+            background: rgba(247, 247, 244, .035);
+            outline: none;
+          }
+
+          .calendar-day-empty {
+            background: rgba(247, 247, 244, .012);
+            cursor: default;
+          }
+
+          .calendar-day-number {
+            color: rgba(247, 247, 244, .5);
+            display: block;
+            font-size: .66rem;
+            font-weight: 800;
+            margin-bottom: .45rem;
+            text-align: right;
+          }
+
+          .calendar-day-today {
+            background: rgba(13, 148, 136, .07);
+            box-shadow: inset 0 0 0 1px rgba(13, 148, 136, .55);
+          }
+
+          .calendar-day-today .calendar-day-number {
+            color: var(--mello-teal);
+          }
+
+          .calendar-day-selected {
+            background: rgba(247, 247, 244, .065);
+            box-shadow: inset 0 0 0 1px rgba(247, 247, 244, .28);
+          }
+
+          .calendar-events {
+            display: grid;
+            gap: .28rem;
+          }
+
+          .calendar-event {
+            appearance: none;
+            background: transparent;
+            border: 0;
+            border-left: 3px solid;
+            color: inherit;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: .58rem;
+            line-height: 1.25;
+            overflow: hidden;
+            padding: .24rem .28rem;
+            text-align: left;
+            text-overflow: ellipsis;
+            transition: filter .2s ease, transform .2s ease;
+            white-space: nowrap;
+            width: 100%;
+          }
+
+          .calendar-event:hover,
+          .calendar-event-selected {
+            filter: brightness(1.3);
+            transform: translateX(2px);
+          }
+
+          .calendar-event-time {
+            display: inline;
+            font-weight: 800;
+            margin-right: .22rem;
+          }
+
+          .calendar-event-title {
+            color: rgba(247, 247, 244, .88);
+          }
+
+          .calendar-more {
+            color: rgba(247, 247, 244, .48);
+            font-size: .57rem;
+            font-weight: 800;
+            letter-spacing: .03em;
+          }
+
+          .calendar-detail {
+            margin-top: 2rem;
+            min-height: 245px;
+            padding: 1.8rem;
+          }
+
+          .calendar-detail-kicker {
+            font-size: .66rem;
+            letter-spacing: .14em;
+            margin-bottom: .75rem;
+          }
+
+          .calendar-detail-title {
+            font-size: clamp(2rem, 3vw, 3.4rem);
+            line-height: .9;
+            margin-bottom: 1rem;
+          }
+
+          .calendar-detail-meta {
+            font-size: .82rem;
+            gap: .65rem;
+            margin-bottom: 1rem;
+          }
+
+          .calendar-detail-description {
+            font-size: .98rem;
+            line-height: 1.65;
+          }
+
+          .attendance-card {
+            margin-top: 1.6rem;
+            padding: 1.2rem;
+          }
+
+          .attendance-card-heading {
+            align-items: flex-start;
+            display: flex;
+            gap: 1rem;
+            justify-content: space-between;
+          }
+
+          .attendance-deadline {
+            max-width: 27ch;
+            text-align: right;
+          }
+
+          .attendance-action {
+            min-height: 44px;
+            padding: .7rem .75rem;
           }
 
           .calendar-detail-day-button {
-            align-items: flex-start;
-            display: grid;
-            gap: .35rem;
-          }
-
-          .fines-table-wrap {
-            border-left: 0;
-            border-right: 0;
-            margin-left: -1.125rem;
-            margin-right: -1.125rem;
+            align-items: center;
+            display: flex;
+            gap: .8rem;
+            justify-content: space-between;
+            padding: .85rem 1rem;
           }
 
           .fines-table {
-            min-width: 560px;
+            min-width: 660px;
           }
 
           .fines-table th {
-            font-size: .58rem;
-            padding: .8rem .85rem;
+            font-size: .64rem;
+            letter-spacing: .13em;
+            padding: .95rem 1.15rem;
           }
 
           .fines-table th:first-child,
           .fines-table td:first-child {
-            width: 3.7rem;
+            width: 7rem;
           }
 
           .fines-table th:last-child,
           .fines-table td:last-child {
-            width: 8.6rem;
+            width: 11rem;
           }
 
           .fines-table td {
-            padding: .85rem;
+            padding: 1rem 1.15rem;
+            vertical-align: middle;
+          }
+
+          .fines-number-cell {
+            font-size: .68rem;
+            letter-spacing: .1em;
           }
 
           .fines-rule-name {
-            font-size: .84rem;
+            font-size: .94rem;
           }
 
           .fines-rule-note {
-            font-size: .7rem;
-            line-height: 1.4;
+            font-size: .78rem;
           }
 
           .fines-amount-cell {
-            font-size: .82rem;
+            font-size: .95rem;
           }
 
           .fines-footer-note {
-            font-size: .68rem;
-          }
-        }
-
-        @media (max-width: 360px) {
-          .player-container {
-            width: min(100% - 2rem, 40rem);
-          }
-
-          .player-title {
-            font-size: 2.55rem;
-          }
-
-          .calendar-day {
-            min-height: 74px;
+            font-size: .72rem;
+            margin-top: 1rem;
           }
         }
       `}</style>
@@ -2489,8 +2546,8 @@ export default function SpielerbereichPage() {
 
             <button
               className="player-logout"
-              type="button"
               onClick={handleLogout}
+              type="button"
             >
               Ausloggen
             </button>
@@ -2521,12 +2578,14 @@ export default function SpielerbereichPage() {
                   <span className="next-unit-date-day">
                     {new Intl.DateTimeFormat("de-AT", {
                       day: "2-digit",
+                      timeZone: "Europe/Vienna",
                     }).format(new Date(primaryWeekEvent.starts_at))}
                   </span>
 
                   <span className="next-unit-date-month">
                     {new Intl.DateTimeFormat("de-AT", {
                       month: "short",
+                      timeZone: "Europe/Vienna",
                     })
                       .format(new Date(primaryWeekEvent.starts_at))
                       .replace(".", "")
@@ -2536,6 +2595,7 @@ export default function SpielerbereichPage() {
                   <span className="next-unit-date-weekday">
                     {new Intl.DateTimeFormat("de-AT", {
                       weekday: "long",
+                      timeZone: "Europe/Vienna",
                     }).format(new Date(primaryWeekEvent.starts_at))}
                   </span>
                 </div>
@@ -2587,8 +2647,8 @@ export default function SpielerbereichPage() {
                       <button
                         className="week-following-event"
                         key={event.id}
-                        type="button"
                         onClick={() => handleEventClick(event)}
+                        type="button"
                       >
                         <span className="week-following-date">
                           {formatDate(event.starts_at)} ·{" "}
@@ -2662,12 +2722,73 @@ export default function SpielerbereichPage() {
             <p className="calendar-error">{eventsError}</p>
           ) : (
             <>
+              <div className="mobile-event-list">
+                {mobileEvents.length > 0 ? (
+                  mobileEvents.map((event) => {
+                    const eventDate = new Date(event.starts_at);
+                    const eventDetails = eventTypeDetails[event.event_type];
+
+                    return (
+                      <button
+                        className={`mobile-event-card ${
+                          selectedEvent?.id === event.id
+                            ? "mobile-event-card-active"
+                            : ""
+                        }`}
+                        key={event.id}
+                        onClick={() => handleEventClick(event)}
+                        type="button"
+                      >
+                        <span className="mobile-event-date">
+                          <span className="mobile-event-day">
+                            {new Intl.DateTimeFormat("de-AT", {
+                              day: "2-digit",
+                              timeZone: "Europe/Vienna",
+                            }).format(eventDate)}
+                          </span>
+                          <span className="mobile-event-month">
+                            {new Intl.DateTimeFormat("de-AT", {
+                              month: "short",
+                              timeZone: "Europe/Vienna",
+                            })
+                              .format(eventDate)
+                              .replace(".", "")
+                              .toUpperCase()}
+                          </span>
+                        </span>
+
+                        <span className="mobile-event-body">
+                          <span
+                            className={`mobile-event-type ${eventDetails.className}`}
+                          >
+                            {eventDetails.label}
+                          </span>
+                          <span className="mobile-event-title">
+                            {event.title}
+                          </span>
+                          <span className="mobile-event-meta">
+                            {getEventTimeLabel(event)}
+                            {getEventLocation(event)
+                              ? ` · ${getEventLocation(event)}`
+                              : ""}
+                          </span>
+                        </span>
+                      </button>
+                    );
+                  })
+                ) : (
+                  <p className="calendar-loading">
+                    Derzeit sind keine kommenden Termine vorhanden.
+                  </p>
+                )}
+              </div>
+
               <div className="calendar-months">
                 {renderCalendarMonth(currentMonth, currentMonthDays)}
                 {renderCalendarMonth(nextMonth, nextMonthDays)}
               </div>
 
-              <section className="calendar-detail">
+              <section className="calendar-detail" id="event-detail">
                 {selectedEvent ? (
                   <>
                     <p className="calendar-detail-kicker">
@@ -2720,8 +2841,8 @@ export default function SpielerbereichPage() {
                         <button
                           className="calendar-detail-day-button"
                           key={event.id}
-                          type="button"
                           onClick={() => handleEventClick(event)}
+                          type="button"
                         >
                           <span className="calendar-detail-day-button-type">
                             {eventTypeDetails[event.event_type].label}
