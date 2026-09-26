@@ -4,6 +4,16 @@ import Link from "next/link";
 
 const ARTICLES = [
   {
+    id: 4,
+    tag: "Zwischenfazit · Kampfmannschaft",
+    date: "26. Sep 2026",
+    title: "Drei Spiele. Ein harter Start. Jetzt beginnt unsere Antwort.",
+    excerpt:
+      "Drei Spiele, drei Niederlagen und ein schwieriger Start in die erste Saison. Mello schaut nicht weg: Wir benennen, was nicht funktioniert hat, und arbeiten gemeinsam an der Reaktion.",
+    href: "/news/saisonstart",
+    readTime: "5 Min.",
+  },
+  {
     id: 1,
     tag: "Spielbericht · Vorschau",
     date: "13. Sep 2026",
