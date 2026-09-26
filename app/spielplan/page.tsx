@@ -76,8 +76,8 @@ const MATCHES: Match[] = [
     venue: HOME_VENUE,
     address: HOME_ADDRESS,
     type: "Heimspiel",
-    status: "upcoming",
-    next: true,
+    result: "0 : 19",
+    status: "finished",
   },
   {
     round: "04",
@@ -92,6 +92,8 @@ const MATCHES: Match[] = [
     venue: "Kinkplatz – Austria 13",
     address: "Kinkplatz · 1140 Wien",
     type: "Auswärtsspiel",
+    status: "upcoming",
+    next: true,
   },
   {
     round: "05",

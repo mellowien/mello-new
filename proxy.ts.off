@@ -1,0 +1,25 @@
+import { NextResponse, type NextRequest } from "next/server";
+
+export function proxy(request: NextRequest) {
+  const hasSupabaseSession = request.cookies
+    .getAll()
+    .some((cookie) => cookie.name.startsWith("sb-"));
+
+  const isProtectedRoute =
+    request.nextUrl.pathname.startsWith("/spielerbereich") ||
+    request.nextUrl.pathname.startsWith("/passwort-aendern");
+
+  if (isProtectedRoute && !hasSupabaseSession) {
+    const loginUrl = request.nextUrl.clone();
+    loginUrl.pathname = "/login";
+    loginUrl.searchParams.set("next", request.nextUrl.pathname);
+
+    return NextResponse.redirect(loginUrl);
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ["/spielerbereich/:path*", "/passwort-aendern/:path*"],
+};
