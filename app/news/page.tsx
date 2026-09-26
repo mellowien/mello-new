@@ -3,6 +3,24 @@ import Link from "next/link";
 
 const STORIES = [
   {
+    id: "saisonstart",
+    category: "Zwischenfazit · Kampfmannschaft",
+    date: "26. September 2026",
+    readTime: "5 Min. Lesezeit",
+    title: "Drei Spiele. Ein harter Start. Jetzt beginnt unsere Antwort.",
+    featuredTitle: (
+      <>
+        Drei Spiele. Ein harter Start.
+        <span>Jetzt beginnt unsere Antwort.</span>
+      </>
+    ),
+    excerpt:
+      "Drei Spiele, drei Niederlagen und ein schwieriger Start in die erste Saison. Mello schaut nicht weg: Wir benennen, was nicht funktioniert hat, und arbeiten gemeinsam an der Reaktion.",
+    href: "/news/saisonstart",
+    featured: true,
+    image: null,
+  },
+  {
     id: "penarol",
     category: "Spielbericht · Vorschau",
     date: "13. September 2026",
@@ -11,7 +29,7 @@ const STORIES = [
     excerpt:
       "Nach der Niederlage gegen FC Polska zieht Mello ehrliche Lehren. Gegen Peñarol wartet nun mit einem Kader von elf Spielern und Martin Drewes im Tor eine besondere Aufgabe.",
     href: "/news/penarol",
-    featured: true,
+    featured: false,
     image: null,
   },
   {
@@ -318,7 +336,7 @@ export default function NewsPage() {
         }
 
         .featured-title {
-          max-width: 11ch;
+          max-width: 13ch;
           margin: 3.5rem 0 1.15rem;
           color: var(--paper);
           font-size: clamp(2.25rem, 4.5vw, 5.1rem);
@@ -651,8 +669,7 @@ export default function NewsPage() {
 
               <div>
                 <h3 className="featured-title">
-                  1:5 zum Auftakt.
-                  <span>Jetzt zählt die Reaktion.</span>
+                  {featuredStory.featuredTitle ?? featuredStory.title}
                 </h3>
 
                 <p className="featured-excerpt">{featuredStory.excerpt}</p>
