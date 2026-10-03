@@ -92,8 +92,8 @@ const MATCHES: Match[] = [
     venue: "Kinkplatz – Austria 13",
     address: "Kinkplatz · 1140 Wien",
     type: "Auswärtsspiel",
-    status: "upcoming",
-    next: true,
+    result: "15 : 0",
+    status: "finished",
   },
   {
     round: "05",
@@ -108,6 +108,8 @@ const MATCHES: Match[] = [
     venue: HOME_VENUE,
     address: HOME_ADDRESS,
     type: "Heimspiel",
+    status: "upcoming",
+    next: true,
   },
   {
     round: "06",
@@ -1424,7 +1426,7 @@ export default function SpielplanPage() {
         </div>
 
         <p className="schedule-note">
-          Spielplan-Stand: September 2026. Die Termine der Rückrunde werden
+          Spielplan-Stand: Oktober 2026. Die Termine der Rückrunde werden
           ergänzt, sobald sie offiziell feststehen.
         </p>
       </section>
